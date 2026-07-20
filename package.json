@@ -1,0 +1,50 @@
+{
+  "name": "echo-fortune",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Echo · 回响 — 命运印证引擎。发起预测，等待回响。18 种命理工具 + AI 对话 + 命格面板",
+  "keywords": [
+    "vue3",
+    "fortune-telling",
+    "bazi",
+    "ziwei",
+    "liuyao",
+    "meihua",
+    "qimen",
+    "fengshui",
+    "ai-chat",
+    "pinia",
+    "vite",
+    "divination",
+    "chinese-metaphysics"
+  ],
+  "license": "MIT",
+  "author": "Echo Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weed33834/echo.git"
+  },
+  "homepage": "https://github.com/weed33834/echo#readme",
+  "bugs": {
+    "url": "https://github.com/weed33834/echo/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4173"
+  },
+  "dependencies": {
+    "pinia": "^2.2.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.0",
+    "@vitejs/plugin-vue-jsx": "^5.1.6",
+    "vite": "^5.4.0"
+  }
+}

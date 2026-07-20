@@ -1,0 +1,72 @@
+/**
+ * Echo Animations
+ * 硬性指标：keyframes ≤15 个、总时长 ≤1s、尊重 prefers-reduced-motion
+ * 仅保留：基础入场3 + 强调2 + 加载2 + 出场1 + 命盘专用1 = 9 个
+ */
+
+/* === 基础入场 === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* === 强调反馈 === */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes stamp {
+  0% { transform: scale(1.4); opacity: 0; }
+  60% { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* === 加载 === */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes progressLine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* === 出场 === */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* === 命盘专用（仅命盘内） === */
+@keyframes wuxingFlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* === 工具类 === */
+.anim-fade { animation: fadeIn var(--dur, 0.3s) ease-out both; }
+.anim-fade-up { animation: fadeInUp var(--dur, 0.4s) ease-out both; }
+.anim-scale { animation: scaleIn var(--dur, 0.3s) ease-out both; }
+.anim-stamp { animation: stamp var(--dur, 0.4s) ease-out both; }
+
+/* stagger 工具：用 --i 索引自动计算 delay */
+.stagger {
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+/* === reduced-motion 适配（强制） === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

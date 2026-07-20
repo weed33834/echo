@@ -1,0 +1,447 @@
+/**
+ * Graph 命运图谱样式
+ * SVG 网络图可视化：中心节点 + 五行环 + 工具环 + 印证/命格信息卡
+ * 遵循设计令牌，BEM 命名，与 Dashboard/Me 页面风格一致
+ */
+
+/* === 页面容器 === */
+.graph-page .container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-top: var(--sp-4);
+  padding-bottom: var(--sp-6);
+}
+
+/* === 图谱卡片 === */
+.graph-page__graph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  min-width: 0;
+}
+
+/* === SVG 容器 === */
+.graph-page__svg-wrap {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.graph-page__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* === 连接线 === */
+.graph-page__link {
+  fill: none;
+  stroke-linecap: round;
+  animation: fadeIn 0.5s ease-out both;
+  animation-delay: 0.05s;
+}
+.graph-page__link--wuxing {
+  stroke: var(--rule-2);
+  stroke-width: 1.5;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 3 3;
+}
+.graph-page__link--tool {
+  stroke: var(--accent);
+  fill: none;
+  transition: stroke-opacity 0.2s, stroke-width 0.2s;
+}
+
+/* === 节点通用 === */
+.graph-page__node {
+  cursor: default;
+}
+.graph-page__node--enter {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: graphNodeIn 0.4s ease-out both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.graph-page__node--interactive {
+  cursor: pointer;
+  outline: none;
+}
+.graph-page__node--interactive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--r-full);
+}
+
+/* 透明命中区（保证最小触控 44px） */
+.graph-page__node-hit {
+  fill: transparent;
+}
+
+/* 节点圆形 */
+.graph-page__node-circle {
+  stroke: var(--bg-2);
+  stroke-width: 2;
+  transition: stroke-width 0.2s ease, filter 0.2s ease;
+}
+/* 辉光圈（hover 时显示） */
+.graph-page__node-glow {
+  fill: currentColor;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.graph-page__node--interactive:hover .graph-page__node-glow,
+.graph-page__node--interactive:focus-visible .graph-page__node-glow {
+  opacity: 0.22;
+}
+.graph-page__node--interactive:hover .graph-page__node-circle,
+.graph-page__node--interactive:focus-visible .graph-page__node-circle {
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.graph-page__node--interactive:active .graph-page__node-circle {
+  stroke-width: 2.5;
+}
+
+/* 节点文字 */
+.graph-page__node-label {
+  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  font-weight: var(--fw-bold);
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* === 中心节点 === */
+.graph-page__center-circle {
+  fill: var(--accent);
+  stroke: var(--bg-2);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 8px var(--accent-soft));
+}
+.graph-page__center-pulse {
+  fill: var(--accent);
+  opacity: 0;
+  animation: graphPulse 2.4s ease-out infinite;
+  animation-delay: 0.6s;
+}
+.graph-page__center-name {
+  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  fill: #fff;
+  pointer-events: none;
+  user-select: none;
+}
+.graph-page__center-dm {
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  fill: rgba(255, 255, 255, 0.82);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* === 五行节点 === */
+.graph-page__wuxing-circle {
+  stroke: var(--bg-2);
+  stroke-width: 2.5;
+}
+.graph-page__wuxing-label {
+  font-size: 18px;
+  fill: #fff;
+}
+.graph-page__wuxing-value {
+  font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
+  font-size: 9px;
+  fill: var(--muted);
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* === 工具节点 === */
+.graph-page__tool-circle {
+  fill: var(--bg-2);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.graph-page__tool-glyph {
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+  fill: var(--accent);
+  pointer-events: none;
+  user-select: none;
+}
+.graph-page__tool-count {
+  font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
+  font-size: 9px;
+  fill: var(--gold);
+  font-weight: var(--fw-bold);
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+.graph-page__tool-name {
+  font-size: 9px;
+  fill: var(--muted);
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* === 提示文字 === */
+.graph-page__hint {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  text-align: center;
+  padding: var(--sp-1) var(--sp-3);
+  line-height: var(--lh-normal);
+}
+
+/* === 信息卡区 === */
+.graph-page__info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+}
+
+/* 印证统计簇 */
+.graph-page__stats-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+}
+.graph-page__stat {
+  text-align: center;
+  padding: var(--sp-2) var(--sp-1);
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+}
+.graph-page__stat-num {
+  font-family: 'Lora', serif;
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  line-height: var(--lh-tight);
+}
+.graph-page__stat-lbl {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-top: 2px;
+}
+.graph-page__stat--ok .graph-page__stat-num { color: var(--ok); }
+.graph-page__stat--gold .graph-page__stat-num { color: var(--gold); }
+
+/* 命格卡 */
+.graph-page__level-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.graph-page__level-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+.graph-page__level-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.graph-page__level-title {
+  font-family: 'Lora', serif;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+}
+.graph-page__level-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.graph-page__level-meta-val {
+  font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
+  font-weight: var(--fw-bold);
+  color: var(--gold);
+}
+
+/* === 图例 === */
+.graph-page__legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.graph-page__legend-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.graph-page__legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--r-full);
+  flex-shrink: 0;
+}
+.graph-page__legend-dot--center { background: var(--accent); }
+.graph-page__legend-dot--tool { background: var(--bg-2); border: 1.5px solid var(--accent); }
+.graph-page__legend-dot--metal { background: var(--wuxing-metal); }
+.graph-page__legend-dot--wood { background: var(--wuxing-wood); }
+.graph-page__legend-dot--water { background: var(--wuxing-water); }
+.graph-page__legend-dot--fire { background: var(--wuxing-fire); }
+.graph-page__legend-dot--earth { background: var(--wuxing-earth); }
+.graph-page__legend-wuxing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  padding-top: var(--sp-1);
+  border-top: 1px solid var(--rule);
+  margin-top: var(--sp-1);
+}
+
+/* === 五行建议弹窗 === */
+.graph-page__advice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.graph-page__advice-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  border: 1px solid var(--rule);
+}
+.graph-page__advice-glyph {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Lora', serif;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: #fff;
+  flex-shrink: 0;
+}
+.graph-page__advice-info {
+  flex: 1;
+  min-width: 0;
+}
+.graph-page__advice-name {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+}
+.graph-page__advice-strength {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-top: 2px;
+}
+.graph-page__advice-section {
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--rule);
+  min-width: 0;
+}
+.graph-page__advice-section:last-child { border-bottom: none; }
+.graph-page__advice-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+.graph-page__advice-body {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  line-height: var(--lh-normal);
+}
+.graph-page__advice-yi { color: var(--ok); margin-bottom: var(--sp-1); }
+.graph-page__advice-ji { color: var(--danger); }
+
+/* === 节点入场动画 === */
+@keyframes graphNodeIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes graphPulse {
+  0% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+/* === 响应式：平板 === */
+@media (min-width: 768px) {
+  .graph-page .container {
+    gap: var(--sp-5);
+    padding-top: var(--sp-5);
+  }
+  .graph-page__svg-wrap {
+    max-width: 420px;
+  }
+  .graph-page__info-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+  .graph-page__stats-cluster {
+    gap: var(--sp-3);
+  }
+}
+
+/* === 响应式：桌面 === */
+@media (min-width: 1024px) {
+  .graph-page .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+    align-items: start;
+  }
+  /* 图谱卡跨双列 */
+  .graph-page .container > .echo-card--primary {
+    grid-column: 1 / -1;
+  }
+  /* 图例跨双列 */
+  .graph-page .container > .echo-card--tertiary {
+    grid-column: 1 / -1;
+  }
+  .graph-page__svg-wrap {
+    max-width: 440px;
+  }
+}
+
+/* === 超宽屏 === */
+@media (min-width: 1440px) {
+  .graph-page .container { gap: var(--sp-6); }
+}
+
+/* === reduced-motion 适配 === */
+@media (prefers-reduced-motion: reduce) {
+  .graph-page__node--enter,
+  .graph-page__link,
+  .graph-page__center-pulse {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

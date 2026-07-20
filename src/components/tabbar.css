@@ -1,0 +1,186 @@
+/* === TabBar === */
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--tabbar-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: var(--bg-2);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  z-index: var(--z-tabbar);
+}
+.tabbar__item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  font-family: 'WorkSans', 'Noto Sans CJK SC', sans-serif;
+  transition: color 0.2s;
+  min-height: var(--tabbar-h);
+}
+.tabbar__item--active {
+  color: var(--accent);
+}
+.tabbar__item--active .tabbar__icon {
+  transform: translateY(-1px);
+}
+.tabbar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.tabbar__label {
+  font-weight: var(--fw-medium);
+  line-height: 1;
+}
+
+/* === 桌面端：TabBar 变为左侧边栏 === */
+@media (min-width: 1024px) {
+  .tabbar {
+    bottom: auto;
+    top: 0;
+    left: 0;
+    right: auto;
+    width: var(--sidebar-w);
+    height: 100vh;
+    padding-bottom: 0;
+    padding-top: var(--safe-top);
+    flex-direction: column;
+    border-top: none;
+    border-right: 1px solid var(--rule);
+    background: var(--bg-2);
+    gap: var(--sp-1);
+    padding-left: var(--sp-3);
+    padding-right: var(--sp-3);
+  }
+  .tabbar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-5) var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: var(--sp-3);
+  }
+  .tabbar__brand-name {
+    font-family: 'Lora', serif;
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    color: var(--accent);
+    letter-spacing: var(--ls-tight);
+    line-height: 1;
+  }
+  .tabbar__brand-sub {
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .tabbar__item {
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--r-md);
+    min-height: 44px;
+    font-size: var(--fs-sm);
+    width: 100%;
+  }
+  .tabbar__item:hover {
+    background: var(--bg-3);
+  }
+  .tabbar__item--active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: var(--fw-bold);
+  }
+  .tabbar__item--active .tabbar__icon {
+    transform: none;
+  }
+  .tabbar__label {
+    line-height: 1.2;
+  }
+  .tabbar__footer {
+    margin-top: auto;
+    padding: var(--sp-4) var(--sp-3);
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-xs);
+    color: var(--muted-2);
+    text-align: center;
+  }
+}
+
+/* 移动端隐藏侧边栏专用元素 */
+.tabbar__brand, .tabbar__footer { display: none; }
+
+/* === TopBar === */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: calc(var(--safe-top) + var(--sp-3)) var(--sp-4) var(--sp-3);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--rule);
+  min-height: calc(var(--safe-top) + 48px);
+}
+.topbar__left, .topbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 40px;
+}
+.topbar__right { margin-left: auto; }
+.topbar__center {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.topbar__title {
+  font-family: 'Lora', serif;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar__subtitle {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-top: 2px;
+}
+.topbar__back {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.topbar__back:hover { background: var(--bg-3); }
+
+/* 超窄屏：TabBar 文字隐藏只留图标 */
+@media (max-width: 340px) {
+  .tabbar__label { display: none; }
+  .tabbar__item { gap: 0; }
+}
+
+/* 横屏矮视口：压缩 TopBar 高度 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .tabbar { height: calc(var(--tabbar-h) + var(--safe-bottom)); }
+  .tabbar__item { min-height: var(--tabbar-h); }
+}

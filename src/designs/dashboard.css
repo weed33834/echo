@@ -1,0 +1,507 @@
+/**
+ * Dashboard 命格面板样式
+ * 遵循设计令牌，BEM 命名，与 Me/EchoCenter 页面风格一致
+ */
+
+/* === 页面容器 === */
+.dashboard .container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-top: var(--sp-4);
+  padding-bottom: var(--sp-6);
+}
+
+/* === 1. 个人命格概览 === */
+.dashboard__overview {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+.dashboard__overview-info {
+  flex: 1;
+  min-width: 0;
+}
+.dashboard__overview-name {
+  font-family: 'Lora', serif;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+.dashboard__overview-title {
+  margin-bottom: var(--sp-2);
+}
+.dashboard__overview-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-2);
+}
+.dashboard__overview-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.dashboard__overview-stat-num {
+  font-family: 'Lora', serif;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  line-height: var(--lh-tight);
+}
+.dashboard__overview-stat-lbl {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* 未设置档案 */
+.dashboard__no-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) 0;
+  text-align: center;
+}
+.dashboard__no-profile-text {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* === 2. 五行雷达图 === */
+.dashboard__radar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+}
+.dashboard__radar-svg-wrap {
+  width: 100%;
+  max-width: 300px;
+}
+.dashboard__radar-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.dashboard__radar-grid {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.dashboard__radar-axis {
+  stroke: var(--rule-2);
+  stroke-width: 1;
+}
+.dashboard__radar-data {
+  fill: var(--accent);
+  fill-opacity: 0.18;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.dashboard__radar-label {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+}
+.dashboard__radar-value {
+  font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  fill: var(--muted);
+}
+.dashboard__radar-reading {
+  text-align: center;
+  width: 100%;
+}
+.dashboard__radar-reading-title {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide);
+  margin-bottom: var(--sp-1);
+}
+.dashboard__radar-reading-text {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+.dashboard__radar-reading-source {
+  font-size: var(--fs-xs);
+  color: var(--muted-2);
+}
+
+/* === 五行生克图 === */
+.dashboard__cycle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.dashboard__cycle-svg-wrap {
+  width: 100%;
+  max-width: 300px;
+}
+.dashboard__cycle-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.dashboard__cycle-legend {
+  display: flex;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dashboard__cycle-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.dashboard__cycle-legend-line {
+  width: 24px;
+  height: 2px;
+  border-radius: var(--r-full);
+}
+.dashboard__cycle-legend-line--sheng {
+  background: var(--ok);
+  opacity: 0.5;
+  border-top: 2px dashed var(--ok);
+  height: 0;
+  width: 24px;
+}
+.dashboard__cycle-legend-line--ke {
+  background: var(--danger);
+  opacity: 0.35;
+}
+.dashboard__cycle-legend-text {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+/* === 4. 今日建议矩阵 === */
+.dashboard__advice {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-3);
+}
+.dashboard__advice-card {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: var(--sp-3);
+  min-width: 0;
+}
+.dashboard__advice-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+.dashboard__advice-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+.dashboard__advice-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+}
+.dashboard__advice-body {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  line-height: var(--lh-normal);
+}
+.dashboard__advice-yi {
+  color: var(--ok);
+  margin-bottom: var(--sp-1);
+}
+.dashboard__advice-ji {
+  color: var(--danger);
+}
+.dashboard__advice-footer {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--rule);
+  font-size: var(--fs-xs);
+  color: var(--muted-2);
+  text-align: center;
+}
+
+/* === 4. 今日宜忌 === */
+.dashboard__yiji {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.dashboard__yiji-date {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule);
+}
+.dashboard__yiji-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+.dashboard__yiji-label {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+.dashboard__yiji-label--yi {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.dashboard__yiji-label--ji {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.dashboard__yiji-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  align-items: center;
+  min-width: 0;
+  padding-top: var(--sp-1);
+}
+.dashboard__yiji-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) 0;
+  text-align: center;
+}
+.dashboard__yiji-empty-text {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* === 5. 推演历史时间线 === */
+.dashboard__timeline {
+  display: flex;
+  flex-direction: column;
+}
+.dashboard__timeline-item {
+  display: flex;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+.dashboard__timeline-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.dashboard__timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  border: 2px solid var(--bg-2);
+  box-shadow: 0 0 0 1px var(--accent);
+  flex-shrink: 0;
+}
+.dashboard__timeline-line {
+  width: 2px;
+  flex: 1;
+  background: var(--rule);
+  margin-top: var(--sp-1);
+  min-height: var(--sp-4);
+}
+.dashboard__timeline-content {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: var(--sp-4);
+}
+.dashboard__timeline-item:last-child .dashboard__timeline-content {
+  padding-bottom: 0;
+}
+.dashboard__timeline-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  margin-bottom: 2px;
+}
+.dashboard__timeline-tool {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.dashboard__timeline-time {
+  font-size: var(--fs-xs);
+  color: var(--muted-2);
+  flex-shrink: 0;
+}
+.dashboard__timeline-summary {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  line-height: var(--lh-normal);
+  overflow-wrap: break-word;
+}
+.dashboard__timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) 0;
+  text-align: center;
+}
+.dashboard__timeline-empty-text {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* === 6. 工具使用统计 === */
+.dashboard__toolstats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.dashboard__toolstats-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.dashboard__toolstats-rank {
+  width: 20px;
+  text-align: center;
+  font-family: 'Lora', serif;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--muted-2);
+  flex-shrink: 0;
+}
+.dashboard__toolstats-name {
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  width: 80px;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dashboard__toolstats-bar {
+  flex: 1;
+  min-width: 0;
+}
+.dashboard__toolstats-count {
+  font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
+  font-size: var(--fs-xs);
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.dashboard__toolstats-empty {
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  padding: var(--sp-3) 0;
+}
+
+/* === 响应式：平板 === */
+@media (min-width: 768px) {
+  .dashboard .container {
+    gap: var(--sp-5);
+    padding-top: var(--sp-5);
+  }
+  .dashboard__radar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-6);
+  }
+  .dashboard__radar-svg-wrap {
+    flex-shrink: 0;
+  }
+  .dashboard__radar-reading {
+    text-align: left;
+    flex: 1;
+    max-width: 240px;
+  }
+  .dashboard__advice {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-4);
+  }
+  .dashboard__overview-stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
+  }
+}
+
+/* === 响应式：桌面 === */
+@media (min-width: 1024px) {
+  .dashboard .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+    align-items: start;
+  }
+  /* 概览卡跨两列 */
+  .dashboard .container > .echo-card--primary {
+    grid-column: 1 / -1;
+  }
+  /* 雷达图跨两列，居中展示 */
+  .dashboard .container > .echo-card:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+  .dashboard__radar-svg-wrap {
+    max-width: 320px;
+  }
+}
+
+/* === 超窄屏 (≤340px)：统计栏改 2x2 === */
+@media (max-width: 340px) {
+  .dashboard__overview-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-2);
+  }
+  .dashboard__advice {
+    grid-template-columns: 1fr;
+  }
+  .dashboard__radar-svg-wrap {
+    max-width: 240px;
+  }
+}
+
+/* === 横屏矮视口：雷达图横向 === */
+@media (max-height: 500px) and (orientation: landscape) {
+  .dashboard__radar {
+    flex-direction: row;
+    gap: var(--sp-4);
+  }
+  .dashboard__radar-svg-wrap { max-width: 200px; }
+  .dashboard__overview { gap: var(--sp-3); }
+  .dashboard__cycle-svg-wrap { max-width: 200px; }
+}

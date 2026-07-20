@@ -1,0 +1,222 @@
+/**
+ * Echo Design Tokens
+ * 单源真理：所有颜色/字号/间距/圆角/阴影只在 :root 定义一次
+ * 硬性指标：最小字号 13px、间距 8pt 节奏、对比度 ≥4.5:1
+ */
+:root {
+  /* === 颜色 === */
+  /* 墨砚系（文本与深色背景） */
+  --ink: #15131f;
+  --ink-2: #2a2540;
+  --ink-3: #3d3656;
+  /* 宣纸系（亮色背景与表面） */
+  --bg: #f7f5f0;
+  --bg-2: #ffffff;
+  --bg-3: #efeafb;
+  /* 静音文本 */
+  --muted: #6b6779;
+  --muted-2: #9b97a9;
+  /* 描边 */
+  --rule: #e6e1d6;
+  --rule-2: #d8d2c4;
+  /* 主色：回响紫 */
+  --accent: #5b3fd6;
+  --accent-2: #7a5ff0;
+  --accent-soft: rgba(91, 63, 214, 0.08);
+  /* 副色：鎏金 */
+  --gold: #b8893a;
+  --gold-2: #d4a85a;
+  --gold-soft: rgba(184, 137, 58, 0.10);
+  /* 语义色 */
+  --ok: #2d8f5b;
+  --ok-soft: rgba(45, 143, 91, 0.12);
+  --danger: #b8453c;
+  --danger-soft: rgba(184, 69, 60, 0.12);
+  --warn: #c98a2b;
+  --warn-soft: rgba(201, 138, 43, 0.12);
+  /* 五行色（仅命盘可视化，不渗入 UI 框架） */
+  --wuxing-metal: #c9b078;
+  --wuxing-wood: #5a9e6f;
+  --wuxing-water: #4a78b0;
+  --wuxing-fire: #c8483a;
+  --wuxing-earth: #a8824a;
+
+  /* === 字号（5 档，最小 13px） === */
+  --fs-xs: 13px;
+  --fs-sm: 15px;
+  --fs-base: 16px;
+  --fs-lg: 20px;
+  --fs-xl: 28px;
+  --fs-2xl: 36px;
+
+  /* === 字重 === */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* === 行高 === */
+  --lh-tight: 1.25;
+  --lh-snug: 1.4;
+  --lh-normal: 1.6;
+  --lh-relaxed: 1.78;
+
+  /* === 字间距 === */
+  --ls-tight: -0.01em;
+  --ls-normal: 0;
+  --ls-wide: 0.04em;
+  --ls-xwide: 0.08em;
+
+  /* === 间距（8pt 节奏） === */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* === 圆角 === */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-full: 999px;
+
+  /* === 阴影（克制，3 档） === */
+  --shadow-sm: 0 1px 2px rgba(21, 19, 31, 0.06);
+  --shadow-md: 0 2px 8px rgba(21, 19, 31, 0.08);
+  --shadow-lg: 0 8px 24px rgba(21, 19, 31, 0.12);
+
+  /* === z-index === */
+  --z-base: 1;
+  --z-sticky: 100;
+  --z-tabbar: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  /* === 安全区 === */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* === 布局 === */
+  --content-max: 480px;
+  --tabbar-h: 56px;
+  --sidebar-w: 0px;       /* 移动端无侧边栏 */
+  --layout-gutter: 0px;   /* 内容区左侧让位 */
+}
+
+/* 平板：加宽内容 */
+@media (min-width: 768px) {
+  :root {
+    --content-max: 720px;
+    --sp-4: 20px;
+    --sp-5: 28px;
+  }
+}
+
+/* 桌面：侧边栏模式 */
+@media (min-width: 1024px) {
+  :root {
+    --content-max: 960px;
+    --sidebar-w: 240px;
+    --layout-gutter: var(--sidebar-w);
+    --tabbar-h: 0px;       /* 桌面端无底部栏 */
+    --fs-base: 17px;
+    --fs-lg: 22px;
+    --fs-xl: 30px;
+    --fs-2xl: 40px;
+  }
+}
+@media (min-width: 1440px) {
+  :root { --content-max: 1120px; }
+}
+
+/* 超宽屏（≥1920px）：限制最大宽度，居中阅读 */
+@media (min-width: 1920px) {
+  :root {
+    --content-max: 1280px;
+    --sp-5: 32px;
+    --sp-6: 40px;
+  }
+}
+
+/* 超窄屏（≤340px）：压缩间距与字号，确保不溢出 */
+@media (max-width: 340px) {
+  :root {
+    --sp-3: 10px;
+    --sp-4: 12px;
+    --sp-5: 18px;
+    --fs-sm: 14px;
+    --fs-lg: 18px;
+  }
+}
+
+/* 横屏矮视口（高 ≤500px 且宽 ≥568px）：减少垂直间距 */
+@media (max-height: 500px) and (min-width: 568px) and (orientation: landscape) {
+  :root {
+    --sp-4: 10px;
+    --sp-5: 14px;
+    --sp-6: 18px;
+    --sp-7: 24px;
+    --tabbar-h: 48px;
+  }
+}
+
+/* 暗色模式（仪式场景） */
+@media (prefers-color-scheme: dark) {
+  :root.theme-auto {
+    --ink: #f7f5f0;
+    --ink-2: #d8d2c4;
+    --ink-3: #9b97a9;
+    --bg: #15131f;
+    --bg-2: #1f1b30;
+    --bg-3: #2a2540;
+    --muted: #9b97a9;
+    --muted-2: #6b6779;
+    --rule: #2a2540;
+    --rule-2: #3d3656;
+    --accent-soft: rgba(122, 95, 240, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+  }
+}
+
+/* === 显式暗色主题（用户主动切换，不依赖系统） === */
+[data-theme="dark"] {
+  --ink: #f7f5f0;
+  --ink-2: #d8d2c4;
+  --ink-3: #9b97a9;
+  --bg: #15131f;
+  --bg-2: #1f1b30;
+  --bg-3: #2a2540;
+  --muted: #9b97a9;
+  --muted-2: #6b6779;
+  --rule: #2a2540;
+  --rule-2: #3d3656;
+  --accent-soft: rgba(122, 95, 240, 0.12);
+  --gold-soft: rgba(212, 168, 90, 0.14);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* === 字号缩放（用户偏好） === */
+[data-font-scale="sm"] {
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 25px;
+  --fs-2xl: 32px;
+}
+[data-font-scale="lg"] {
+  --fs-xs: 14px;
+  --fs-sm: 16px;
+  --fs-base: 18px;
+  --fs-lg: 22px;
+  --fs-xl: 31px;
+  --fs-2xl: 40px;
+}
