@@ -56,8 +56,8 @@
 }
 .tool-detail__unit {
   font-size: var(--fs-xs);
-  color: var(--accent);
-  font-weight: var(--fw-medium);
+  color: var(--muted);
+  font-weight: var(--fw-normal);
 }
 .tool-detail__input,
 .tool-detail__select,

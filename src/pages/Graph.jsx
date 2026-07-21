@@ -357,13 +357,6 @@ export default defineComponent({
                     class="graph-page__node graph-page__node--enter graph-page__center"
                     style={{ '--i': 0, color: 'var(--accent)' }}
                   >
-                    {/* 脉冲扩散圈 */}
-                    <circle
-                      cx={CENTER.x}
-                      cy={CENTER.y}
-                      r={CENTER_R}
-                      class="graph-page__center-pulse"
-                    />
                     {/* 主圆 */}
                     <circle
                       cx={CENTER.x}
