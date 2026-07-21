@@ -39,7 +39,7 @@
     "lint": "eslint src --ext .js,.jsx --fix || true"
   },
   "dependencies": {
-    "pinia": "^2.3.1",
+    "pinia": "^4.0.2",
     "vue": "^3.5.40",
     "vue-router": "^4.6.4"
   },
