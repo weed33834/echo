@@ -51,12 +51,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 - 添加 .nvmrc Node 版本声明
 - 添加 .prettierrc 代码格式化配置
 - CI 工作流新增 Node 22.x 矩阵和构建产物上传
+- 添加 .github/dependabot.yml 依赖自动更新配置（npm + GitHub Actions 每周检查）
+- 添加 .github/workflows/deploy.yml GitHub Pages 自动部署工作流
 
 ### Changed
 - 升级 pinia 2.2→2.3.1、vue-router 4.4→4.6.4、vite 5.4.0→5.4.20
 - SPEC.md 从内部 AI agent 规范重写为开源项目技术文档
 - CONTRIBUTING.md 补充项目结构说明、环境变量配置、代码风格规范
 - package.json 新增 lint 脚本
+- README 三语言版本徽章更新（Pinia 2.2→2.3、Vue Router 4.4→4.6、新增 Node ≥18 徽章）
+- README 三语言新增项目文档索引表和 .env.example 配置说明
+- vite.config.js 新增 GitHub Pages base 路径条件配置
 
 ## [0.2.0] - 2026-07-20
 

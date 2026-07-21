@@ -10,7 +10,8 @@
 
 ![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vuedotjs&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646cff?logo=vite&logoColor=white)
-![Pinia](https://img.shields.io/badge/Pinia-2.2-ffd859?logo=pinia&logoColor=black)
+![Pinia](https://img.shields.io/badge/Pinia-2.3-ffd859?logo=pinia&logoColor=black)
+![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 ![Stars](https://img.shields.io/github/stars/weed33834/echo?style=social)
@@ -138,8 +139,8 @@ src/
 | 技术 | 版本 | 用途 |
 |------|------|------|
 | Vue 3 | 3.5 | 框架（JSX + Composition API） |
-| Pinia | 2.2 | 状态管理 |
-| Vue Router | 4.4 | 路由 |
+| Pinia | 2.3 | 状态管理 |
+| Vue Router | 4.6 | 路由 |
 | Vite | 5.4 | 构建工具 |
 
 **零运行时依赖**——除了 Vue/Pinia/Router 三个核心库，所有功能均自实现：
@@ -149,6 +150,8 @@ src/
 
 ## 快速开始
 
+> 前置要求：Node.js ≥ 18（推荐 20.x，参见 `.nvmrc`）、npm ≥ 9
+
 ```bash
 # 克隆仓库
 git clone https://github.com/weed33834/echo.git
@@ -156,6 +159,9 @@ cd echo
 
 # 安装依赖
 npm install
+
+#（可选）配置环境变量
+cp .env.example .env  # 填入你的 API Key，也可在应用内设置页面配置
 
 # 启动开发服务器
 npm run dev
@@ -247,6 +253,16 @@ AI 输出 → validateOutput → 追加安全提示
 | 8 | 见性 | 3000 |
 
 经验值 = 印证次数 × 10 + 应验次数 × 20
+
+## 项目文档
+
+| 文档 | 说明 |
+|------|------|
+| [SPEC.md](./SPEC.md) | 技术规范（架构 / 引擎 / 设计系统 / 安全） |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | 贡献指南（开发环境 / 代码风格 / 提交规范） |
+| [SECURITY.md](./SECURITY.md) | 安全策略（漏洞报告 / 沙箱机制 / 安全护栏） |
+| [CHANGELOG.md](./CHANGELOG.md) | 更新日志 |
+| [.env.example](./.env.example) | 环境变量模板 |
 
 ## 贡献
 

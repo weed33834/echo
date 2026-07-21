@@ -10,7 +10,8 @@
 
 ![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vuedotjs&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646cff?logo=vite&logoColor=white)
-![Pinia](https://img.shields.io/badge/Pinia-2.2-ffd859?logo=pinia&logoColor=black)
+![Pinia](https://img.shields.io/badge/Pinia-2.3-ffd859?logo=pinia&logoColor=black)
+![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 ![Stars](https://img.shields.io/github/stars/weed33834/echo?style=social)
@@ -138,8 +139,8 @@ src/
 | Tech | Version | Purpose |
 |------|---------|---------|
 | Vue 3 | 3.5 | Framework (JSX + Composition API) |
-| Pinia | 2.2 | State management |
-| Vue Router | 4.4 | Routing |
+| Pinia | 2.3 | State management |
+| Vue Router | 4.6 | Routing |
 | Vite | 5.4 | Build tool |
 
 **Zero runtime dependencies** — besides Vue/Pinia/Router, everything is self-implemented:
@@ -149,6 +150,8 @@ src/
 
 ## Quick Start
 
+> Prerequisites: Node.js ≥ 18 (recommended 20.x, see `.nvmrc`), npm ≥ 9
+
 ```bash
 # Clone repository
 git clone https://github.com/weed33834/echo.git
@@ -156,6 +159,9 @@ cd echo
 
 # Install dependencies
 npm install
+
+# (Optional) Configure environment variables
+cp .env.example .env  # Fill in your API keys, or configure in-app Settings page
 
 # Start dev server
 npm run dev
@@ -239,6 +245,16 @@ AI output → validateOutput → append safety notice
 | 8 | True Nature | 3000 |
 
 XP = verification count × 10 + fulfilled count × 20
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [SPEC.md](./SPEC.md) | Technical spec (architecture / engines / design system / security) |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contributing guide (dev setup / code style / commit conventions) |
+| [SECURITY.md](./SECURITY.md) | Security policy (vulnerability reporting / sandbox / guardrails) |
+| [CHANGELOG.md](./CHANGELOG.md) | Changelog |
+| [.env.example](./.env.example) | Environment variable template |
 
 ## Contributing
 

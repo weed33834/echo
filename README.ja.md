@@ -10,7 +10,8 @@
 
 ![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vuedotjs&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646cff?logo=vite&logoColor=white)
-![Pinia](https://img.shields.io/badge/Pinia-2.2-ffd859?logo=pinia&logoColor=black)
+![Pinia](https://img.shields.io/badge/Pinia-2.3-ffd859?logo=pinia&logoColor=black)
+![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 ![Stars](https://img.shields.io/github/stars/weed33834/echo?style=social)
@@ -138,8 +139,8 @@ src/
 | 技術 | バージョン | 用途 |
 |------|-----------|------|
 | Vue 3 | 3.5 | フレームワーク（JSX + Composition API） |
-| Pinia | 2.2 | 状態管理 |
-| Vue Router | 4.4 | ルーティング |
+| Pinia | 2.3 | 状態管理 |
+| Vue Router | 4.6 | ルーティング |
 | Vite | 5.4 | ビルドツール |
 
 **ランタイム依存ゼロ**——Vue/Pinia/Router の 3 つのコアライブラリ以外、すべて自前実装：
@@ -149,6 +150,8 @@ src/
 
 ## クイックスタート
 
+> 前提条件：Node.js ≥ 18（推奨 20.x、`.nvmrc` 参照）、npm ≥ 9
+
 ```bash
 # リポジトリをクローン
 git clone https://github.com/weed33834/echo.git
@@ -156,6 +159,9 @@ cd echo
 
 # 依存関係をインストール
 npm install
+
+#（任意）環境変数を設定
+cp .env.example .env  # API Key を入力、アプリ内の設定ページでも設定可能
 
 # 開発サーバーを起動
 npm run dev
@@ -239,6 +245,16 @@ AI 出力 → validateOutput → 安全通知を付加
 | 8 | 見性 | 3000 |
 
 経験値 = 印証回数 × 10 + 応験回数 × 20
+
+## プロジェクトドキュメント
+
+| ドキュメント | 説明 |
+|-------------|------|
+| [SPEC.md](./SPEC.md) | 技術仕様（アーキテクチャ / エンジン / デザインシステム / セキュリティ） |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | コントリビューションガイド（開発環境 / コードスタイル / コミット規約） |
+| [SECURITY.md](./SECURITY.md) | セキュリティポリシー（脆弱性報告 / サンドボックス / ガードレール） |
+| [CHANGELOG.md](./CHANGELOG.md) | 変更履歴 |
+| [.env.example](./.env.example) | 環境変数テンプレート |
 
 ## コントリビュート
 
