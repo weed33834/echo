@@ -912,6 +912,14 @@ export default defineComponent({
       e.inputConfig.forEach(f => {
         newForm[f.key] = f.default
       })
+      // 从用户档案自动填充出生日期相关字段
+      if (store.profile?.birthday) {
+        const [yy, mm, dd] = store.profile.birthday.split('-').map(Number)
+        if (yy && 'year' in newForm) newForm.year = yy
+        if (mm && 'month' in newForm) newForm.month = mm
+        if (dd && 'day' in newForm) newForm.day = dd
+        if (store.profile.gender && 'gender' in newForm) newForm.gender = store.profile.gender
+      }
       form.value = newForm
       result.value = null
       crossVerifyResult.value = null
