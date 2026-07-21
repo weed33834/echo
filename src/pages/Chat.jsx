@@ -391,6 +391,7 @@ export default defineComponent({
       const systemPrompt = buildSystemPrompt({
         recentHistory: includeContext.value ? getRecentHistory(echoStore.history, 5) : '',
         profile: echoStore.profile,
+        profileBazi: echoStore.profileBazi,
         currentJieqi: getCurrentJieqi(new Date()),
         knowledgeBase: relevantKB.length ? relevantKB : effectiveKB,
         userInput

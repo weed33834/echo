@@ -2247,3 +2247,302 @@ export function personalYiJi(dayMaster, favorable, liuriGanZhi) {
   const ji = favorable.flatMap(wx => jiMap[wx] || [])
   return { yi: [...new Set(yi)].slice(0, 4), ji: [...new Set(ji)].slice(0, 3) }
 }
+
+/* ============================================================
+ * 五、扩展辅助函数（六合/三合/天干合/大运/合婚/流年）
+ * ============================================================ */
+
+// 地支六合：子丑合土、寅亥合木、卯戌合火、辰酉合金、巳申合水、午未合
+const LIUHE_MAP = { '子': '丑', '丑': '子', '寅': '亥', '亥': '寅', '卯': '戌', '戌': '卯', '辰': '酉', '酉': '辰', '巳': '申', '申': '巳', '午': '未', '未': '午' }
+const LIUHE_WX = { '子丑': '土', '寅亥': '木', '卯戌': '火', '辰酉': '金', '巳申': '水', '午未': '土' }
+
+/** 地支六合 — 返回合化后的地支与五行，无合返回 null */
+export function heOf(zhi) {
+  const partner = LIUHE_MAP[zhi]
+  if (!partner) return null
+  const key = [zhi, partner].sort((a, b) => DI_ZHI.indexOf(a) - DI_ZHI.indexOf(b)).join('')
+  const sortedKey = Object.keys(LIUHE_WX).find(k => k.split('').sort().join('') === [zhi, partner].sort().join(''))
+  return { partner, wx: LIUHE_WX[sortedKey] || '土' }
+}
+
+// 地支三合局：申子辰合水、亥卯未合木、寅午戌合火、巳酉丑合金
+const SANHE_GROUPS = [
+  { members: ['申', '子', '辰'], wx: '水', name: '水局' },
+  { members: ['亥', '卯', '未'], wx: '木', name: '木局' },
+  { members: ['寅', '午', '戌'], wx: '火', name: '火局' },
+  { members: ['巳', '酉', '丑'], wx: '金', name: '金局' }
+]
+
+/** 地支三合 — 返回所属三合局信息，不属于任何三合局返回 null */
+export function sanheOf(zhi) {
+  for (const group of SANHE_GROUPS) {
+    if (group.members.includes(zhi)) {
+      return { members: group.members, wx: group.wx, name: group.name, isMiddle: group.members[1] === zhi }
+    }
+  }
+  return null
+}
+
+// 天干五合：甲己合土、乙庚合金、丙辛合水、丁壬合木、戊癸合火
+const GANHE_MAP = { '甲': { partner: '己', wx: '土' }, '己': { partner: '甲', wx: '土' }, '乙': { partner: '庚', wx: '金' }, '庚': { partner: '乙', wx: '金' }, '丙': { partner: '辛', wx: '水' }, '辛': { partner: '丙', wx: '水' }, '丁': { partner: '壬', wx: '木' }, '壬': { partner: '丁', wx: '木' }, '戊': { partner: '癸', wx: '火' }, '癸': { partner: '戊', wx: '火' } }
+
+/** 天干五合 — 返回合化对象与五行，无合返回 null */
+export function ganHeOf(gan) {
+  return GANHE_MAP[gan] ? { ...GANHE_MAP[gan] } : null
+}
+
+// 地支相刑
+const XING_MAP = {
+  '寅巳': '无恩之刑', '巳申': '无恩之刑', '申寅': '无恩之刑',
+  '丑戌': '恃势之刑', '戌未': '恃势之刑', '未丑': '恃势之刑',
+  '子卯': '无礼之刑', '卯子': '无礼之刑',
+  '辰辰': '自刑', '午午': '自刑', '酉酉': '自刑', '亥亥': '自刑'
+}
+
+/** 地支相刑 — 返回刑的类型，无刑返回 null */
+export function xingOf(zhi1, zhi2) {
+  const key = zhi1 + zhi2
+  const revKey = zhi2 + zhi1
+  return XING_MAP[key] || XING_MAP[revKey] || null
+}
+
+/** 地支相害（穿） */
+const HAI_MAP = { '子未': '相害', '未子': '相害', '丑午': '相害', '午丑': '相害', '寅巳': '相害', '巳寅': '相害', '卯辰': '相害', '辰卯': '相害', '申亥': '相害', '亥申': '相害', '酉戌': '相害', '戌酉': '相害' }
+export function haiOf(zhi1, zhi2) {
+  return HAI_MAP[zhi1 + zhi2] || null
+}
+
+/**
+ * 大运计算（可复用，从 bazi 引擎提取）
+ * @param {string} yearGan - 年柱天干
+ * @param {string} monthGan - 月柱天干
+ * @param {string} monthZhi - 月柱地支
+ * @param {string} dayGan - 日柱天干
+ * @param {string} gender - 'male' | 'female'
+ * @param {number} birthYear - 出生年
+ * @param {number} [count=8] - 排几个大运
+ * @returns {{ dayuns: Array, currentDayun: Object, startAge: number }}
+ */
+export function computeDayuns(yearGan, monthGan, monthZhi, dayGan, gender, birthYear, count = 8) {
+  const yearGanIdx = TIAN_GAN.indexOf(yearGan)
+  const yearGanYang = yearGanIdx % 2 === 0
+  const forward = (yearGanYang && gender === 'male') || (!yearGanYang && gender === 'female')
+  const monthGanIdx = TIAN_GAN.indexOf(monthGan)
+  const monthZhiIdx = DI_ZHI.indexOf(monthZhi)
+  // 起运岁数估算（简化：3岁起运为默认，阳男阴女顺排，阴男阳女逆排）
+  const startAge = 3
+  const dayuns = []
+  for (let i = 1; i <= count; i++) {
+    const offset = forward ? i : -i
+    const gIdx = (monthGanIdx + offset + 100) % 10
+    const zIdx = (monthZhiIdx + offset + 100) % 12
+    dayuns.push({
+      name: TIAN_GAN[gIdx] + DI_ZHI[zIdx],
+      startAge: startAge + (i - 1) * 10,
+      endAge: startAge + i * 10 - 1,
+      wx: GAN_WX[gIdx] + ZHI_WX[zIdx],
+      tenGod: tenGod(dayGan, TIAN_GAN[gIdx])
+    })
+  }
+  const age = new Date().getFullYear() - birthYear
+  const currentDayun = dayuns.find(d => age >= d.startAge && age <= d.endAge) || dayuns[0]
+  return { dayuns, currentDayun, startAge }
+}
+
+/**
+ * 流年计算
+ * @param {number} year - 年份
+ * @param {string} dayGan - 日柱天干
+ * @returns {{ ganzhi: string, tenGod: string, year: number }}
+ */
+export function liunianOf(year, dayGan) {
+  const yp = yearPillar(year)
+  return {
+    ganzhi: yp.gan + yp.zhi,
+    tenGod: tenGod(dayGan, yp.gan),
+    year
+  }
+}
+
+/**
+ * 从用户档案计算完整八字信息（供 Profile/Daily/Timeline 使用）
+ * @param {Object} profile - { birthday: 'YYYY-MM-DD', birthTime: 'HH', gender, birthPlace, longitude }
+ * @returns {Object|null} 八字信息对象
+ */
+export function computeProfileBazi(profile) {
+  if (!profile || !profile.birthday) return null
+  const [year, month, day] = profile.birthday.split('-').map(Number)
+  if (!year || !month || !day) return null
+  const hour = profile.birthTime ? Number(profile.birthTime) : 12
+  const gender = profile.gender || 'male'
+  const longitude = profile.longitude || 116
+  // 真太阳时修正
+  const trueHour = hour + (longitude - 116) * 4 / 60
+  const yp = yearPillar(year)
+  const mp = monthPillar(year, month, day)
+  const dp = dayPillar(year, month, day)
+  const hp = hourPillar(dp.gan, Math.floor(trueHour))
+  const pillars = [
+    { name: '年柱', gan: yp.gan, zhi: yp.zhi, wx: yp.wx },
+    { name: '月柱', gan: mp.gan, zhi: mp.zhi, wx: mp.wx },
+    { name: '日柱', gan: dp.gan, zhi: dp.zhi, wx: dp.wx },
+    { name: '时柱', gan: hp.gan, zhi: hp.zhi, wx: hp.wx }
+  ]
+  pillars.forEach(p => { p.tenGod = tenGod(dp.gan, p.gan); p.nayin = getNayin(p.gan, p.zhi) })
+  const wx = wuxingCount(pillars)
+  const strongest = Object.entries(wx).sort((a, b) => b[1] - a[1])[0][0]
+  const weakest = Object.entries(wx).sort((a, b) => a[1] - b[1])[0][0]
+  const dayMasterWx = GAN_WX[TIAN_GAN.indexOf(dp.gan)]
+  const fav = getFavorable(dayMasterWx, wx)
+  // 大运
+  const { dayuns, currentDayun, startAge } = computeDayuns(yp.gan, mp.gan, mp.zhi, dp.gan, gender, year)
+  // 流年（当年 + 未来5年）
+  const thisYear = new Date().getFullYear()
+  const liunians = []
+  for (let y = thisYear - 1; y <= thisYear + 5; y++) {
+    liunians.push(liunianOf(y, dp.gan))
+  }
+  const currentLiunian = liunians.find(l => l.year === thisYear) || liunians[0]
+  // 农历
+  const lunar = solarToLunar(year, month, day)
+  // 生肖
+  const zodiac = zodiacOf(year)
+  // 星座
+  const zodiacSign = zodiacSignOf(month, day)
+  // 纳音
+  const nayin = getNayin(dp.gan, dp.zhi)
+  return {
+    pillars,
+    dayMaster: dp.gan,
+    dayMasterWx,
+    dayMasterLabel: `${dp.gan}${dayMasterWx}`,
+    dayMasterStrength: fav.strong ? '强' : '弱',
+    wuxing: wx,
+    strongest,
+    weakest,
+    favorable: fav.favorable,
+    dayuns,
+    currentDayun,
+    startAge,
+    liunians,
+    currentLiunian,
+    lunar,
+    zodiac,
+    zodiacSign,
+    nayin,
+    solarDate: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+    summary: `${dp.gan}${dayMasterWx}日主，五行${strongest}最旺，喜用${fav.favorable.join('')}，当前${currentDayun.name}大运`
+  }
+}
+
+/**
+ * 合婚/合盘匹配计算
+ * @param {Object} bazi1 - computeProfileBazi 返回对象
+ * @param {Object} bazi2 - computeProfileBazi 返回对象
+ * @returns {Object} 匹配结果
+ */
+export function compatibilityCalc(bazi1, bazi2) {
+  if (!bazi1 || !bazi2) return null
+  const dimensions = []
+  let totalScore = 0
+  let maxScore = 0
+
+  // 1. 日主五行生克（25分）
+  const gen = ['木', '火', '土', '金', '水']
+  const wx1 = bazi1.dayMasterWx, wx2 = bazi2.dayMasterWx
+  const idx1 = gen.indexOf(wx1), idx2 = gen.indexOf(wx2)
+  let wxScore = 0, wxDesc = ''
+  if (idx1 === idx2) { wxScore = 20; wxDesc = '比和，性格相似' }
+  else if ((idx1 + 1) % 5 === idx2) { wxScore = 25; wxDesc = `${wx1}生${wx2}，互相滋养` }
+  else if ((idx2 + 1) % 5 === idx1) { wxScore = 25; wxDesc = `${wx2}生${wx1}，互相滋养` }
+  else if ((idx1 + 2) % 5 === idx2) { wxScore = 10; wxDesc = `${wx1}克${wx2}，需磨合` }
+  else { wxScore = 10; wxDesc = `${wx2}克${wx1}，需磨合` }
+  totalScore += wxScore; maxScore += 25
+  dimensions.push({ name: '日主五行', score: wxScore, max: 25, desc: wxDesc })
+
+  // 2. 天干五合（15分）
+  const ganHe = ganHeOf(bazi1.dayMaster)
+  let ganHeScore = 0, ganHeDesc = '无天干合'
+  if (ganHe && ganHe.partner === bazi2.dayMaster) {
+    ganHeScore = 15; ganHeDesc = `${bazi1.dayMaster}${bazi2.dayMaster}合化${ganHe.wx}，天作之合`
+  } else {
+    ganHeScore = 5; ganHeDesc = '日干不合'
+  }
+  totalScore += ganHeScore; maxScore += 15
+  dimensions.push({ name: '天干合', score: ganHeScore, max: 15, desc: ganHeDesc })
+
+  // 3. 地支六合（15分）
+  const dayZhi1 = bazi1.pillars[2].zhi, dayZhi2 = bazi2.pillars[2].zhi
+  const liuHe = heOf(dayZhi1)
+  let zhiHeScore = 0, zhiHeDesc = '无地支合'
+  if (liuHe && liuHe.partner === dayZhi2) {
+    zhiHeScore = 15; zhiHeDesc = `日支${dayZhi1}${dayZhi2}六合${liuHe.wx}，感情深厚`
+  } else if (sanheOf(dayZhi1) && sanheOf(dayZhi2) && sanheOf(dayZhi1).name === sanheOf(dayZhi2).name) {
+    zhiHeScore = 12; zhiHeDesc = `日支同属${sanheOf(dayZhi1).name}，气场相合`
+  } else {
+    zhiHeScore = 5; zhiHeDesc = '日支无合'
+  }
+  totalScore += zhiHeScore; maxScore += 15
+  dimensions.push({ name: '地支合', score: zhiHeScore, max: 15, desc: zhiHeDesc })
+
+  // 4. 地支相冲（-10分，扣分项）
+  const chong = chongOf(dayZhi1) === dayZhi2
+  let chongScore = chong ? -5 : 5
+  let chongDesc = chong ? `日支${dayZhi1}${dayZhi2}相冲，易有摩擦` : '日支无冲'
+  totalScore += chongScore + 5; maxScore += 10
+  dimensions.push({ name: '地支冲', score: chongScore + 5, max: 10, desc: chongDesc })
+
+  // 5. 喜用神互补（20分）
+  const fav1 = bazi1.favorable || [], fav2 = bazi2.favorable || []
+  const complementary = fav1.some(f => fav2.includes(f))
+  let favScore = complementary ? 20 : 8
+  let favDesc = complementary ? `喜用神互补（${fav1.join('')} ↔ ${fav2.join('')}）` : '喜用神无互补'
+  totalScore += favScore; maxScore += 20
+  dimensions.push({ name: '喜用互补', score: favScore, max: 20, desc: favDesc })
+
+  // 6. 五行平衡（15分）
+  const wx1Count = bazi1.wuxing || {}, wx2Count = bazi2.wuxing || {}
+  const merged = {}
+  Object.keys(wx1Count).forEach(k => { merged[k] = (wx1Count[k] || 0) + (wx2Count[k] || 0) })
+  const vals = Object.values(merged)
+  const avg = vals.reduce((a, b) => a + b, 0) / vals.length
+  const variance = vals.reduce((a, b) => a + (b - avg) ** 2, 0) / vals.length
+  const balanceScore = Math.max(5, Math.round(15 - variance * 2))
+  totalScore += balanceScore; maxScore += 15
+  dimensions.push({ name: '五行平衡', score: balanceScore, max: 15, desc: `合并后五行方差${variance.toFixed(1)}` })
+
+  const finalScore = Math.round((totalScore / maxScore) * 100)
+  let level = ''
+  if (finalScore >= 80) level = '天作之合'
+  else if (finalScore >= 65) level = '佳偶天成'
+  else if (finalScore >= 50) level = '良缘可期'
+  else if (finalScore >= 35) level = '需多磨合'
+  else level = '缘浅需努力'
+
+  return {
+    score: finalScore,
+    level,
+    dimensions,
+    summary: `${bazi1.dayMaster}${bazi1.dayMasterWx} × ${bazi2.dayMaster}${bazi2.dayMasterWx}，匹配度${finalScore}%，${level}`
+  }
+}
+
+/**
+ * 地支关系汇总（刑冲合害）
+ * @param {string} zhi1
+ * @param {string} zhi2
+ * @returns {Array} 关系列表
+ */
+export function zhiRelationOf(zhi1, zhi2) {
+  const relations = []
+  if (chongOf(zhi1) === zhi2) relations.push({ type: '冲', name: `${zhi1}${zhi2}相冲`, tone: 'neg' })
+  const he = heOf(zhi1)
+  if (he && he.partner === zhi2) relations.push({ type: '合', name: `${zhi1}${zhi2}六合${he.wx}`, tone: 'pos' })
+  const s1 = sanheOf(zhi1), s2 = sanheOf(zhi2)
+  if (s1 && s2 && s1.name === s2.name) relations.push({ type: '合', name: `${zhi1}${zhi2}同属${s1.name}`, tone: 'pos' })
+  const xing = xingOf(zhi1, zhi2)
+  if (xing) relations.push({ type: '刑', name: `${zhi1}${zhi2}${xing}`, tone: 'neg' })
+  const hai = haiOf(zhi1, zhi2)
+  if (hai) relations.push({ type: '害', name: `${zhi1}${zhi2}相害`, tone: 'neg' })
+  return relations
+}

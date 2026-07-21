@@ -1,0 +1,464 @@
+/**
+ * Echo 扩展页面与组件样式
+ * Profile / Compatibility / Learn / Timeline / BaziChart / Fortune
+ */
+
+/* ============================================================
+ * BaziChart 八字图表
+ * ============================================================ */
+.bazi-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.bazi-chart__pillars {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+.bazi-chart__pillar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  min-width: 60px;
+  position: relative;
+}
+.bazi-chart__pillar--day {
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+.bazi-chart__pillar-label {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-weight: var(--fw-medium);
+}
+.bazi-chart__pillar-god {
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.8;
+}
+.bazi-chart__pillar-gan,
+.bazi-chart__pillar-zhi {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  font-family: 'Lora', serif;
+  line-height: 1.3;
+}
+.bazi-chart__pillar-gan-wx,
+.bazi-chart__pillar-zhi-wx {
+  font-size: 10px;
+  color: var(--muted);
+}
+.bazi-chart__pillar-nayin {
+  font-size: 9px;
+  color: var(--muted);
+  opacity: 0.7;
+  margin-top: 2px;
+}
+.bazi-chart__daymaster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  font-size: var(--fs-sm);
+}
+.bazi-chart__dm-label { color: var(--muted); }
+.bazi-chart__dm-val { font-weight: var(--fw-bold); font-size: var(--fs-md); }
+.bazi-chart__dm-str {
+  padding: 2px 8px;
+  border-radius: var(--r-xs);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+}
+.bazi-chart__dm-str--strong { background: rgba(212, 90, 90, 0.15); color: #d45a5a; }
+.bazi-chart__dm-str--weak { background: rgba(90, 141, 181, 0.15); color: #5a8db5; }
+.bazi-chart__dm-fav { color: var(--accent); font-weight: var(--fw-medium); }
+.bazi-chart__dm-nayin { color: var(--muted); margin-left: auto; }
+.bazi-chart__wuxing { display: flex; flex-direction: column; gap: var(--sp-1); }
+.bazi-chart__wx-title { font-size: var(--fs-xs); color: var(--muted); margin-bottom: var(--sp-1); }
+.bazi-chart__wx-bars { display: flex; flex-direction: column; gap: 4px; }
+.bazi-chart__wx-bar { display: flex; align-items: center; gap: var(--sp-2); }
+.bazi-chart__wx-label { width: 16px; font-weight: var(--fw-bold); text-align: center; }
+.bazi-chart__wx-track { flex: 1; height: 8px; background: var(--bg-1); border-radius: 4px; overflow: hidden; }
+.bazi-chart__wx-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+.bazi-chart__wx-count { width: 16px; text-align: right; font-size: var(--fs-xs); color: var(--muted); font-family: 'GeistMono', monospace; }
+.bazi-chart__current {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+}
+.bazi-chart__current-row { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); }
+.bazi-chart__current-label { color: var(--muted); font-size: var(--fs-xs); }
+.bazi-chart__current-val { font-weight: var(--fw-bold); color: var(--accent); }
+.bazi-chart__current-age { font-size: var(--fs-xs); color: var(--muted); }
+.bazi-chart__current-god { font-size: var(--fs-xs); padding: 1px 6px; border-radius: var(--r-xs); background: var(--accent-soft); color: var(--accent); }
+
+/* ============================================================
+ * Timeline 大运流年
+ * ============================================================ */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.timeline__item {
+  display: flex;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-3);
+  position: relative;
+}
+.timeline__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 28px;
+}
+.timeline__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-2);
+  z-index: 1;
+}
+.timeline__item--current .timeline__dot {
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(212, 168, 67, 0.2);
+}
+.timeline__line {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+  margin-top: 2px;
+}
+.timeline__item:last-child .timeline__line { display: none; }
+.timeline__content {
+  flex: 1;
+  padding-bottom: var(--sp-2);
+}
+.timeline__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: 4px;
+}
+.timeline__age {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-family: 'GeistMono', monospace;
+}
+.timeline__name {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+}
+.timeline__item--current .timeline__name { color: var(--gold); }
+.timeline__god {
+  font-size: var(--fs-xs);
+  padding: 1px 6px;
+  border-radius: var(--r-xs);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.timeline__wx { font-size: var(--fs-xs); color: var(--muted); }
+.timeline__desc { font-size: var(--fs-sm); color: var(--muted); line-height: 1.5; }
+
+/* ============================================================
+ * Profile 个人档案页
+ * ============================================================ */
+.profile-page__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.profile-page__name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.profile-page__name {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+}
+.profile-page__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+.profile-page__info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-2);
+}
+.profile-page__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-2);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+}
+.profile-page__info-label { font-size: var(--fs-xs); color: var(--muted); }
+.profile-page__info-val { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--ink); }
+.profile-page__form { display: flex; flex-direction: column; gap: var(--sp-3); }
+.profile-page__field { display: flex; flex-direction: column; gap: var(--sp-1); }
+.profile-page__label { font-size: var(--fs-xs); color: var(--muted); font-weight: var(--fw-medium); }
+.profile-page__input {
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+}
+.profile-page__input:focus { outline: none; border-color: var(--accent); }
+.profile-page__select {
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}
+.profile-page__gender-btns { display: flex; gap: var(--sp-2); }
+.profile-page__gender-btn {
+  flex: 1;
+  padding: var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.profile-page__gender-btn--active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: var(--fw-medium);
+}
+.profile-page__hint { font-size: var(--fs-xs); color: var(--muted); }
+.profile-page__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-5) var(--sp-3);
+  text-align: center;
+}
+.profile-page__empty-icon { font-size: 48px; opacity: 0.3; }
+.profile-page__empty-text { color: var(--muted); font-size: var(--fs-sm); }
+
+/* ============================================================
+ * Compatibility 合婚页
+ * ============================================================ */
+.compat-page__input {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+.compat-page__person {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+}
+.compat-page__person-title { font-size: var(--fs-sm); font-weight: var(--fw-bold); color: var(--accent); }
+.compat-page__score-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+}
+.compat-page__score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: var(--fw-bold);
+  font-family: 'GeistMono', monospace;
+  position: relative;
+}
+.compat-page__score-circle--high { background: rgba(90, 158, 90, 0.15); color: #5a9e5a; }
+.compat-page__score-circle--mid { background: rgba(212, 168, 67, 0.15); color: #d4a843; }
+.compat-page__score-circle--low { background: rgba(212, 90, 90, 0.15); color: #d45a5a; }
+.compat-page__level { font-size: var(--fs-md); font-weight: var(--fw-bold); }
+.compat-page__dims { display: flex; flex-direction: column; gap: var(--sp-2); }
+.compat-page__dim {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--sp-2);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+}
+.compat-page__dim-head { display: flex; justify-content: space-between; align-items: center; }
+.compat-page__dim-name { font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+.compat-page__dim-score { font-size: var(--fs-sm); font-family: 'GeistMono', monospace; color: var(--accent); }
+.compat-page__dim-desc { font-size: var(--fs-xs); color: var(--muted); }
+.compat-page__dim-bar { height: 4px; background: var(--bg-2); border-radius: 2px; overflow: hidden; }
+.compat-page__dim-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+
+/* ============================================================
+ * Learn 学习页
+ * ============================================================ */
+.learn-page__cats { display: flex; gap: var(--sp-1); overflow-x: auto; padding-bottom: var(--sp-1); }
+.learn-page__cat {
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.learn-page__cat--active { background: var(--accent-soft); color: var(--accent); font-weight: var(--fw-medium); }
+.learn-page__lessons { display: flex; flex-direction: column; gap: var(--sp-2); }
+.learn-page__lesson {
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.learn-page__lesson:active { transform: scale(0.98); }
+.learn-page__lesson-glyph {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+.learn-page__lesson-info { flex: 1; }
+.learn-page__lesson-title { font-size: var(--fs-sm); font-weight: var(--fw-bold); color: var(--ink); }
+.learn-page__lesson-desc { font-size: var(--fs-xs); color: var(--muted); margin-top: 2px; }
+.learn-page__lesson-meta { display: flex; gap: var(--sp-2); margin-top: 4px; }
+.learn-page__lesson-done { color: var(--ok); font-size: var(--fs-xs); }
+.learn-page__detail { display: flex; flex-direction: column; gap: var(--sp-3); }
+.learn-page__detail-title { font-size: var(--fs-lg); font-weight: var(--fw-bold); }
+.learn-page__detail-content { font-size: var(--fs-sm); line-height: 1.7; color: var(--ink); }
+.learn-page__detail-content p { margin-bottom: var(--sp-2); }
+.learn-page__detail-content strong { color: var(--accent); }
+.learn-page__quiz { display: flex; flex-direction: column; gap: var(--sp-3); }
+.learn-page__quiz-q { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--ink); }
+.learn-page__quiz-options { display: flex; flex-direction: column; gap: var(--sp-2); }
+.learn-page__quiz-opt {
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.learn-page__quiz-opt--correct { border-color: var(--ok); background: rgba(90, 158, 90, 0.1); color: var(--ok); }
+.learn-page__quiz-opt--wrong { border-color: var(--danger); background: rgba(212, 90, 90, 0.1); color: var(--danger); }
+.learn-page__progress { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-xs); color: var(--muted); }
+
+/* ============================================================
+ * Daily 每日运势改造
+ * ============================================================ */
+.daily-page__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--accent-soft), var(--bg-1));
+}
+.daily-page__hero-date { font-size: var(--fs-lg); font-weight: var(--fw-bold); }
+.daily-page__hero-lunar { font-size: var(--fs-sm); color: var(--muted); }
+.daily-page__overall {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+}
+.daily-page__overall-score {
+  font-size: 36px;
+  font-weight: var(--fw-bold);
+  font-family: 'GeistMono', monospace;
+  color: var(--accent);
+}
+.daily-page__overall-label { font-size: var(--fs-sm); color: var(--muted); }
+.daily-page__ai-reading {
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+.daily-page__ai-reading-title { font-size: var(--fs-xs); color: var(--accent); font-weight: var(--fw-medium); margin-bottom: var(--sp-1); }
+.daily-page__lucky { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-2); }
+.daily-page__lucky-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+}
+.daily-page__lucky-icon { font-size: var(--fs-lg); }
+.daily-page__lucky-label { font-size: var(--fs-xs); color: var(--muted); }
+.daily-page__lucky-val { font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+
+/* ============================================================
+ * Home 个人档案快捷卡
+ * ============================================================ */
+.home__profile-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.home__profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+.home__profile-info { flex: 1; min-width: 0; }
+.home__profile-name { font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--ink); }
+.home__profile-meta { font-size: var(--fs-xs); color: var(--muted); margin-top: 2px; }
+.home__profile-arrow { color: var(--muted); font-size: var(--fs-md); flex-shrink: 0; }

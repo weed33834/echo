@@ -1,7 +1,15 @@
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEchoStore, TOOLS, CATEGORIES } from '@/stores/echo.js'
+import { zodiacOf } from '@/utils/engines.js'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, MingeGauge, EchoProgress, showToast } from '@/components/EchoUI.jsx'
+
+const zodiacOfYear = (birthday) => {
+  if (!birthday) return '?'
+  const y = Number(birthday.split('-')[0])
+  if (!y) return '?'
+  return zodiacOf(y)
+}
 
 // 时辰宜忌计算（简化版，基于当下时辰）
 const SHICHEN = [
@@ -69,7 +77,7 @@ export default defineComponent({
             <span class="home__brand-dot">·</span>
             <span class="home__brand-sub">回响</span>
           </div>
-          <p class="home__slogan">{greeting.value}，发起预测，等待回响。</p>
+          <p class="home__slogan">{greeting.value}，{store.profile?.name || '探索者'}，发起预测，等待回响。</p>
         </section>
 
         {/* 时辰宜忌条 */}
@@ -81,6 +89,25 @@ export default defineComponent({
         </div>
 
         <div class="container">
+          {/* 个人档案快捷卡 */}
+          <section class="home__section">
+            <EchoCard level="secondary" interactive onClick={() => router.push('/profile')}>
+              <div class="home__profile-card">
+                <div class="home__profile-avatar">
+                  {store.profile?.name?.charAt(0) || '回'}
+                </div>
+                <div class="home__profile-info">
+                  <div class="home__profile-name">{store.profile?.name || '未设置档案'}</div>
+                  <div class="home__profile-meta">
+                    {store.profile?.dayMaster
+                      ? `${store.profile.dayMaster.label} · 属${store.profile?.birthday ? zodiacOfYear(store.profile.birthday) : '?'}`
+                      : '点击设置你的出生信息，获取个性化推演'}
+                  </div>
+                </div>
+                <span class="home__profile-arrow">→</span>
+              </div>
+            </EchoCard>
+          </section>
           {/* EchoCard 队列 - 首屏第一卡 */}
           <section class="home__section">
             <div class="home__section-head">
@@ -173,6 +200,20 @@ export default defineComponent({
                   <div class="home__quick-icon">图</div>
                   <div class="home__quick-label">命运图谱</div>
                   <div class="home__quick-sub">关系网络</div>
+                </div>
+              </EchoCard>
+              <EchoCard level="tertiary" interactive onClick={() => router.push('/compatibility')}>
+                <div class="home__quick-item">
+                  <div class="home__quick-icon home__quick-icon--gold">合</div>
+                  <div class="home__quick-label">合婚匹配</div>
+                  <div class="home__quick-sub">六维分析</div>
+                </div>
+              </EchoCard>
+              <EchoCard level="tertiary" interactive onClick={() => router.push('/learn')}>
+                <div class="home__quick-item">
+                  <div class="home__quick-icon">学</div>
+                  <div class="home__quick-label">命理学堂</div>
+                  <div class="home__quick-sub">入门课程</div>
                 </div>
               </EchoCard>
             </div>

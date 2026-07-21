@@ -4,6 +4,7 @@ import { useEchoStore, TOOLS } from '@/stores/echo.js'
 import { getDayMaster, getCurrentJieqi } from '@/utils/engines.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, MingeGauge, showToast } from '@/components/EchoUI.jsx'
+import { Timeline } from '@/components/Timeline.jsx'
 
 /* === 五行建议数据（日主五行 → 四维建议） === */
 const WUXING_ADVICE = {
@@ -523,7 +524,17 @@ export default defineComponent({
             )}
           </EchoCard>
 
-          {/* === 6. 工具使用统计 === */}
+          {/* === 6. 大运流年时间轴 === */}
+          {store.profileBazi && (
+            <EchoCard level="secondary" title="大运流年">
+              <Timeline bazi={store.profileBazi} type="dayun" />
+              <div style={{ marginTop: 'var(--sp-3)' }}>
+                <Timeline bazi={store.profileBazi} type="liunian" />
+              </div>
+            </EchoCard>
+          )}
+
+          {/* === 7. 工具使用统计 === */}
           <EchoCard level="secondary" title="工具使用">
             {toolStats.value.length > 0 ? (
               <div class="dashboard__toolstats">

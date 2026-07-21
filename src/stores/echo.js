@@ -4,8 +4,9 @@
  * 数据持久化到 localStorage，模拟后端
  */
 import { defineStore } from 'pinia'
+import { computeProfileBazi } from '@/utils/engines.js'
 
-const LS_KEY = 'echo_store_v1'
+const LS_KEY = 'echo_store_v2'
 
 // 命格等级阈值（经验值）
 const LEVEL_THRESHOLDS = [0, 100, 300, 600, 1000, 1500, 2200, 3000, 4000, 5500, 7500]
@@ -41,6 +42,10 @@ export const useEchoStore = defineStore('echo', {
       settings: saved?.settings || { theme: 'light', fontScale: 'md' },
       // 推演档案（功能B：个人档案与轨迹）
       history: saved?.history || [],
+      // 每日运势缓存 { date: 'YYYY-MM-DD', data: {...} }
+      fortuneCache: saved?.fortuneCache || null,
+      // 学习进度 { completedLessons: [], quizScores: {} }
+      learnProgress: saved?.learnProgress || { completedLessons: [], quizScores: {} },
       ...({ __saved: saved ? true : false })
     }
   },
@@ -80,7 +85,16 @@ export const useEchoStore = defineStore('echo', {
       })
       return stats
     },
-    recentHistory: (state) => state.history.slice(0, 20)
+    recentHistory: (state) => state.history.slice(0, 20),
+    // 档案八字信息（自动计算）
+    profileBazi: (state) => {
+      if (!state.profile || !state.profile.birthday) return null
+      return computeProfileBazi(state.profile)
+    },
+    // 档案是否完整（含出生时辰）
+    isProfileComplete: (state) => {
+      return !!(state.profile && state.profile.name && state.profile.birthday && state.profile.birthTime)
+    }
   },
   actions: {
     persist() {
@@ -155,6 +169,8 @@ export const useEchoStore = defineStore('echo', {
       this.reviews = []
       this.minge = { level: 1, exp: 0, totalReviews: 0, accurateCount: 0 }
       this.checkin = { streak: 0, lastDate: null, dates: [] }
+      this.fortuneCache = null
+      this.learnProgress = { completedLessons: [], quizScores: {} }
       this.persist()
     },
     // 推演档案：记录每次推演结果（功能B）
@@ -182,6 +198,32 @@ export const useEchoStore = defineStore('echo', {
     removeHistory(id) {
       this.history = this.history.filter(h => h.id !== id)
       this.persist()
+    },
+    // 每日运势缓存
+    setFortuneCache(data) {
+      this.fortuneCache = { date: new Date().toISOString().slice(0, 10), data }
+      this.persist()
+    },
+    getFortuneCache() {
+      const today = new Date().toISOString().slice(0, 10)
+      if (this.fortuneCache && this.fortuneCache.date === today) {
+        return this.fortuneCache.data
+      }
+      return null
+    },
+    // 学习进度
+    markLessonComplete(lessonId) {
+      if (!this.learnProgress.completedLessons.includes(lessonId)) {
+        this.learnProgress.completedLessons.push(lessonId)
+        this.persist()
+      }
+    },
+    setQuizScore(lessonId, score) {
+      this.learnProgress.quizScores[lessonId] = score
+      this.persist()
+    },
+    isLessonCompleted(lessonId) {
+      return this.learnProgress.completedLessons.includes(lessonId)
     }
   }
 })

@@ -231,10 +231,30 @@ export function buildSystemPrompt(context = {}) {
     const lines = []
     if (p.name) lines.push(`姓名：${p.name}`)
     if (p.birthday) lines.push(`出生：${p.birthday}`)
+    if (p.birthTime) lines.push(`时辰：${p.birthTime}时`)
     if (p.gender) lines.push(`性别：${p.gender === 'male' ? '男' : p.gender === 'female' ? '女' : p.gender}`)
     if (p.dayMaster) lines.push(`日主：${p.dayMaster}`)
+    // 增强档案：注入完整八字信息
+    if (context.profileBazi) {
+      const bazi = context.profileBazi
+      if (bazi.pillars) {
+        const pillarStr = bazi.pillars.map(p => `${p.gan}${p.zhi}`).join(' ')
+        lines.push(`四柱：${pillarStr}`)
+      }
+      if (bazi.dayMasterStrength) lines.push(`日主强弱：${bazi.dayMasterStrength}`)
+      if (bazi.favorable) lines.push(`喜用神：${bazi.favorable.join('、')}`)
+      if (bazi.wuxing) {
+        const wxStr = Object.entries(bazi.wuxing).map(([k, v]) => `${k}${v}`).join(' ')
+        lines.push(`五行分布：${wxStr}`)
+      }
+      if (bazi.currentDayun) lines.push(`当前大运：${bazi.currentDayun.name}（${bazi.currentDayun.startAge}-${bazi.currentDayun.endAge}岁，${bazi.currentDayun.tenGod}）`)
+      if (bazi.currentLiunian) lines.push(`今年流年：${bazi.currentLiunian.ganzhi}（${bazi.currentLiunian.tenGod}）`)
+      if (bazi.zodiac) lines.push(`生肖：属${bazi.zodiac}`)
+      if (bazi.zodiacSign) lines.push(`星座：${bazi.zodiacSign}`)
+      if (bazi.nayin) lines.push(`纳音：${bazi.nayin}`)
+    }
     if (lines.length) {
-      parts.push(`\n【用户档案】\n${lines.join('，')}。\n以上为用户已登记的档案信息，回答时可结合参考。`)
+      parts.push(`\n【用户档案】\n${lines.join('，')}。\n以上为用户已登记的档案信息与自动推演的八字数据，回答时可结合参考，给出个性化建议。`)
     }
   }
 

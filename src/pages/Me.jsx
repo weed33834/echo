@@ -133,12 +133,24 @@ export default defineComponent({
           {/* 菜单 */}
           <EchoCard level="secondary">
             <div class="me-page__menu">
+              <button class="me-page__menu-item" onClick={() => router.push('/profile')}>
+                <span class="me-page__menu-label">个人档案</span>
+                <span class="me-page__menu-arrow">→</span>
+              </button>
               <button class="me-page__menu-item" onClick={() => router.push('/graph')}>
                 <span class="me-page__menu-label">命运图谱</span>
                 <span class="me-page__menu-arrow">→</span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/dashboard')}>
                 <span class="me-page__menu-label">命格面板</span>
+                <span class="me-page__menu-arrow">→</span>
+              </button>
+              <button class="me-page__menu-item" onClick={() => router.push('/compatibility')}>
+                <span class="me-page__menu-label">合婚匹配</span>
+                <span class="me-page__menu-arrow">→</span>
+              </button>
+              <button class="me-page__menu-item" onClick={() => router.push('/learn')}>
+                <span class="me-page__menu-label">命理学堂</span>
                 <span class="me-page__menu-arrow">→</span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/echo')}>

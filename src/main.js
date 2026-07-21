@@ -17,6 +17,7 @@ import './designs/tool-results.css'
 import './designs/dashboard.css'
 import './designs/chat.css'
 import './designs/admin.css'
+import './designs/extended.css'
 
 // 主题/字号应用器
 function applySettings(settings) {
