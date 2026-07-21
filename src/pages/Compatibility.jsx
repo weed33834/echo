@@ -137,7 +137,7 @@ export default defineComponent({
           {opts.self && <EchoBadge variant="gold">自己</EchoBadge>}
         </div>
         <div class="profile-form__field">
-          <label class="profile-form__label">出生日期</label>
+          <label class="profile-form__label">出生日期 <span style="font-size: var(--fs-xs); color: var(--muted); font-weight: normal;">(年-月-日)</span></label>
           <input
             class="profile-form__input"
             type="date"
