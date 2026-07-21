@@ -46,6 +46,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 - 多语言 README 支持（中文默认 / English / 日本語）
 - 开源仓库标准文件（ISSUE 模板、PR 模板、CODE_OF_CONDUCT、CI 工作流）
 - 为全部组件和页面的列表渲染补充 key prop（ToolDetail 38 处、BaziChart 2 处、Timeline 2 处等）
+- 添加 SECURITY.md 安全策略文档
+- 添加 .env.example 环境变量模板
+- 添加 .nvmrc Node 版本声明
+- 添加 .prettierrc 代码格式化配置
+- CI 工作流新增 Node 22.x 矩阵和构建产物上传
+
+### Changed
+- 升级 pinia 2.2→2.3.1、vue-router 4.4→4.6.4、vite 5.4.0→5.4.20
+- SPEC.md 从内部 AI agent 规范重写为开源项目技术文档
+- CONTRIBUTING.md 补充项目结构说明、环境变量配置、代码风格规范
+- package.json 新增 lint 脚本
 
 ## [0.2.0] - 2026-07-20
 

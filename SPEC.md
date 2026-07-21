@@ -1,116 +1,224 @@
-# Echo 重构执行规范（强约束）
+# Echo 技术规范
 
-> 本文档是所有参与 Echo 重构的 AI agent 必须遵守的"宪法"。任何偏离需先修订本文档。
-> 制定依据：2025-2026 年 AI 前端编码常见错误调研 + Web 设计最佳实践调研 + 代码级审查结论。
+> 本文档描述 Echo 项目的架构设计、代码规范和技术约束。
 
-## 一、角色定义
+## 一、项目定位
 
-| 角色 | 职责 | 边界 |
-|---|---|---|
-| 架构师（主控） | 拆解任务、分派、验收、不改代码 | 只读代码、写规范、跑测试 |
-| UI 工程师 agent | 实现设计系统、组件、页面 | 只动 `src/designs/`、`src/components/`、`src/pages/`、`src/styles/` |
-| 交互工程师 agent | 实现点击/弹窗/状态机/路由 | 只动 `src/composables/`、`src/stores/`、路由配置 |
-| QA agent | 浏览器截图、点击、溢出检测 | 只读，只产出测试报告 |
+Echo 是一个**命运印证引擎**——不是算命软件，而是假设验证工具。
 
-**铁律**：一个 agent 一次只做一个模块，完成后必须自检（见 §5），再交下一个。
+核心循环：**设节点 → 等回响 → 复盘**
 
-## 二、AI 前端编码常见错误（红线清单）
+用户用命理工具排盘得到预测结果 → 设定印证时间节点 → 到期后回来复盘应验情况 → 命格可信度随时间积累。
 
-以下错误在调研中高频出现，**每条都是红线**，违反即视为任务失败：
+## 二、技术栈
 
-### R1 布局溢出与重叠
-- **禁止**滥用 `flex: 1` 不设 `min-width: 0` —— 小屏文本会撑爆容器
-- **禁止**用绝对定位 `position: absolute` 做常规布局，仅用于浮层/Tooltip
-- **禁止**固定 `width` + `padding` 不用 `box-sizing: border-box`
-- **必须**对每个容器显式声明 `overflow`（hidden/auto/visible 三选一，不许默认）
-- **必须**卡片/按钮设 `min-width` 而非 `width`，文字用 `overflow-wrap: break-word`
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| Vue 3 | ≥3.5 | 框架（JSX + Composition API） |
+| Pinia | ≥2.3 | 状态管理 |
+| Vue Router | ≥4.6 | 路由（Hash 模式） |
+| Vite | ≥5.4 | 构建工具 |
 
-### R2 视觉层级混乱
-- **禁止**所有卡片视觉权重相同 —— 必须有主卡/次卡/辅助条三级
-- **禁止**字号小于 13px（原项目 14rpx≈7px 是硬伤）
-- **禁止**全站文字 `text-shadow` 发光 —— 仅 CTA 按钮可保留单层
-- **必须**类型尺度：H1 28-32px / H2 20-24px / H3 16-18px / body 15-16px / caption 13-14px
-- **必须**间距用 8pt 节奏（4/8/12/16/24/32/48/64），不许出现 7px、11px 这类非节奏值
+**零运行时依赖**：除上述三个核心库外，所有功能自实现（Markdown 渲染、SVG 图表、UI 组件等）。
 
-### R3 CSS 冗余与硬编码
-- **禁止**硬编码色值（`color: #c9a961`）—— 必须用 `var(--token)`
-- **禁止**硬编码字号（`font-size: 14rpx`）—— 必须用 `var(--fs-*)`
-- **禁止**重复造组件 —— 结构相同的卡片必须合并为参数化组件
-- **必须**单源真理：颜色只在 `tokens.css` 的 `:root` 定义一次
-
-### R4 动画与性能
-- **禁止**`filter: blur(>20rpx)` 的多层 orb —— 移动端掉帧
-- **禁止**入场动画总时长 >1s —— 用户等待感差
-- **禁止**滚动监听不清理（`onUnmounted` 必须移除）
-- **必须**动画尊重 `prefers-reduced-motion`
-- **必须**keyframes 总数 ≤15 个
-
-### R5 可访问性与对比度
-- **必须**文字对比度 ≥4.5:1（WCAG AA），暗背景上禁止 0.6 透明度小字
-- **必须**可点击区域 ≥44×44px（iOS HIG）
-- **必须**焦点可见（`:focus-visible` 有 outline）
-
-### R6 响应式
-- **禁止**只调 `max-width` —— 大屏必须用栅格双栏
-- **必须**定义断点：mobile <768 / tablet 768-1024 / desktop ≥1024
-- **必须**移动端优先（base 样式是手机，`@media (min-width)` 向上增强）
-
-## 三、Web 前端设计最佳实践（必须遵循）
-
-1. **8pt 间距节奏**：所有 padding/margin/gap 取值来自 {4,8,12,16,24,32,48,64}
-2. **类型尺度比例**：1.25 模数（body 16 → 20 → 25 → 31 → 39）
-3. **眯眼测试**：眯眼看页面，主元素必须最先突出，否则层级失败
-4. **留白优先**：宁可多留白，不要多装饰。东方韵味靠材质感（衬线字体、克制金色）传递
-5. **单一视觉焦点**：每个屏幕只有一个主行动点（首屏 = EchoCard 队列）
-6. **渐进披露**：长内容用折叠，不要一屏堆 10 张卡
-7. **反馈即时**：点击 200ms 内必须有视觉反馈
-8. **减法美学**：删除所有非功能性装饰（CSS 插画、霓虹发光、过度动画）
-
-## 四、Echo 设计系统硬性指标
-
-| 指标 | 上限/下限 | 验收方式 |
-|---|---|---|
-| CSS keyframes | ≤15 个 | grep 计数 |
-| 硬编码色值 | 0 处 | grep `#[0-9a-f]{3,6}` 在组件内 |
-| 硬编码字号 | 0 处 | grep `font-size:\s*\d` 在组件内 |
-| 最小字号 | ≥13px | tokens 定义 |
-| 文字对比度 | ≥4.5:1 | 浏览器 DevTools |
-| 首屏渲染 FCP | ≤1.2s | Lighthouse |
-| 动画帧率 | 60fps | Performance 面板 |
-| 卡片视觉层级 | 3 级 | 眯眼测试 |
-| TabBar 可点击区 | ≥44px | 尺寸测量 |
-
-## 五、自检流程（每个 agent 完成任务前必须执行）
+## 三、架构概览
 
 ```
-1. grep 硬编码色值 → 必须为 0
-2. grep 硬编码字号 → 必须为 0
-3. 检查每个容器 overflow 是否显式声明
-4. 检查 flex:1 是否配 min-width:0
-5. 检查 position:absolute 是否仅用于浮层
-6. 检查间距是否在 8pt 节奏内
-7. 检查字号是否 ≥13px
-8. 检查对比度是否 ≥4.5:1
-9. 检查动画是否尊重 prefers-reduced-motion
-10. 构建通过（pnpm build / vite build 无 error）
+src/
+├── main.js                    # 应用入口
+├── router/index.js            # 15 条路由（Hash 模式）
+├── stores/                    # Pinia 状态管理
+│   ├── echo.js                # 命格/历史/档案/工具注册
+│   └── chat.js                # AI 对话/模型配置
+├── services/                  # 业务服务层
+│   ├── ai.js                  # 多模型 AI 对话（SSE 流式）
+│   ├── tools.js               # 工具调度与执行
+│   ├── sandbox.js             # 安全沙箱（校验/超时/注入检测）
+│   └── webSearch.js           # Tavily 联网搜索
+├── prompts/
+│   └── system.js              # 系统提示词/Few-shot/知识库
+├── utils/
+│   └── engines.js             # 18 个命理引擎（纯函数）
+├── components/                # 基础组件库
+│   ├── EchoUI.jsx             # Card/Button/Badge/Modal/Toast/Progress/Gauge
+│   ├── TabBar.jsx             # 导航栏（响应式底部/侧边）
+│   ├── ChatFab.jsx            # 悬浮 AI 入口
+│   ├── BaziChart.jsx          # 八字排盘可视化
+│   └── Timeline.jsx           # 大运流年时间线
+├── pages/                     # 15 个页面
+│   ├── Home.jsx               # 首页（命格概览 + 快捷入口）
+│   ├── Tools.jsx              # 工具列表（4 类 18 种）
+│   ├── ToolDetail.jsx         # 工具推演（表单 + 结果渲染）
+│   ├── Profile.jsx            # 个人档案
+│   ├── Daily.jsx              # 今日运势
+│   ├── Dashboard.jsx          # 命格面板（五行雷达 + 建议）
+│   ├── Compatibility.jsx      # 合婚匹配
+│   ├── Learn.jsx              # 学习中心
+│   ├── EchoCenter.jsx         # 印证中心
+│   ├── Graph.jsx              # 命运图谱（SVG 关系网络）
+│   ├── Chat.jsx               # AI 对话
+│   ├── Me.jsx                 # 个人中心
+│   ├── Settings.jsx           # 设置（主题/字号/AI 配置）
+│   ├── Admin.jsx              # 管理后台
+│   └── Checkin.jsx            # 每日签到
+├── designs/                   # 设计系统
+│   ├── tokens.css             # 设计令牌（颜色/间距/字号/圆角/阴影）
+│   ├── base.css               # 全局重置
+│   ├── animations.css         # 动画关键帧
+│   └── *.css                  # 各页面样式
+└── data/
+    └── lessons.js             # 学习中心课程数据
 ```
 
-任一项不通过，**不许交付**，必须修复后重新自检。
+## 四、数据流
 
-## 六、技术栈选择
+```
+用户输入 → Profile.jsx → echoStore.setProfile()
+                                ↓
+                    computeProfileBazi() → profileBazi (getter)
+                                ↓
+                    Daily/Dashboard/Me 等页面读取
+```
 
-- **不使用 uni-app**（多端工具链在沙箱难以运行，无法浏览器测试）
-- **采用 Vite + Vue 3 SPA**（纯 Web，可直接 `vite dev` 启动浏览器测试）
-- **JavaScript (JSX) + Composition API**
-- **Pinia** 状态管理
-- **Vue Router** 路由
-- 算法层从原项目 `apps/web/src/utils/` 移植核心（bazi/yunshi/huangli 等纯 JS 函数）
+```
+工具推演 → ToolDetail.jsx → toolsService.execute()
+                                ↓
+                    engines[key].calc(args) → result
+                                ↓
+                    echoStore.pushHistory() → 持久化到 localStorage
+```
 
-## 七、交付标准
+```
+AI 对话 → Chat.jsx → chatStore.send()
+                         ↓
+              aiService.chatCompletion() → SSE 流式
+                         ↓
+              onToken → 更新消息 → 渲染
+              onToolCall → toolsService.execute() → 工具结果注入
+```
 
-1. `npm install && npm run dev` 可在沙箱启动
-2. 浏览器可访问所有核心页面（首页/印证/工具/我的）
-3. 所有点击按钮有响应、弹窗正常
-4. 多分辨率截图无溢出/重叠
-5. 设计系统指标全部达标（§4）
-6. 最终打包到 `/workspace/echo/` 上传
+## 五、命理引擎规范
+
+每个引擎导出 `{ calc, meta }` 结构：
+
+```javascript
+export const myEngine = {
+  meta: {
+    name: '工具名',
+    description: '工具描述',
+    inputConfig: [
+      { key: 'param1', label: '参数1', type: 'text', required: true },
+      { key: 'param2', label: '参数2', type: 'select', options: [...] }
+    ]
+  },
+  calc(args) {
+    // 纯函数，无副作用
+    // 返回结构化结果对象
+    return { summary: '...', /* ... */ }
+  }
+}
+```
+
+注册流程：
+1. 在 `engines.js` 实现引擎
+2. 在 `echo.js` 的 `TOOLS` 数组注册元信息
+3. 在 `tools.js` 的 `ENGINES` 映射关联引擎
+
+## 六、设计系统
+
+### 设计令牌
+
+所有视觉属性通过 CSS 自定义属性定义在 `tokens.css` 的 `:root`：
+
+```css
+:root {
+  /* 主题色 */
+  --accent: #5b3fd6;
+  --gold: #b8893a;
+  --ink: #15131f;
+  --bg: #f7f5f0;
+
+  /* 五行色 */
+  --wuxing-metal: #d4a843;
+  --wuxing-wood: #5a9e5a;
+  --wuxing-water: #5a8db5;
+  --wuxing-fire: #d45a5a;
+  --wuxing-earth: #a8825a;
+
+  /* 间距（8pt 节奏） */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-7: 28px; --sp-8: 32px;
+
+  /* 字号 */
+  --fs-xs: 12px; --fs-sm: 13px; --fs-base: 15px; --fs-lg: 17px;
+  --fs-xl: 20px; --fs-2xl: 24px; --fs-3xl: 30px;
+}
+```
+
+暗色模式通过 `[data-theme="dark"]` 覆盖令牌值。字号缩放通过 `[data-font-scale]` 控制。
+
+### 响应式断点
+
+| 断点 | 场景 | 策略 |
+|------|------|------|
+| ≤340px | 超窄屏 | 压缩间距、网格降列 |
+| 341-767px | 标准手机 | 底部 TabBar、单列 |
+| 768-1023px | 平板 | 双列网格 |
+| 1024-1439px | 桌面 | 侧边导航、双列面板 |
+| ≥1440px | 宽屏 | 五列工具网格 |
+
+### 代码规范
+
+- 2 空格缩进
+- 组件使用 `defineComponent` + `setup()` 模式
+- CSS 遵循 BEM 命名，使用设计令牌
+- 列表渲染必须设置 `key` prop
+- 不使用 TypeScript（纯 JavaScript + JSX）
+
+## 七、安全机制
+
+### 沙箱
+
+```
+用户输入 → sanitizeInput → detectInjection → AI
+                                    ↓
+工具调用 → validateArgs → executeWithTimeout → sanitizeToolResult → AI
+                                    ↓
+AI 输出 → validateOutput → 追加安全提示
+```
+
+### 安全护栏
+
+| 类型 | 触发条件 | 处理方式 |
+|------|----------|----------|
+| 医疗 | 涉及疾病、用药 | 仅五行养生角度，建议就医 |
+| 法律 | 涉及纠纷、官司 | 不预测输赢，建议咨询律师 |
+| 财务 | 涉及投资、理财 | 不做收益保证，强调风险 |
+| 危机 | 检测到自残倾向 | 优先安全，提供援助热线 |
+| 绝对化 | 要求确定预测 | 软性表述，说明局限 |
+
+详见 [SECURITY.md](./SECURITY.md)。
+
+## 八、命格等级系统
+
+| 等级 | 称号 | 经验阈值 |
+|------|------|----------|
+| 1 | 初悟 | 0 |
+| 2 | 渐明 | 100 |
+| 3 | 通玄 | 300 |
+| 4 | 識命 | 600 |
+| 5 | 知機 | 1000 |
+| 6 | 洞微 | 1500 |
+| 7 | 明心 | 2200 |
+| 8 | 見性 | 3000 |
+
+经验值 = 印证次数 × 10 + 应验次数 × 20
+
+## 九、交付标准
+
+1. `npm install && npm run dev` 可正常启动
+2. `npm run build` 构建无错误
+3. 所有页面可访问，所有按钮有响应
+4. 响应式布局在 320px-4K 范围内无溢出
+5. 设计令牌指标达标（无硬编码色值/字号）
+6. 安全沙箱和护栏正常工作
