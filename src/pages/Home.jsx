@@ -99,9 +99,11 @@ export default defineComponent({
                 <div class="home__profile-info">
                   <div class="home__profile-name">{store.profile?.name || '未设置档案'}</div>
                   <div class="home__profile-meta">
-                    {store.profile?.dayMaster
-                      ? `${store.profile.dayMaster.label} · 属${store.profile?.birthday ? zodiacOfYear(store.profile.birthday) : '?'}`
-                      : '点击设置你的出生信息，获取个性化推演'}
+                    {store.profileBazi
+                      ? `${store.profileBazi.dayMasterLabel} · 属${store.profileBazi.zodiac} · ${store.profileBazi.zodiacSign}`
+                      : store.profile?.name
+                        ? '档案信息不完整，请补充出生时辰'
+                        : '点击设置你的出生信息，获取个性化推演'}
                   </div>
                 </div>
                 <span class="home__profile-arrow">→</span>

@@ -340,9 +340,12 @@ export function tenGod(dayMaster, target) {
 // 当前节气
 export function getCurrentJieqi(date = new Date()) {
   const m = date.getMonth() + 1, d = date.getDate()
+  // JIEQI 从立春(2月)开始到大寒(1月)结束，1月节气需当作13月比较
+  const dateM = m === 1 ? 13 : m
   let current = JIEQI[JIEQI.length - 1]
   for (const jq of JIEQI) {
-    if (jq.month < m || (jq.month === m && jq.day <= d)) current = jq
+    const jqM = jq.month === 1 ? 13 : jq.month
+    if (jqM < dateM || (jqM === dateM && jq.day <= d)) current = jq
   }
   return current
 }
@@ -432,21 +435,21 @@ export function zodiacOf(year) {
 
 // 星座（公历）
 export function zodiacSignOf(month, day) {
-  const dates = [[3,21,'白羊'],[4,20,'金牛'],[5,21,'双子'],[6,22,'巨蟹'],[7,23,'狮子'],[8,23,'处女'],[9,23,'天秤'],[10,24,'天蝎'],[11,23,'射手'],[12,22,'摩羯'],[1,20,'水瓶'],[2,19,'双鱼']]
-  for (const [m, d, name] of dates) {
-    if (month === m && day < d) return name
-    if (month === m - 1 || (m === 1 && month === 12)) {
-      if (m === 1 && month === 12 && day >= 22) return '摩羯'
-    }
-  }
-  // 简化回退
-  const sign = [[1,20,'水瓶'],[2,19,'双鱼'],[3,21,'白羊'],[4,20,'金牛'],[5,21,'双子'],[6,22,'巨蟹'],[7,23,'狮子'],[8,23,'处女'],[9,23,'天秤'],[10,24,'天蝎'],[11,23,'射手'],[12,22,'摩羯']]
-  for (let i = 0; i < 12; i++) {
-    if (month === sign[i][0] && day >= sign[i][1]) {
-      return sign[i][2]
-    }
-    if (i < 11 && month === sign[i+1][0] && day < sign[i+1][1]) {
-      return sign[i][2]
+  // 西方星座：按起始日判断，[(月, 日, 星座名)]，已按时间顺序排列
+  const signs = [
+    [1, 20, '水瓶'], [2, 19, '双鱼'], [3, 21, '白羊'], [4, 20, '金牛'],
+    [5, 21, '双子'], [6, 22, '巨蟹'], [7, 23, '狮子'], [8, 23, '处女'],
+    [9, 23, '天秤'], [10, 24, '天蝎'], [11, 23, '射手'], [12, 22, '摩羯']
+  ]
+  // 摩羯座跨年：12/22 - 1/19
+  if (month === 12 && day >= 22) return '摩羯'
+  if (month === 1 && day < 20) return '摩羯'
+  // 其余星座：找到第一个 (month, day) >= 起始日的星座
+  for (let i = 0; i < signs.length; i++) {
+    const [m, d, name] = signs[i]
+    if (month < m || (month === m && day < d)) {
+      // 当前日期在 signs[i] 之前，属于前一个星座
+      return i === 0 ? '摩羯' : signs[i - 1][2]
     }
   }
   return '摩羯'
@@ -674,25 +677,8 @@ export const ENGINES = {
       const strongest = Object.entries(wx).sort((a, b) => b[1] - a[1])[0][0]
       const weakest = Object.entries(wx).sort((a, b) => a[1] - b[1])[0][0]
       const fav = getFavorable(GAN_WX[TIAN_GAN.indexOf(dp.gan)], wx)
-      // 大运：性别决定顺逆
-      const yearGanIdx = TIAN_GAN.indexOf(yp.gan)
-      const yearGanYang = yearGanIdx % 2 === 0
-      const forward = (yearGanYang && f.gender === 'male') || (!yearGanYang && f.gender === 'female')
-      const monthGanIdx = TIAN_GAN.indexOf(mp.gan), monthZhiIdx = DI_ZHI.indexOf(mp.zhi)
-      const dayuns = []
-      for (let i = 1; i <= 8; i++) {
-        const offset = forward ? i : -i
-        const gIdx = (monthGanIdx + offset + 100) % 10
-        const zIdx = (monthZhiIdx + offset + 100) % 12
-        dayuns.push({
-          name: TIAN_GAN[gIdx] + DI_ZHI[zIdx],
-          startAge: i * 10 - 9, endAge: i * 10,
-          wx: GAN_WX[gIdx] + ZHI_WX[zIdx],
-          tenGod: tenGod(dp.gan, TIAN_GAN[gIdx])
-        })
-      }
-      const age = new Date().getFullYear() - f.year
-      const currentDayun = dayuns.find(d => age >= d.startAge && age <= d.endAge) || dayuns[0]
+      // 大运：复用 computeDayuns 保持起运岁一致
+      const { dayuns, currentDayun } = computeDayuns(yp.gan, mp.gan, mp.zhi, dp.gan, f.gender, f.year)
       // 流年
       const thisYear = new Date().getFullYear()
       const lyP = yearPillar(thisYear)
@@ -1714,11 +1700,13 @@ export const ENGINES = {
       // 综合解读
       const synthesis = cards.map(c => `${c.position}：${c.card.name}${c.upright ? '正位' : '逆位'}（${c.meaning}）`).join('；')
       const advice = cards[cards.length - 1] ? `结局牌${cards[cards.length - 1].card.name}提示：${cards[cards.length - 1].meaning}` : '顺应牌意'
+      const spreadLabel = this.inputConfig[1].options.find(o => o.value === f.spread)?.label || f.spread
+      const focusLabel = this.inputConfig[2].options.find(o => o.value === f.focusArea)?.label || f.focusArea
       return {
         resultType: 'tarot',
-        question: f.question, spread: f.spread, focusArea: f.focusArea,
+        question: f.question, spread: spreadLabel, focusArea: focusLabel,
         cards, synthesis, advice,
-        summary: `${f.spread}牌阵 · ${cards.length}张 · ${cards.filter(c => c.isKeyCard).length}张关键牌`
+        summary: `${spreadLabel}牌阵 · ${cards.length}张 · ${cards.filter(c => c.isKeyCard).length}张关键牌`
       }
     }
   },
@@ -1818,7 +1806,9 @@ export const ENGINES = {
         }
       }
       // 房间方位建议
-      layoutSuggestions.push({ star: '房间吉位', dir: goodPalaces[0]?.dir || '中宫', action: `${f.roomType === 'bathroom' ? '卫生间宜置凶星位以凶制凶' : `${f.roomType}宜置吉星位`}，参考${goodPalaces[0]?.starName || '中宫'}方位`, priority: '中' })
+      const roomTypeLabels = { bedroom: '卧室', livingroom: '客厅', study: '书房', kitchen: '厨房', bathroom: '卫生间', office: '办公室' }
+      const roomTypeLabel = roomTypeLabels[f.roomType] || '房间'
+      layoutSuggestions.push({ star: '房间吉位', dir: goodPalaces[0]?.dir || '中宫', action: `${f.roomType === 'bathroom' ? '卫生间宜置凶星位以凶制凶' : `${roomTypeLabel}宜置吉星位`}，参考${goodPalaces[0]?.starName || '中宫'}方位`, priority: '中' })
 
       // === 与居住者生肖冲合 ===
       const occupantZhi = f.occupantGanZhi

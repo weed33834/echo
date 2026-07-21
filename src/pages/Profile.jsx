@@ -71,7 +71,9 @@ export default defineComponent({
     const zodiac = computed(() => {
       if (!profile.value?.birthday) return ''
       try {
-        return zodiacOf(profile.value.birthday)
+        const year = Number(profile.value.birthday.split('-')[0])
+        if (!year) return ''
+        return zodiacOf(year)
       } catch (e) {
         return ''
       }
@@ -81,7 +83,10 @@ export default defineComponent({
     const zodiacSign = computed(() => {
       if (!profile.value?.birthday) return ''
       try {
-        return zodiacSignOf(profile.value.birthday)
+        const parts = profile.value.birthday.split('-').map(Number)
+        const [, month, day] = parts
+        if (!month || !day) return ''
+        return zodiacSignOf(month, day)
       } catch (e) {
         return ''
       }

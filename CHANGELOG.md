@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- 修复塔罗牌结果显示内部代码名（如 three-pf、career）而非中文标签
+- 修复个人档案页生肖星座显示错误（传入字符串而非解析后的数字）
+- 修复风水布局建议显示英文房间类型名（bedroom）而非中文（卧室）
+- 修复 getCurrentJieqi 节气计算错误（7 月显示大寒而非小暑，因 1 月节气排序问题）
+- 修复八字大运起运年龄不一致（bazi 引擎改用 computeDayuns 统一计算）
+- 修复首页档案卡片显示异常
+
+### Added
+- 多语言 README 支持（中文默认 / English / 日本語）
+- 开源仓库标准文件（ISSUE 模板、PR 模板、CODE_OF_CONDUCT、CI 工作流）
+
 ## [0.2.0] - 2026-07-20
 
 ### Added
