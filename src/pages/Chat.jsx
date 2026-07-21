@@ -31,7 +31,8 @@ import {
   buildGuardedMessages,
   injectFewShot,
   retrieveKnowledge,
-  getCurrentJieqi
+  getCurrentJieqi,
+  DEFAULT_KNOWLEDGE_BASE
 } from '@/prompts/system.js'
 import { sanitizeInput, validateOutput, detectInjection, escapeHtml } from '@/services/sandbox.js'
 
@@ -382,15 +383,16 @@ export default defineComponent({
         return
       }
 
-      // 检索知识库（按关键词匹配）
-      const knowledgeBase = chatStore.adminConfig?.knowledgeBase || []
-      const relevantKB = userInput ? retrieveKnowledge(knowledgeBase, userInput) : []
+      // 检索知识库（按关键词匹配）——管理员未配置时使用内置默认知识库
+      const adminKB = chatStore.adminConfig?.knowledgeBase || []
+      const effectiveKB = adminKB.length ? adminKB : DEFAULT_KNOWLEDGE_BASE
+      const relevantKB = userInput ? retrieveKnowledge(effectiveKB, userInput) : []
 
       const systemPrompt = buildSystemPrompt({
         recentHistory: includeContext.value ? getRecentHistory(echoStore.history, 5) : '',
         profile: echoStore.profile,
         currentJieqi: getCurrentJieqi(new Date()),
-        knowledgeBase: relevantKB,
+        knowledgeBase: relevantKB.length ? relevantKB : effectiveKB,
         userInput
       })
 
@@ -415,7 +417,10 @@ export default defineComponent({
       messages = buildGuardedMessages(messages, userInput)
 
       const tools = includeContext.value
-        ? getToolSchemas({ webSearchEnabled: chatStore.adminConfig?.webSearchEnabled })
+        ? getToolSchemas({
+            webSearchEnabled: chatStore.adminConfig?.webSearchEnabled,
+            enabledTools: chatStore.adminConfig?.enabledTools || []
+          })
         : []
 
       const controller = new AbortController()

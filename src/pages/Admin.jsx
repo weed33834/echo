@@ -30,11 +30,15 @@ export default defineComponent({
     const authed = ref(false)
     const passwordInput = ref('')
     const loginError = ref('')
+    // 首次设置密码（adminPassword 为空时进入设置模式）
+    const setupPassword = ref('')
+    const setupConfirm = ref('')
+    const isFirstTime = computed(() => !chatStore.adminConfig.adminPassword)
 
     const tryLogin = () => {
       const pwd = chatStore.adminConfig.adminPassword || ''
       if (!pwd) {
-        loginError.value = '请先在系统配置中设置管理员密码'
+        loginError.value = '首次使用，请在下方设置管理员密码'
         return
       }
       if (passwordInput.value === pwd) {
@@ -45,6 +49,22 @@ export default defineComponent({
         loginError.value = '密码错误，请重试'
         showToast('密码错误', 'danger', 1500)
       }
+    }
+
+    const doFirstTimeSetup = () => {
+      if (!setupPassword.value || setupPassword.value.length < 4) {
+        showToast('密码至少 4 位', 'warn', 1500)
+        return
+      }
+      if (setupPassword.value !== setupConfirm.value) {
+        showToast('两次输入不一致', 'danger', 1500)
+        return
+      }
+      chatStore.setAdminConfig({ adminPassword: setupPassword.value })
+      authed.value = true
+      setupPassword.value = ''
+      setupConfirm.value = ''
+      showToast('密码设置成功，已进入管理后台', 'success', 2000)
     }
     const logout = () => {
       authed.value = false
@@ -256,8 +276,16 @@ export default defineComponent({
     const newPassword = ref('')
     const confirmPassword = ref('')
     const webSearchApiKey = ref(chatStore.adminConfig.webSearchApiKey || '')
+    const webSearchEnabled = ref(chatStore.adminConfig.webSearchEnabled || false)
     const rateLimit = ref(chatStore.adminConfig.rateLimit ?? 20)
-    const enabledTools = ref([...(chatStore.adminConfig.enabledTools || [])])
+    // 工具启用列表：空数组在 getToolSchemas 中表示"全部启用"，但 UI toggle 需要显式列表
+    // 因此初始化时如果为空，填充为所有工具 key
+    const allToolKeys = TOOLS.map(t => t.key)
+    const enabledTools = ref(
+      (chatStore.adminConfig.enabledTools && chatStore.adminConfig.enabledTools.length > 0)
+        ? [...chatStore.adminConfig.enabledTools]
+        : [...allToolKeys]
+    )
 
     const changePassword = () => {
       if (!newPassword.value) {
@@ -275,9 +303,15 @@ export default defineComponent({
     }
     const saveWebSearch = () => {
       chatStore.setAdminConfig({
-        webSearchApiKey: webSearchApiKey.value
+        webSearchApiKey: webSearchApiKey.value,
+        webSearchEnabled: webSearchEnabled.value
       })
       showToast('联网搜索配置已保存', 'success', 1500)
+    }
+    const toggleWebSearch = () => {
+      webSearchEnabled.value = !webSearchEnabled.value
+      chatStore.setAdminConfig({ webSearchEnabled: webSearchEnabled.value })
+      showToast(webSearchEnabled.value ? '联网搜索已启用' : '联网搜索已禁用', 'success', 1500)
     }
     const saveRateLimit = () => {
       chatStore.setAdminConfig({ rateLimit: Number(rateLimit.value) })
@@ -327,18 +361,45 @@ export default defineComponent({
           <div class="admin-login__card">
             <div class="admin-login__icon">管</div>
             <div class="admin-login__title">管理后台</div>
-            <div class="admin-login__subtitle">请输入管理员密码以继续</div>
-            <input
-              type="password"
-              class="admin-login__input"
-              placeholder="管理员密码"
-              value={passwordInput.value}
-              onInput={(e) => passwordInput.value = e.target.value}
-              onKeyup={(e) => { if (e.key === 'Enter') tryLogin() }}
-            />
-            {loginError.value && <div class="admin-login__error">{loginError.value}</div>}
-            <EchoButton variant="primary" block onClick={tryLogin}>验证登录</EchoButton>
-            <div class="admin-login__hint">首次使用请先在系统配置中设置密码</div>
+            {isFirstTime.value ? (
+              <>
+                <div class="admin-login__subtitle">首次使用，请设置管理员密码</div>
+                <input
+                  type="password"
+                  class="admin-login__input"
+                  placeholder="设置密码（至少 4 位）"
+                  value={setupPassword.value}
+                  onInput={(e) => setupPassword.value = e.target.value}
+                  onKeyup={(e) => { if (e.key === 'Enter') doFirstTimeSetup() }}
+                />
+                <input
+                  type="password"
+                  class="admin-login__input"
+                  placeholder="确认密码"
+                  value={setupConfirm.value}
+                  onInput={(e) => setupConfirm.value = e.target.value}
+                  onKeyup={(e) => { if (e.key === 'Enter') doFirstTimeSetup() }}
+                />
+                {loginError.value && <div class="admin-login__error">{loginError.value}</div>}
+                <EchoButton variant="primary" block onClick={doFirstTimeSetup}>设置密码并进入</EchoButton>
+                <div class="admin-login__hint">密码仅存储在本地浏览器，用于保护管理后台</div>
+              </>
+            ) : (
+              <>
+                <div class="admin-login__subtitle">请输入管理员密码以继续</div>
+                <input
+                  type="password"
+                  class="admin-login__input"
+                  placeholder="管理员密码"
+                  value={passwordInput.value}
+                  onInput={(e) => passwordInput.value = e.target.value}
+                  onKeyup={(e) => { if (e.key === 'Enter') tryLogin() }}
+                />
+                {loginError.value && <div class="admin-login__error">{loginError.value}</div>}
+                <EchoButton variant="primary" block onClick={tryLogin}>验证登录</EchoButton>
+                <div class="admin-login__hint">忘记密码可在浏览器 localStorage 中重置</div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -620,6 +681,16 @@ export default defineComponent({
         <EchoCard level="secondary" title="联网搜索 (Tavily)">
           <div class="admin-form">
             <div class="admin-form__row">
+              <label class="admin-form__label">启用状态</label>
+              <button
+                type="button"
+                class={`admin-tool-toggle ${webSearchEnabled.value ? 'admin-tool-toggle--on' : ''}`}
+                onClick={toggleWebSearch}
+              >
+                {webSearchEnabled.value ? '✓ 已启用' : '× 已禁用'}
+              </button>
+            </div>
+            <div class="admin-form__row">
               <label class="admin-form__label">Tavily API Key</label>
               <input
                 type="password"
@@ -629,7 +700,7 @@ export default defineComponent({
                 placeholder="tvly-..."
               />
             </div>
-            <div class="admin-form__hint">联网搜索需要 Tavily API Key，可在 tavily.com 申请</div>
+            <div class="admin-form__hint">联网搜索需要 Tavily API Key，可在 tavily.com 申请（免费 1000 次/月）</div>
             <EchoButton variant="primary" size="sm" onClick={saveWebSearch}>保存</EchoButton>
           </div>
         </EchoCard>
@@ -662,6 +733,7 @@ export default defineComponent({
               >
                 <span class="admin-tool-chip__glyph">{t.glyph}</span>
                 <span class="admin-tool-chip__name">{t.name}</span>
+                <span class="admin-tool-chip__status">{isToolEnabled(t.key) ? '✓' : '×'}</span>
               </button>
             ))}
           </div>

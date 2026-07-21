@@ -304,16 +304,36 @@ async function mockChat({ messages, onToken, onDone, onError, signal }) {
 /**
  * 测试 API 连通性（发送一个最小非流式请求）
  * @param {Object} config - 模型配置 { baseUrl, apiKey, model, provider }
- * @returns {Promise<boolean>} true 表示连接成功
+ * @returns {Promise<{ok:boolean, latency?:number, error?:string}>}
+ *   - ok: 是否连接成功
+ *   - latency: 响应耗时（毫秒）
+ *   - error: 失败时的详细原因
  */
 export async function testConnection(config) {
   // mock 或无需 key 的本地模型 → 直接返回 true
   if (config.provider === 'mock') {
     await new Promise(r => setTimeout(r, 100))
-    return true
+    return { ok: true, latency: 100 }
   }
+
+  // 参数校验：给出可读的错误而非笼统的"连接失败"
+  if (!config.baseUrl) {
+    return { ok: false, error: '未填写 API 地址 (Base URL)' }
+  }
+  if (!config.model) {
+    return { ok: false, error: '未填写模型名称' }
+  }
+  if (!config.apiKey) {
+    return { ok: false, error: '未填写 API 密钥' }
+  }
+
+  const url = `${config.baseUrl.replace(/\/+$/, '')}/chat/completions`
+  const controller = new AbortController()
+  // 20 秒超时：避免长时间挂起
+  const timer = setTimeout(() => controller.abort(), 20000)
+  const startedAt = Date.now()
+
   try {
-    const url = `${(config.baseUrl || '').replace(/\/+$/, '')}/chat/completions`
     const response = await fetch(url, {
       method: 'POST',
       headers: buildHeaders(config),
@@ -322,10 +342,34 @@ export async function testConnection(config) {
         messages: [{ role: 'user', content: '测试' }],
         max_tokens: 5,
         stream: false
-      })
+      }),
+      signal: controller.signal
     })
-    return response.ok
-  } catch {
-    return false
+    clearTimeout(timer)
+    const latency = Date.now() - startedAt
+
+    if (response.ok) {
+      return { ok: true, latency }
+    }
+
+    // 非 2xx：解析错误详情
+    let detail = ''
+    try {
+      const body = await response.text()
+      detail = mapHttpError(response.status, body).message
+    } catch {
+      detail = `HTTP ${response.status}`
+    }
+    return { ok: false, latency, error: detail }
+  } catch (err) {
+    clearTimeout(timer)
+    if (err.name === 'AbortError') {
+      return { ok: false, error: '连接超时（20s），请检查网络或服务地址' }
+    }
+    // 网络错误 / CORS / DNS 等
+    return {
+      ok: false,
+      error: err.message || '网络请求失败，请检查地址是否正确、网络是否通畅'
+    }
   }
 }

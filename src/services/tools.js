@@ -144,14 +144,20 @@ function getBaseSchemas() {
  * 返回 OpenAI Function Calling 格式的工具数组
  * 每个工具对应 TOOLS 中的一个命理工具；
  * 当 options.webSearchEnabled 为真时，在末尾追加 web_search 工具。
+ * 当 options.enabledTools 非空时，仅返回启用的工具（管理员控制）。
  *
  * @param {Object} [options]
  * @param {boolean} [options.webSearchEnabled=false] - 是否启用联网搜索
+ * @param {Array<string>} [options.enabledTools=[]] - 启用的工具 key 列表（空数组=全部启用）
  * @returns {Array<{ type: 'function', function: { name, description, parameters } }>}
  */
 export function getToolSchemas(options = {}) {
-  const base = getBaseSchemas()
-  // 仅在启用时追加 web_search，避免 AI 调用未开启的工具
+  let base = getBaseSchemas()
+  // 管理员工具启用过滤：enabledTools 为空数组时表示未配置（全部启用）
+  if (options.enabledTools && options.enabledTools.length > 0) {
+    base = base.filter(t => options.enabledTools.includes(t.function.name))
+  }
+  // 仅在启用时追加 web_search
   if (options.webSearchEnabled) {
     return [...base, webSearchTool]
   }

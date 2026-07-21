@@ -72,27 +72,36 @@ export default defineComponent({
         baseUrl: baseUrl.value,
         model: modelName.value
       })
-      // 兼容两种返回：布尔值 或 { ok, latency }
+      // 兼容两种返回：布尔值（旧） 或 { ok, latency, error }（新）
       const ok = typeof result === 'boolean' ? result : (result?.ok ?? false)
-      testResult.value = {
-        success: ok,
-        message: ok ? '连接成功，模型可用' : '连接失败，请检查密钥与地址'
-      }
+      const latency = typeof result === 'object' ? result?.latency : null
+      const errMsg = typeof result === 'object' ? result?.error : ''
+      const msg = ok
+        ? `连接成功，模型可用${latency ? `（${latency}ms）` : ''}`
+        : (errMsg || '连接失败，请检查密钥与地址')
+      testResult.value = { success: ok, message: msg }
       testing.value = false
       showToast(ok ? '连接测试成功' : '连接测试失败', ok ? 'success' : 'danger', 2000)
     }
 
     const saveConfig = () => {
-      const preset = DEFAULT_MODELS.find(m => (m.model || m.id) === modelName.value)
-      chatStore.setModelConfig({
+      // 尝试匹配预设模型，获取 provider / modelId
+      const preset = DEFAULT_MODELS.find(m => m.model === modelName.value)
+        || chatStore.customModels.find(m => m.model === modelName.value)
+      const config = {
         apiKey: apiKey.value,
         baseUrl: baseUrl.value,
         model: modelName.value,
+        modelId: preset?.id || 'custom-' + Date.now(),
+        provider: preset?.provider || 'custom',
+        label: preset?.label || modelName.value,
         temperature: Number(temperature.value),
         maxTokens: Number(maxTokens.value),
         isDefault: useDefault.value,
-        label: preset?.name || preset?.label || modelName.value
-      })
+        requireKey: preset?.requireKey !== false,
+        stream: true
+      }
+      chatStore.setModelConfig(config)
       chatStore.setAdminConfig({ webSearchEnabled: webSearch.value })
       showToast('AI 配置已保存', 'success', 2000)
     }
@@ -103,8 +112,23 @@ export default defineComponent({
     const applyPreset = (m) => {
       baseUrl.value = m.baseUrl || baseUrl.value
       modelName.value = m.model || m.id
+      apiKey.value = apiKey.value || ''
       useDefault.value = !!m.isDefault
-      showToast(`已切换到 ${m.name || m.label}`, 'success', 1500)
+      // 立即保存预设模型的完整配置（含 provider / modelId）
+      chatStore.setModelConfig({
+        apiKey: apiKey.value,
+        baseUrl: m.baseUrl || baseUrl.value,
+        model: m.model || m.id,
+        modelId: m.id,
+        provider: m.provider,
+        label: m.label,
+        temperature: Number(temperature.value),
+        maxTokens: Number(maxTokens.value),
+        isDefault: !!m.isDefault,
+        requireKey: m.requireKey !== false,
+        stream: true
+      })
+      showToast(`已切换到 ${m.label}`, 'success', 1500)
     }
 
     return () => (
@@ -283,12 +307,12 @@ export default defineComponent({
                 {DEFAULT_MODELS.map(m => (
                   <button
                     key={m.id}
-                    class={`settings-page__ai-preset-card ${chatStore.modelConfig.model === (m.model || m.id) ? 'active' : ''}`}
+                    class={`settings-page__ai-preset-card ${chatStore.modelConfig.modelId === m.id ? 'active' : ''}`}
                     onClick={() => applyPreset(m)}
                     type="button"
                   >
-                    <div class="settings-page__ai-preset-name">{m.name || m.label}</div>
-                    <div class="settings-page__ai-preset-model">{m.model || m.id}</div>
+                    <div class="settings-page__ai-preset-name">{m.label}</div>
+                    <div class="settings-page__ai-preset-model">{m.model}</div>
                     {m.isDefault && <span class="settings-page__ai-preset-badge">默认</span>}
                   </button>
                 ))}
