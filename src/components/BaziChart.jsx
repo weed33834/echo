@@ -63,7 +63,7 @@ export const BaziChart = defineComponent({
               const ganWx = ganWxOf(p.gan)
               const zhiWx = zhiWxOf(p.zhi)
               return (
-                <div class={`bazi-chart__pillar ${isDay ? 'bazi-chart__pillar--day' : ''}`}>
+                <div key={i} class={`bazi-chart__pillar ${isDay ? 'bazi-chart__pillar--day' : ''}`}>
                   <div class="bazi-chart__pillar-label">{p.name}</div>
                   {!props.compact && (
                     <div class="bazi-chart__pillar-god">{isDay ? '日主' : p.tenGod}</div>
@@ -107,7 +107,7 @@ export const BaziChart = defineComponent({
               </div>
               <div class="bazi-chart__wx-bars">
                 {wuxingBars.value.map(b => (
-                  <div class="bazi-chart__wx-bar">
+                  <div key={b.wx} class="bazi-chart__wx-bar">
                     <span class="bazi-chart__wx-label" style={{ color: wxColor(b.wx) }}>{b.wx}</span>
                     <div class="bazi-chart__wx-track">
                       <div

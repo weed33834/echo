@@ -70,7 +70,7 @@ export const Timeline = defineComponent({
               const isCurrent = !!currentDayun.value &&
                 currentDayun.value.startAge === d.startAge
               return (
-                <div class={['timeline__item', { 'timeline__item--current': isCurrent }]}>
+                <div key={d.startAge} class={['timeline__item', { 'timeline__item--current': isCurrent }]}>
                   <div class="timeline__marker">
                     <div class="timeline__dot" />
                     <div class="timeline__line" />
@@ -115,6 +115,7 @@ export const Timeline = defineComponent({
             const wx = wxOfGanzhi(l.ganzhi)
             return (
               <div
+                key={idx}
                 class={['timeline__item', { 'timeline__item--current': isCurrent }]}
                 style={{
                   flex: '0 0 auto',

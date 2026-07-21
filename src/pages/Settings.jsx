@@ -49,7 +49,7 @@ export default defineComponent({
     // 当 store 外部变更时同步本地表单
     watch(() => chatStore.modelConfig, (c) => {
       apiKey.value = c.apiKey || ''
-      baseUrl.value = c.baseUrl || ''
+      baseUrl.value = c.baseUrl || 'https://api.deepseek.com/v1'
       modelName.value = c.model || ''
       temperature.value = c.temperature ?? 0.7
       maxTokens.value = c.maxTokens ?? 2048
@@ -112,7 +112,6 @@ export default defineComponent({
     const applyPreset = (m) => {
       baseUrl.value = m.baseUrl || baseUrl.value
       modelName.value = m.model || m.id
-      apiKey.value = apiKey.value || ''
       useDefault.value = !!m.isDefault
       // 立即保存预设模型的完整配置（含 provider / modelId）
       chatStore.setModelConfig({
@@ -144,6 +143,7 @@ export default defineComponent({
             <div class="settings-page__theme-grid">
               {THEME_OPTIONS.map(t => (
                 <button
+                  key={t.value}
                   class={`settings-page__theme-card ${theme.value === t.value ? 'settings-page__theme-card--active' : ''}`}
                   onClick={() => setTheme(t.value)}
                 >
@@ -166,6 +166,7 @@ export default defineComponent({
               <div class="settings-page__font-scale">
                 {FONT_SCALE_OPTIONS.map(f => (
                   <button
+                    key={f.value}
                     class={`settings-page__font-btn ${fontScale.value === f.value ? 'settings-page__font-btn--active' : ''}`}
                     onClick={() => setFontScale(f.value)}
                   >

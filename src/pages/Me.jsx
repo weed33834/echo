@@ -1,9 +1,8 @@
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEchoStore } from '@/stores/echo.js'
-import { getDayMaster } from '@/utils/engines.js'
 import { TopBar } from '@/components/TabBar.jsx'
-import { EchoCard, EchoButton, EchoBadge, EchoProgress, EchoTag, EchoModal, MingeGauge, showToast } from '@/components/EchoUI.jsx'
+import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoModal, MingeGauge, showToast } from '@/components/EchoUI.jsx'
 
 export default defineComponent({
   name: 'Me',
@@ -29,19 +28,10 @@ export default defineComponent({
         showToast('请填写称呼', 'warn')
         return
       }
-      let dayMaster = null
-      if (profileForm.value.birthday) {
-        const [y, m, d] = profileForm.value.birthday.split('-').map(Number)
-        if (y && m && d) {
-          const dm = getDayMaster(y, m, d)
-          dayMaster = { gan: dm.gan, wx: dm.wx, label: `${dm.gan}${dm.wx}` }
-        }
-      }
       store.setProfile({
         name: profileForm.value.name.trim(),
         birthday: profileForm.value.birthday,
-        gender: profileForm.value.gender,
-        dayMaster
+        gender: profileForm.value.gender
       })
       showToast('档案已保存', 'success', 1500)
       profileModal.value = false
@@ -52,9 +42,9 @@ export default defineComponent({
     const zodiacOf = (birthday) => {
       if (!birthday) return null
       const y = Number(birthday.split('-')[0])
-      if (!y) return null
+      if (!y || y < 4) return null
       const animals = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪']
-      return animals[(y - 4) % 12]
+      return animals[((y - 4) % 12 + 12) % 12]
     }
 
     return () => (
@@ -64,7 +54,7 @@ export default defineComponent({
           {/* 命格档案 */}
           <EchoCard level="primary">
             <div class="me-page__profile">
-              <MingeGauge value={store.accuracyRate} level={store.minge.level} />
+              <MingeGauge value={store.accuracyRate} />
               <div class="me-page__profile-info">
                 <div class="me-page__name">{store.profile?.name || 'Echo 探索者'}</div>
                 <div class="me-page__title">
@@ -92,10 +82,10 @@ export default defineComponent({
                   <span class="me-page__detail-label">性别</span>
                   <span class="me-page__detail-val">{genderLabel(store.profile.gender)}</span>
                 </div>
-                {store.profile.dayMaster && (
+                {store.profileBazi?.dayMasterLabel && (
                   <div class="me-page__detail-row">
                     <span class="me-page__detail-label">日主</span>
-                    <EchoTag variant="gold">{store.profile.dayMaster.label}</EchoTag>
+                    <EchoTag variant="gold">{store.profileBazi.dayMasterLabel}</EchoTag>
                   </div>
                 )}
                 {zodiacOf(store.profile.birthday) && (

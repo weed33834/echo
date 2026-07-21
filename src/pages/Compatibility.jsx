@@ -28,8 +28,6 @@ const SHICHEN = [
   { label: '亥时 21:00-23:00', value: '21' }
 ]
 
-const genderLabel = (g) => (g === 'female' ? '女' : '男')
-
 export default defineComponent({
   name: 'Compatibility',
   setup() {
@@ -158,7 +156,7 @@ export default defineComponent({
           >
             <option value="">未知时辰</option>
             {SHICHEN.map((s) => (
-              <option value={s.value}>{s.label}</option>
+              <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
         </div>
@@ -230,7 +228,7 @@ export default defineComponent({
                   {result.value.dimensions.map((d) => {
                     const judge = dimJudge(d)
                     return (
-                      <div class="compat-page__dim">
+                      <div key={d.name} class="compat-page__dim">
                         <div class="compat-page__dim-head">
                           <span class="compat-page__dim-name">
                             {d.name}

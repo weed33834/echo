@@ -334,8 +334,9 @@
   overflow-wrap: break-word;
 }
 .toast--success { background: var(--ok); color: #fff; }
-.toast--error { background: var(--danger); color: #fff; }
+.toast--error, .toast--danger { background: var(--danger); color: #fff; }
 .toast--warn { background: var(--warn); color: #fff; }
+.toast--default { background: var(--ink); color: #fff; }
 
 /* === EmptyState === */
 .empty-state {

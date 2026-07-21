@@ -1,9 +1,9 @@
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEchoStore, TOOLS } from '@/stores/echo.js'
-import { getDayMaster, getCurrentJieqi } from '@/utils/engines.js'
+import { getCurrentJieqi } from '@/utils/engines.js'
 import { TopBar } from '@/components/TabBar.jsx'
-import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, MingeGauge, showToast } from '@/components/EchoUI.jsx'
+import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, MingeGauge } from '@/components/EchoUI.jsx'
 import { Timeline } from '@/components/Timeline.jsx'
 
 /* === 五行建议数据（日主五行 → 四维建议） === */
@@ -123,9 +123,9 @@ export default defineComponent({
         })
         return dist
       }
-      // 2. 其次从 profile.dayMaster 推算默认分布
-      if (store.profile?.dayMaster?.wx) {
-        return buildDefaultWuxing(store.profile.dayMaster.wx)
+      // 2. 其次从 profileBazi.dayMasterWx 推算默认分布
+      if (store.profileBazi?.dayMasterWx) {
+        return buildDefaultWuxing(store.profileBazi.dayMasterWx)
       }
       // 3. 兜底：均衡分布
       return { '金': 50, '木': 50, '水': 50, '火': 50, '土': 50 }
@@ -177,7 +177,7 @@ export default defineComponent({
 
     /* 今日建议（日主五行 + 节气） */
     const todayAdvice = computed(() => {
-      const wx = store.profile?.dayMaster?.wx
+      const wx = store.profileBazi?.dayMasterWx
       if (wx && WUXING_ADVICE[wx]) {
         return { wx, ...WUXING_ADVICE[wx] }
       }
@@ -197,6 +197,8 @@ export default defineComponent({
       const stats = store.historyStats
       const toolMap = {}
       TOOLS.forEach(t => { toolMap[t.key] = t.name })
+      // 合婚匹配不是独立工具但会记录历史
+      toolMap['compat'] = '合婚匹配'
       const arr = Object.entries(stats).map(([key, count]) => ({
         key,
         name: toolMap[key] || key,
@@ -218,7 +220,6 @@ export default defineComponent({
     const goToTools = () => router.push('/tools')
     const goToMe = () => router.push('/me')
     const goToHuangli = () => router.push('/tools/huangli')
-    const goToBazi = () => router.push('/tools/bazi')
 
     return () => (
       <div class="dashboard">
@@ -228,7 +229,7 @@ export default defineComponent({
           <EchoCard level="primary">
             {hasProfile.value ? (
               <div class="dashboard__overview">
-                <MingeGauge value={store.accuracyRate} level={store.minge.level} />
+                <MingeGauge value={store.accuracyRate} />
                 <div class="dashboard__overview-info">
                   <div class="dashboard__overview-name">{store.profile.name}</div>
                   <div class="dashboard__overview-title">
@@ -324,8 +325,8 @@ export default defineComponent({
                 <div class="dashboard__radar-reading-source">
                   {latestBazi.value
                     ? '数据来源：最近八字推演'
-                    : store.profile?.dayMaster
-                      ? `数据来源：日主${store.profile.dayMaster.label}推算`
+                    : store.profileBazi?.dayMasterWx
+                      ? `数据来源：日主${store.profileBazi.dayMasterLabel}推算`
                       : '数据来源：默认均衡分布'}
                 </div>
               </div>
@@ -455,12 +456,12 @@ export default defineComponent({
             </div>
             <div class="dashboard__advice-footer">
               {todayAdvice.value.wx
-                ? `基于${store.profile.dayMaster.label}日主(${todayAdvice.value.wx}行) · ${currentJieqi.value.name}调摄`
+                ? `基于${store.profileBazi.dayMasterLabel}日主(${todayAdvice.value.wx}行) · ${currentJieqi.value.name}调摄`
                 : `通用建议 · ${currentJieqi.value.name}时令`}
             </div>
           </EchoCard>
 
-          {/* === 4. 今日宜忌条 === */}
+          {/* === 5. 今日宜忌条 === */}
           <EchoCard level="secondary" title="今日宜忌">
             {latestHuangli.value ? (
               <div class="dashboard__yiji">

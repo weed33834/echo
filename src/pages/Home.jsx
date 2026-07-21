@@ -1,15 +1,7 @@
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useEchoStore, TOOLS, CATEGORIES } from '@/stores/echo.js'
-import { zodiacOf } from '@/utils/engines.js'
+import { useEchoStore, TOOLS } from '@/stores/echo.js'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, MingeGauge, EchoProgress, showToast } from '@/components/EchoUI.jsx'
-
-const zodiacOfYear = (birthday) => {
-  if (!birthday) return '?'
-  const y = Number(birthday.split('-')[0])
-  if (!y) return '?'
-  return zodiacOf(y)
-}
 
 // 时辰宜忌计算（简化版，基于当下时辰）
 const SHICHEN = [
@@ -150,7 +142,7 @@ export default defineComponent({
             <EchoCard level="secondary">
               <div class="home__minge">
                 <div class="home__minge-gauge">
-                  <MingeGauge value={store.accuracyRate} level={store.minge.level} label="命格可信度" />
+                  <MingeGauge value={store.accuracyRate} label="命格可信度" />
                 </div>
                 <div class="home__minge-info">
                   <div class="home__minge-level">
@@ -247,7 +239,7 @@ export default defineComponent({
             </div>
             <div class="home__tool-grid">
               {TOOLS.slice(0, 8).map(t => (
-                <button class="home__tool-item" onClick={() => router.push(`/tools/${t.key}`)}>
+                <button key={t.key} class="home__tool-item" onClick={() => router.push(`/tools/${t.key}`)}>
                   <div class="home__tool-glyph">{t.glyph}</div>
                   <div class="home__tool-name">{t.name}</div>
                 </button>

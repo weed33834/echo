@@ -1,10 +1,9 @@
-import { defineComponent, ref, reactive, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref, reactive, computed } from 'vue'
 import { useChatStore, DEFAULT_PROMPTS } from '@/stores/chat.js'
-import { useEchoStore, TOOLS } from '@/stores/echo.js'
+import { TOOLS } from '@/stores/echo.js'
 import { DEFAULT_MODELS, testConnection } from '@/services/ai.js'
 import { TopBar } from '@/components/TabBar.jsx'
-import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoModal, showToast } from '@/components/EchoUI.jsx'
+import { EchoCard, EchoButton, EchoBadge, EchoModal, showToast } from '@/components/EchoUI.jsx'
 
 const TABS = [
   { key: 'models', label: '模型管理' },
@@ -22,9 +21,7 @@ const PROMPT_TEMPLATES = [
 export default defineComponent({
   name: 'Admin',
   setup() {
-    const router = useRouter()
     const chatStore = useChatStore()
-    const echoStore = useEchoStore()
 
     /* === 登录态 === */
     const authed = ref(false)
@@ -784,93 +781,99 @@ export default defineComponent({
             modelValue={modelModalOpen.value}
             onUpdate:modelValue={(v) => modelModalOpen.value = v}
             title={editingModelId.value ? '编辑模型' : '添加模型'}
-          >
-            <div class="admin-form">
-              <div class="admin-form__row">
-                <label class="admin-form__label">显示名称</label>
-                <input
-                  class="admin-form__input"
-                  value={modelForm.label}
-                  onInput={(e) => modelForm.label = e.target.value}
-                  placeholder="如：我的 DeepSeek"
-                />
-              </div>
-              <div class="admin-form__row">
-                <label class="admin-form__label">提供商</label>
-                <input
-                  class="admin-form__input"
-                  value={modelForm.provider}
-                  onInput={(e) => modelForm.provider = e.target.value}
-                  placeholder="如：deepseek"
-                />
-              </div>
-              <div class="admin-form__row">
-                <label class="admin-form__label">模型标识</label>
-                <input
-                  class="admin-form__input"
-                  value={modelForm.model}
-                  onInput={(e) => modelForm.model = e.target.value}
-                  placeholder="如：deepseek-chat"
-                />
-              </div>
-              <div class="admin-form__row">
-                <label class="admin-form__label">Base URL</label>
-                <input
-                  class="admin-form__input"
-                  value={modelForm.baseUrl}
-                  onInput={(e) => modelForm.baseUrl = e.target.value}
-                  placeholder="https://api.deepseek.com/v1"
-                />
-              </div>
-              <div class="admin-form__row">
-                <label class="admin-form__label">API Key</label>
-                <input
-                  type="password"
-                  class="admin-form__input"
-                  value={modelForm.apiKey}
-                  onInput={(e) => modelForm.apiKey = e.target.value}
-                  placeholder="sk-..."
-                />
-              </div>
-            </div>
-            <div class="admin-modal__footer">
-              <EchoButton variant="ghost" size="sm" onClick={() => modelModalOpen.value = false}>取消</EchoButton>
-              <EchoButton variant="primary" size="sm" onClick={submitModel}>保存</EchoButton>
-            </div>
-          </EchoModal>
+            vSlots={{
+              default: () => (
+                <div class="admin-form">
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">显示名称</label>
+                    <input
+                      class="admin-form__input"
+                      value={modelForm.label}
+                      onInput={(e) => modelForm.label = e.target.value}
+                      placeholder="如：我的 DeepSeek"
+                    />
+                  </div>
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">提供商</label>
+                    <input
+                      class="admin-form__input"
+                      value={modelForm.provider}
+                      onInput={(e) => modelForm.provider = e.target.value}
+                      placeholder="如：deepseek"
+                    />
+                  </div>
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">模型标识</label>
+                    <input
+                      class="admin-form__input"
+                      value={modelForm.model}
+                      onInput={(e) => modelForm.model = e.target.value}
+                      placeholder="如：deepseek-chat"
+                    />
+                  </div>
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">Base URL</label>
+                    <input
+                      class="admin-form__input"
+                      value={modelForm.baseUrl}
+                      onInput={(e) => modelForm.baseUrl = e.target.value}
+                      placeholder="https://api.deepseek.com/v1"
+                    />
+                  </div>
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">API Key</label>
+                    <input
+                      type="password"
+                      class="admin-form__input"
+                      value={modelForm.apiKey}
+                      onInput={(e) => modelForm.apiKey = e.target.value}
+                      placeholder="sk-..."
+                    />
+                  </div>
+                </div>
+              ),
+              footer: () => [
+                <EchoButton key="cancel" variant="ghost" size="sm" onClick={() => modelModalOpen.value = false}>取消</EchoButton>,
+                <EchoButton key="save" variant="primary" size="sm" onClick={submitModel}>保存</EchoButton>
+              ]
+            }}
+          />
 
           {/* 知识库编辑弹窗 */}
           <EchoModal
             modelValue={kbModalOpen.value}
             onUpdate:modelValue={(v) => kbModalOpen.value = v}
             title={editingKbId.value ? '编辑片段' : '添加片段'}
-          >
-            <div class="admin-form">
-              <div class="admin-form__row">
-                <label class="admin-form__label">标题</label>
-                <input
-                  class="admin-form__input"
-                  value={kbForm.title}
-                  onInput={(e) => kbForm.title = e.target.value}
-                  placeholder="片段标题"
-                />
-              </div>
-              <div class="admin-form__row">
-                <label class="admin-form__label">内容</label>
-                <textarea
-                  class="admin-form__textarea"
-                  rows="5"
-                  value={kbForm.content}
-                  onInput={(e) => kbForm.content = e.target.value}
-                  placeholder="片段内容..."
-                />
-              </div>
-            </div>
-            <div class="admin-modal__footer">
-              <EchoButton variant="ghost" size="sm" onClick={() => kbModalOpen.value = false}>取消</EchoButton>
-              <EchoButton variant="primary" size="sm" onClick={submitKb}>保存</EchoButton>
-            </div>
-          </EchoModal>
+            vSlots={{
+              default: () => (
+                <div class="admin-form">
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">标题</label>
+                    <input
+                      class="admin-form__input"
+                      value={kbForm.title}
+                      onInput={(e) => kbForm.title = e.target.value}
+                      placeholder="片段标题"
+                    />
+                  </div>
+                  <div class="admin-form__row">
+                    <label class="admin-form__label">内容</label>
+                    <textarea
+                      class="admin-form__textarea"
+                      rows="5"
+                      value={kbForm.content}
+                      onInput={(e) => kbForm.content = e.target.value}
+                      placeholder="片段内容..."
+                    />
+                  </div>
+                </div>
+              ),
+              footer: () => [
+                <EchoButton key="cancel" variant="ghost" size="sm" onClick={() => kbModalOpen.value = false}>取消</EchoButton>,
+                <EchoButton key="save" variant="primary" size="sm" onClick={submitKb}>保存</EchoButton>
+              ]
+            }}
+          />
         </div>
       )
     }

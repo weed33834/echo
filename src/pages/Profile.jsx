@@ -62,7 +62,6 @@ export default defineComponent({
     // 仓库派生状态
     const profile = computed(() => store.profile || {})
     const profileBazi = computed(() => store.profileBazi)
-    const isProfileComplete = computed(() => store.isProfileComplete)
 
     // 是否已设置档案（以是否有称呼为准）
     const hasProfile = computed(() => !!profile.value?.name)
@@ -217,13 +216,6 @@ export default defineComponent({
       store.setProfile(payload)
       showToast(hasProfile.value ? '档案已更新' : '档案已创建')
       showModal.value = false
-    }
-
-    // 返回上一页
-    const handleBack = () => {
-      if (window.history.length > 1) {
-        window.history.back()
-      }
     }
 
     // 空状态

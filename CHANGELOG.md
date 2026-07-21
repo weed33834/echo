@@ -14,10 +14,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/
 - 修复 getCurrentJieqi 节气计算错误（7 月显示大寒而非小暑，因 1 月节气排序问题）
 - 修复八字大运起运年龄不一致（bazi 引擎改用 computeDayuns 统一计算）
 - 修复首页档案卡片显示异常
+- 修复 showToast 的 danger 变体与 CSS 类名不匹配（toast--danger → toast--error）
+- 修复 Dashboard 五行雷达图和今日建议因 dayMaster 路径错误而始终显示默认值
+- 修复 EchoCenter 复盘提交时 result 为空导致崩溃
+- 修复 Checkin 签到页面使用 UTC 日期导致跨午夜/时区签到异常
+- 修复 Admin 模型编辑和知识库编辑弹窗的 footer 按钮被错误放入 body slot
+- 修复 Me 页面日主显示依赖 store.profile.dayMaster（仅 Me 页面写入）的不一致问题
+- 修复 MingeGauge 未对 value 做 0-100 边界检查
+- 修复 EchoCard 的 onClick 不传递事件对象
+- 修复 Me.jsx zodiacOf 对公元前年份返回 undefined
+- 修复 Settings.jsx watch 清空 baseUrl 默认值
+- 修复 Dashboard 工具使用统计中 compat 显示原始 key 而非中文名
+
+### Changed
+- MingeGauge 移除未使用的 level prop
+- EchoCenter 复盘表单初始值改为 0.3（部分）以匹配 scoreLabels 选项
+- Checkin nextMilestone 在所有里程碑达成后显示"所有里程碑已达成"而非回退到最后一项
+
+### Removed
+- 清理 Home.jsx 未使用的 onMounted、CATEGORIES、zodiacOfYear 死代码
+- 清理 Dashboard.jsx 未使用的 ref、onMounted、getDayMaster、showToast、goToBazi
+- 清理 Me.jsx 未使用的 computed、EchoProgress、getDayMaster 及 saveProfile 中的 dayMaster 冗余计算
+- 清理 Chat.jsx 未使用的 useRouter、EmptyState
+- 清理 ToolDetail.jsx 未使用的 reactive
+- 清理 Tools.jsx 未使用的 useEchoStore
+- 清理 Compatibility.jsx 未使用的 genderLabel
+- 清理 Profile.jsx 未使用的 isProfileComplete、handleBack
+- 清理 Admin.jsx 未使用的 onMounted、useRouter、useEchoStore、EchoTag
 
 ### Added
 - 多语言 README 支持（中文默认 / English / 日本語）
 - 开源仓库标准文件（ISSUE 模板、PR 模板、CODE_OF_CONDUCT、CI 工作流）
+- 为全部组件和页面的列表渲染补充 key prop（ToolDetail 38 处、BaziChart 2 处、Timeline 2 处等）
 
 ## [0.2.0] - 2026-07-20
 

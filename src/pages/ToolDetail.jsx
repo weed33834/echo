@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, watch, reactive } from 'vue'
+import { defineComponent, ref, computed, watch, Fragment } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEchoStore, TOOLS } from '@/stores/echo.js'
 import { getEngine, crossVerify } from '@/utils/engines.js'
@@ -22,7 +22,7 @@ const ResultRenderers = {
     <EchoCard level="primary" title="四柱命盘">
       <div class="bazi-pillars">
         {r.pillars.map(p => (
-          <div class="bazi-pillar">
+          <div class="bazi-pillar" key={p.name}>
             <div class="bazi-pillar__label">{p.name}</div>
             <div class="bazi-pillar__gan">{p.gan}</div>
             <div class="bazi-pillar__zhi">{p.zhi}</div>
@@ -43,7 +43,7 @@ const ResultRenderers = {
         <div class="bazi-wuxing__title">五行分布 · 最旺{r.strongest} · 最弱{r.weakest}</div>
         <div class="bazi-wuxing__bars">
           {Object.entries(r.wuxing).map(([wx, count]) => (
-            <div class="bazi-wuxing__bar">
+            <div class="bazi-wuxing__bar" key={wx}>
               <span class="bazi-wuxing__wx">{wx}</span>
               <div class="bazi-wuxing__track">
                 <div class={`bazi-wuxing__fill bazi-wuxing__fill--${wx}`} style={{ width: `${count / 8 * 100}%` }} />
@@ -57,7 +57,7 @@ const ResultRenderers = {
         <div class="bazi-dayun__title">大运时间轴 · 纳音{r.nayin}</div>
         <div class="bazi-dayun__timeline">
           {r.dayuns.map((d, i) => (
-            <div class={`bazi-dayun__item ${d.name === r.currentDayun.name ? 'bazi-dayun__item--current' : ''}`}>
+            <div class={`bazi-dayun__item ${d.name === r.currentDayun.name ? 'bazi-dayun__item--current' : ''}`} key={d.name}>
               <div class="bazi-dayun__age">{d.startAge}-{d.endAge}</div>
               <div class="bazi-dayun__name">{d.name}</div>
               <div class="bazi-dayun__god">{d.tenGod}</div>
@@ -89,7 +89,7 @@ const ResultRenderers = {
       </div>
       <div class="ziwei-palaces">
         {r.palaces.map((p, i) => (
-          <div class={`ziwei-palace ${p.name === r.currentDaxian.name ? 'ziwei-palace--current' : ''}`}>
+          <div class={`ziwei-palace ${p.name === r.currentDaxian.name ? 'ziwei-palace--current' : ''}`} key={p.name}>
             <div class="ziwei-palace__pos">{p.position}</div>
             <div class="ziwei-palace__name">{p.name}</div>
             <div class={`ziwei-palace__star ${p.mainStar === '空宫' ? 'ziwei-palace__star--empty' : ''}`}>{p.mainStar}</div>
@@ -101,7 +101,7 @@ const ResultRenderers = {
         <div class="ziwei-sihua__title">四化（年干）</div>
         <div class="ziwei-sihua__list">
           {r.sihua.map(s => (
-            <EchoTag variant={s.name === '化忌' ? 'danger' : s.name === '化禄' ? 'gold' : s.name === '化权' ? 'accent' : 'ok'}>
+            <EchoTag key={s.name} variant={s.name === '化忌' ? 'danger' : s.name === '化禄' ? 'gold' : s.name === '化权' ? 'accent' : 'ok'}>
               {s.star}{s.name}@{s.palace}
             </EchoTag>
           ))}
@@ -134,7 +134,7 @@ const ResultRenderers = {
         )}
         <div class="liuyao-gua__lines">
           {r.yaoLines.map((y, i) => (
-            <div class={`liuyao-yao ${y.change ? 'liuyao-yao--change' : ''}`}>
+            <div class={`liuyao-yao ${y.change ? 'liuyao-yao--change' : ''}`} key={i}>
               <span class="liuyao-yao__pos">第{i + 1}爻</span>
               <span class="liuyao-yao__line">{y.line}</span>
               <span class="liuyao-yao__label">{y.label}</span>
@@ -201,7 +201,7 @@ const ResultRenderers = {
         <div class="gua-result__name">{r.benGua}</div>
         <div class="gua-result__lines">
           {r.yaoLines.map((y, i) => (
-            <div class={`gua-yao ${y.change ? 'gua-yao--change' : ''}`}>
+            <div class={`gua-yao ${y.change ? 'gua-yao--change' : ''}`} key={i}>
               <span class="gua-yao__pos">第{i + 1}爻</span>
               <span class="gua-yao__line">{y.line}</span>
               <span class="gua-yao__label">{y.label}</span>
@@ -239,7 +239,7 @@ const ResultRenderers = {
       </div>
       <div class="qimen-grid">
         {r.palaces.map(p => (
-          <div class={`qimen-cell ${p.num === 5 ? 'qimen-cell--center' : ''} ${p.num === r.yongShenGong.num ? 'qimen-cell--yongshen' : ''}`}>
+          <div class={`qimen-cell ${p.num === 5 ? 'qimen-cell--center' : ''} ${p.num === r.yongShenGong.num ? 'qimen-cell--yongshen' : ''}`} key={p.num}>
             <div class="qimen-cell__num">{p.num}宫·{p.dir}</div>
             <div class="qimen-cell__men">{p.men}</div>
             <div class="qimen-cell__xing">{p.tianPan}</div>
@@ -276,7 +276,7 @@ const ResultRenderers = {
         <div class="liuren-tianpan__title">天盘（月将加占时）</div>
         <div class="liuren-tianpan__grid">
           {r.tianPan.map((t, i) => (
-            <div class="liuren-tp__cell">
+            <div class="liuren-tp__cell" key={t}>
               <div class="liuren-tp__zhi">{t}</div>
               <div class="liuren-tp__pos">{DI_ZHI_LABEL[i]}</div>
             </div>
@@ -287,7 +287,7 @@ const ResultRenderers = {
         <div class="liuren-lessons__title">四课</div>
         <div class="liuren-lessons__grid">
           {r.fourLessons.map(l => (
-            <div class="liuren-lesson">
+            <div class="liuren-lesson" key={l.name}>
               <div class="liuren-lesson__name">{l.name}</div>
               <div class="liuren-lesson__gan">{l.gan}</div>
               <div class="liuren-lesson__zhi">{l.zhi}</div>
@@ -299,7 +299,7 @@ const ResultRenderers = {
         <div class="liuren-chuan__title">三传</div>
         <div class="liuren-chuan__grid">
           {r.threeChuan.map(c => (
-            <div class="liuren-chuan__item">
+            <div class="liuren-chuan__item" key={c.name}>
               <div class="liuren-chuan__name">{c.name}</div>
               <div class="liuren-chuan__zhi">{c.zhi}</div>
               <EchoTag variant="muted">{c.wx}</EchoTag>
@@ -337,7 +337,7 @@ const ResultRenderers = {
         <div class="ziwu-acupoints__title">取穴方案</div>
         <div class="ziwu-acupoints__list">
           {r.acupoints.map(a => (
-            <div class="ziwu-acupoint">
+            <div class="ziwu-acupoint" key={a.name}>
               <div class="ziwu-acupoint__name">{a.name}</div>
               <div class="ziwu-acupoint__cat">{a.category}</div>
               <div class="ziwu-acupoint__action">{a.action}</div>
@@ -401,7 +401,7 @@ const ResultRenderers = {
       <div class="yangsheng-taboos">
         <div class="yangsheng-taboos__title">禁忌</div>
         <div class="yangsheng-taboos__list">
-          {r.taboos.map(t => <EchoTag variant="danger">{t}</EchoTag>)}
+          {r.taboos.map(t => <EchoTag key={t} variant="danger">{t}</EchoTag>)}
         </div>
       </div>
       <div class="tool-detail__summary">{r.summary}</div>
@@ -431,13 +431,13 @@ const ResultRenderers = {
         <div class="huangli-yi">
           <div class="huangli-yi__label">宜</div>
           <div class="huangli-yi__list">
-            {r.yi.map(y => <EchoTag variant="ok">{y}</EchoTag>)}
+            {r.yi.map(y => <EchoTag key={y} variant="ok">{y}</EchoTag>)}
           </div>
         </div>
         <div class="huangli-ji">
           <div class="huangli-ji__label">忌</div>
           <div class="huangli-ji__list">
-            {r.ji.map(j => <EchoTag variant="danger">{j}</EchoTag>)}
+            {r.ji.map(j => <EchoTag key={j} variant="danger">{j}</EchoTag>)}
           </div>
         </div>
       </div>
@@ -447,7 +447,7 @@ const ResultRenderers = {
           <div class="huangli-shichen__title">十二时辰宜忌</div>
           <div class="huangli-shichen__grid">
             {r.shichenYiji.map(s => (
-              <div class={`huangli-shichen__cell ${s.lucky ? 'huangli-shichen__cell--ji' : 'huangli-shichen__cell--xiong'}`}>
+              <div class={`huangli-shichen__cell ${s.lucky ? 'huangli-shichen__cell--ji' : 'huangli-shichen__cell--xiong'}`} key={s.shichen}>
                 <span class="huangli-shichen__zhi">{s.shichen}</span>
                 <span class="huangli-shichen__yi">{s.yi}</span>
               </div>
@@ -465,7 +465,7 @@ const ResultRenderers = {
       <div class="jiri-range">{r.range}天内筛选，找到{r.goodDays.length}个吉日</div>
       <div class="jiri-list">
         {r.goodDays.map((d, i) => (
-          <div class={`jiri-day ${d.label === '大吉' ? 'jiri-day--best' : ''}`}>
+          <div class={`jiri-day ${d.label === '大吉' ? 'jiri-day--best' : ''}`} key={d.date}>
             <div class="jiri-day__rank">第{i + 1}选</div>
             <div class="jiri-day__main">
               <div class="jiri-day__date">{d.date}（周{d.weekday}）</div>
@@ -487,7 +487,7 @@ const ResultRenderers = {
           <div class="jiri-baddays__title">需避开</div>
           <div class="jiri-baddays__list">
             {r.badDays.map(d => (
-              <div class="jiri-badday">
+              <div class="jiri-badday" key={d.date}>
                 <span class="jiri-badday__date">{d.date}</span>
                 <EchoTag variant="danger">{d.reason}</EchoTag>
               </div>
@@ -518,7 +518,7 @@ const ResultRenderers = {
           { label: '财运', val: r.scores.wealth },
           { label: '健康', val: r.scores.health }
         ].map(s => (
-          <div class="yunshi-score">
+          <div class="yunshi-score" key={s.label}>
             <div class="yunshi-score__head">
               <span class="yunshi-score__label">{s.label}</span>
               <span class="yunshi-score__val">{s.val}</span>
@@ -536,7 +536,7 @@ const ResultRenderers = {
         <div class="yunshi-shichen__title">12时辰吉凶</div>
         <div class="yunshi-shichen__grid">
           {r.shichenLuck.map(s => (
-            <div class={`yunshi-sc__cell yunshi-sc__cell--${s.luck === '吉' ? 'ji' : s.luck === '凶' ? 'xiong' : 'ping'}`}>
+            <div class={`yunshi-sc__cell yunshi-sc__cell--${s.luck === '吉' ? 'ji' : s.luck === '凶' ? 'xiong' : 'ping'}`} key={s.shichen}>
               <span class="yunshi-sc__zhi">{s.shichen}</span>
               <span class="yunshi-sc__ss">{s.shishen}</span>
               <span class="yunshi-sc__luck">{s.luck}</span>
@@ -580,7 +580,7 @@ const ResultRenderers = {
         <div class="astro-planets__title">七行星分布</div>
         <div class="astro-planets__grid">
           {Object.entries(r.planets).map(([k, v]) => (
-            <div class="astro-planet"><span class="astro-planet__name">{{sun:'☉太阳',moon:'☽月亮',mercury:'☿水星',venus:'♀金星',mars:'♂火星',jupiter:'♃木星',saturn:'♄土星'}[k]}</span><EchoBadge variant="accent">{v}</EchoBadge></div>
+            <div class="astro-planet" key={k}><span class="astro-planet__name">{{sun:'☉太阳',moon:'☽月亮',mercury:'☿水星',venus:'♀金星',mars:'♂火星',jupiter:'♃木星',saturn:'♄土星'}[k]}</span><EchoBadge variant="accent">{v}</EchoBadge></div>
           ))}
         </div>
       </div>
@@ -589,7 +589,7 @@ const ResultRenderers = {
           <div class="astro-aspects__title">主要相位</div>
           <div class="astro-aspects__list">
             {r.aspects.map((a, i) => (
-              <div class="astro-aspect">
+              <div class="astro-aspect" key={i}>
                 <span class="astro-aspect__pair">{a.a}↔{a.b}</span>
                 <EchoTag variant={a.type.includes('合') || a.type.includes('拱') ? 'ok' : a.type.includes('冲') || a.type.includes('刑') ? 'danger' : 'accent'}>{a.type}</EchoTag>
                 <span class="astro-aspect__meaning">{a.meaning}</span>
@@ -603,7 +603,7 @@ const ResultRenderers = {
           <div class="astro-balance__title">元素</div>
           <div class="astro-balance__bars">
             {Object.entries(r.elementBalance).map(([k, v]) => (
-              <div class="astro-balance__bar"><span class="astro-balance__label">{k}</span><span class="astro-balance__val">{v}</span></div>
+              <div class="astro-balance__bar" key={k}><span class="astro-balance__label">{k}</span><span class="astro-balance__val">{v}</span></div>
             ))}
           </div>
         </div>
@@ -611,7 +611,7 @@ const ResultRenderers = {
           <div class="astro-balance__title">模式</div>
           <div class="astro-balance__bars">
             {Object.entries(r.modeBalance).map(([k, v]) => (
-              <div class="astro-balance__bar"><span class="astro-balance__label">{k}</span><span class="astro-balance__val">{v}</span></div>
+              <div class="astro-balance__bar" key={k}><span class="astro-balance__label">{k}</span><span class="astro-balance__val">{v}</span></div>
             ))}
           </div>
         </div>
@@ -637,11 +637,11 @@ const ResultRenderers = {
       <div class="maya-five">
         <div class="maya-five__title">五图腾矩阵</div>
         <div class="maya-five__grid">
-          <div class="maya-five__item maya-five__item--guide"><div class="maya-five__role">引导</div><div class="maya-five__seal">{r.fiveSeals.guide}</div></div>
-          <div class="maya-five__item maya-five__item--analog"><div class="maya-five__role">类比</div><div class="maya-five__seal">{r.fiveSeals.analog}</div></div>
-          <div class="maya-five__item maya-five__item--antipode"><div class="maya-five__role">对偶</div><div class="maya-five__seal">{r.fiveSeals.antipode}</div></div>
-          <div class="maya-five__item maya-five__item--hidden"><div class="maya-five__role">隐藏</div><div class="maya-five__seal">{r.fiveSeals.hidden}</div></div>
-          <div class="maya-five__item maya-five__item--challenge"><div class="maya-five__role">挑战</div><div class="maya-five__seal">{r.fiveSeals.challenge}</div></div>
+          <div key="guide" class="maya-five__item maya-five__item--guide"><div class="maya-five__role">引导</div><div class="maya-five__seal">{r.fiveSeals.guide}</div></div>
+          <div key="analog" class="maya-five__item maya-five__item--analog"><div class="maya-five__role">类比</div><div class="maya-five__seal">{r.fiveSeals.analog}</div></div>
+          <div key="antipode" class="maya-five__item maya-five__item--antipode"><div class="maya-five__role">对偶</div><div class="maya-five__seal">{r.fiveSeals.antipode}</div></div>
+          <div key="hidden" class="maya-five__item maya-five__item--hidden"><div class="maya-five__role">隐藏</div><div class="maya-five__seal">{r.fiveSeals.hidden}</div></div>
+          <div key="challenge" class="maya-five__item maya-five__item--challenge"><div class="maya-five__role">挑战</div><div class="maya-five__seal">{r.fiveSeals.challenge}</div></div>
         </div>
       </div>
       <div class="maya-wave">
@@ -670,7 +670,7 @@ const ResultRenderers = {
       <div class="tarot-question">所问：{r.question || '（未填写）'} · {r.spread}牌阵 · 关注{r.focusArea}</div>
       <div class={`tarot-cards tarot-cards--${r.spread}`}>
         {r.cards.map((c, i) => (
-          <div class={`tarot-card ${c.upright ? '' : 'tarot-card--reversed'} ${c.isKeyCard ? 'tarot-card--key' : ''}`}>
+          <div class={`tarot-card ${c.upright ? '' : 'tarot-card--reversed'} ${c.isKeyCard ? 'tarot-card--key' : ''}`} key={c.position}>
             <div class="tarot-card__position">{c.position}</div>
             <div class="tarot-card__num">{c.card.num || '★'}</div>
             <div class="tarot-card__name">{c.card.name}</div>
@@ -703,7 +703,7 @@ const ResultRenderers = {
       </div>
       <div class="fengshui-grid">
         {r.flyStarGrid.map(c => (
-          <div class={`fengshui-cell ${c.palaceNum === 5 ? 'fengshui-cell--center' : ''} ${c.starLuck === '吉' ? 'fengshui-cell--ji' : c.starLuck === '凶' ? 'fengshui-cell--xiong' : ''}`}>
+          <div class={`fengshui-cell ${c.palaceNum === 5 ? 'fengshui-cell--center' : ''} ${c.starLuck === '吉' ? 'fengshui-cell--ji' : c.starLuck === '凶' ? 'fengshui-cell--xiong' : ''}`} key={c.palaceNum}>
             <div class="fengshui-cell__dir">{c.dir}</div>
             <div class="fengshui-cell__star">{c.starName}</div>
             <div class="fengshui-cell__nature">{c.starNature}</div>
@@ -719,7 +719,7 @@ const ResultRenderers = {
         <div class="fengshui-suggestions__title">布局建议</div>
         <div class="fengshui-suggestions__list">
           {r.layoutSuggestions.map((s, i) => (
-            <div class="fengshui-suggestion">
+            <div class="fengshui-suggestion" key={i}>
               <EchoBadge variant={s.priority === '极高' ? 'danger' : s.priority === '高' ? 'gold' : 'accent'}>{s.priority}</EchoBadge>
               <span class="fengshui-suggestion__star">{s.star}</span>
               <span class="fengshui-suggestion__dir">@{s.dir}</span>
@@ -762,7 +762,7 @@ const ResultRenderers = {
         <div class="nameology-strokes__title">笔画分布</div>
         <div class="nameology-strokes__list">
           {r.strokes.map((s, i) => (
-            <div class="nameology-stroke">
+            <div class="nameology-stroke" key={i}>
               <div class="nameology-stroke__char">{s.char}</div>
               <div class="nameology-stroke__num">{s.strokes}画</div>
               <div class="nameology-stroke__pos">{i === 0 ? '姓' : `名${i}`}</div>
@@ -783,7 +783,7 @@ const ResultRenderers = {
         <div class="nameology-wuge__title">五格吉凶</div>
         <div class="nameology-wuge__grid">
           {Object.entries(r.wuGe).map(([k, g]) => (
-            <div class={`nameology-wuge-item nameology-wuge-item--${g.luck === '大吉' ? 'ji' : g.luck === '大凶' ? 'xiong' : 'ping'}`}>
+            <div class={`nameology-wuge-item nameology-wuge-item--${g.luck === '大吉' ? 'ji' : g.luck === '大凶' ? 'xiong' : 'ping'}`} key={k}>
               <div class="nameology-wuge-item__name">{g.name}</div>
               <div class="nameology-wuge-item__num">{g.num}</div>
               <div class="nameology-wuge-item__luck">{g.luck}</div>
@@ -796,7 +796,7 @@ const ResultRenderers = {
         <div class="nameology-numology__title">81数理解读</div>
         <div class="nameology-numology__list">
           {Object.entries(r.numology81).map(([k, n]) => (
-            <div class="nameology-numology-item">
+            <div class="nameology-numology-item" key={k}>
               <EchoTag variant={n.luck === '大吉' ? 'ok' : n.luck === '大凶' ? 'danger' : 'muted'}>{n.luck}</EchoTag>
               <span class="nameology-numology-item__desc">{n.desc}</span>
             </div>
@@ -824,7 +824,7 @@ const ResultRenderers = {
           <div class="dream-keywords__title">匹配关键词（{r.keywords.length}个）</div>
           <div class="dream-keywords__list">
             {r.keywords.map((k, i) => (
-              <EchoTag variant={r.interpretations[i].luck === '吉' ? 'ok' : r.interpretations[i].luck === '凶' ? 'danger' : r.interpretations[i].luck === '半吉' ? 'gold' : 'muted'}>
+              <EchoTag key={k} variant={r.interpretations[i].luck === '吉' ? 'ok' : r.interpretations[i].luck === '凶' ? 'danger' : r.interpretations[i].luck === '半吉' ? 'gold' : 'muted'}>
                 {k}（{r.interpretations[i].luck}）
               </EchoTag>
             ))}
@@ -841,7 +841,7 @@ const ResultRenderers = {
           <div class="dream-interprets__title">逐条解读</div>
           <div class="dream-interprets__list">
             {r.interpretations.map((it, i) => (
-              <div class="dream-interpret">
+              <div class="dream-interpret" key={it.keyword}>
                 <EchoBadge variant={it.luck === '吉' ? 'ok' : it.luck === '凶' ? 'danger' : it.luck === '半吉' ? 'gold' : 'accent'}>{it.keyword}</EchoBadge>
                 <span class="dream-interpret__meaning">{it.meaning}</span>
               </div>
@@ -1061,7 +1061,7 @@ export default defineComponent({
               value={form.value[f.key]}
               onChange={(e) => form.value[f.key] = e.target.value}
             >
-              {f.options.map(o => <option value={o.value}>{o.label}</option>)}
+              {f.options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
         )
@@ -1073,6 +1073,7 @@ export default defineComponent({
             <div class="tool-detail__radio">
               {f.options.map(o => (
                 <button
+                  key={o.value}
                   type="button"
                   class={`tool-detail__radio-btn ${form.value[f.key] === o.value ? 'tool-detail__radio-btn--active' : ''}`}
                   onClick={() => form.value[f.key] = o.value}
@@ -1169,7 +1170,7 @@ export default defineComponent({
 
             <EchoCard level="secondary" title="输入">
               <div class="tool-detail__form">
-                {e.inputConfig.map(renderField)}
+                {e.inputConfig.map(f => <Fragment key={f.key}>{renderField(f)}</Fragment>)}
               </div>
               <EchoButton variant="primary" block loading={loading.value} onClick={calc} class="tool-detail__calc-btn">
                 {loading.value ? '推演中…' : calcLabel.value}
@@ -1190,7 +1191,7 @@ export default defineComponent({
                       </p>
                       <div class="tool-detail__crossverify-btns">
                         {crossVerifyTargets.value.map(t => (
-                          <EchoButton variant="ghost" size="sm" onClick={() => doCrossVerify(t.key)}>{t.name}印证</EchoButton>
+                          <EchoButton key={t.key} variant="ghost" size="sm" onClick={() => doCrossVerify(t.key)}>{t.name}印证</EchoButton>
                         ))}
                       </div>
                       {crossVerifyResult.value && (
@@ -1203,7 +1204,7 @@ export default defineComponent({
                           </div>
                           <div class="crossverify-result__dims">
                             {crossVerifyResult.value.dimensions.map(d => (
-                              <div class={`crossverify-dim ${d.match ? 'crossverify-dim--match' : 'crossverify-dim--nomatch'}`}>
+                              <div class={`crossverify-dim ${d.match ? 'crossverify-dim--match' : 'crossverify-dim--nomatch'}`} key={d.name}>
                                 <span class="crossverify-dim__name">{d.name}</span>
                                 <span class="crossverify-dim__from">{d.from}</span>
                                 <span class="crossverify-dim__arrow">↔</span>
@@ -1256,6 +1257,7 @@ export default defineComponent({
                     <div class="assume-form__days">
                       {[7, 30, 90, 180].map(d => (
                         <button
+                          key={d}
                           class={`assume-form__day ${assumeForm.value.days === d ? 'assume-form__day--active' : ''}`}
                           onClick={() => assumeForm.value.days = d}
                         >{d} 天</button>

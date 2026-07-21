@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useEchoStore } from '@/stores/echo.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, showToast } from '@/components/EchoUI.jsx'
@@ -10,12 +10,21 @@ const MILESTONES = [
   { days: 365, name: '周天运转' }
 ]
 
+/** 获取本地日期字符串（YYYY-MM-DD），避免 UTC 偏移问题 */
+function localDateStr(d = new Date()) {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 export default defineComponent({
   name: 'Checkin',
   setup() {
     const store = useEchoStore()
-    const today = new Date().toISOString().slice(0, 10)
-    const checkedToday = computed(() => store.checkin.lastDate === today)
+    // 使用 computed 确保跨午夜后日期自动更新
+    const today = computed(() => localDateStr())
+    const checkedToday = computed(() => store.checkin.lastDate === today.value)
 
     // 当月签到日历
     const now = new Date()
@@ -28,7 +37,7 @@ export default defineComponent({
       for (let i = 0; i < firstDay; i++) arr.push(null)
       for (let d = 1; d <= daysInMonth; d++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
-        arr.push({ day: d, checked: store.checkin.dates.includes(dateStr), isToday: dateStr === today })
+        arr.push({ day: d, checked: store.checkin.dates.includes(dateStr), isToday: dateStr === today.value })
       }
       return arr
     })
@@ -39,7 +48,7 @@ export default defineComponent({
     }
 
     const nextMilestone = computed(() => {
-      return MILESTONES.find(m => m.days > store.checkin.streak) || MILESTONES[MILESTONES.length - 1]
+      return MILESTONES.find(m => m.days > store.checkin.streak) || null
     })
 
     return () => (
@@ -62,7 +71,9 @@ export default defineComponent({
                 {checkedToday.value ? '今日已签' : '立即签到'}
               </EchoButton>
               <div class="checkin-page__next">
-                下一里程碑：{nextMilestone.value.name}（{nextMilestone.value.days} 天）
+                {nextMilestone.value
+                  ? `下一里程碑：${nextMilestone.value.name}（${nextMilestone.value.days} 天）`
+                  : '所有里程碑已达成'}
               </div>
             </div>
           </EchoCard>
@@ -72,7 +83,7 @@ export default defineComponent({
             {MILESTONES.map(m => {
               const reached = store.checkin.streak >= m.days
               return (
-                <div class={`checkin-page__milestone ${reached ? 'checkin-page__milestone--reached' : ''}`}>
+                <div key={m.days} class={`checkin-page__milestone ${reached ? 'checkin-page__milestone--reached' : ''}`}>
                   <div class="checkin-page__milestone-days">{m.days}</div>
                   <div class="checkin-page__milestone-name">{m.name}</div>
                   {reached && <EchoBadge variant="ok">已达成</EchoBadge>}
@@ -85,10 +96,10 @@ export default defineComponent({
           <EchoCard level="secondary" title="本月签到">
             <div class="checkin-page__calendar">
               {['日', '一', '二', '三', '四', '五', '六'].map(w => (
-                <div class="checkin-page__calendar-weekday">{w}</div>
+                <div key={w} class="checkin-page__calendar-weekday">{w}</div>
               ))}
               {calendarDays.value.map((d, i) => (
-                <div class={`checkin-page__calendar-day ${d ? '' : 'checkin-page__calendar-day--empty'} ${d?.checked ? 'checkin-page__calendar-day--checked' : ''} ${d?.isToday ? 'checkin-page__calendar-day--today' : ''}`}>
+                <div key={i} class={`checkin-page__calendar-day ${d ? '' : 'checkin-page__calendar-day--empty'} ${d?.checked ? 'checkin-page__calendar-day--checked' : ''} ${d?.isToday ? 'checkin-page__calendar-day--today' : ''}`}>
                   {d?.day || ''}
                 </div>
               ))}

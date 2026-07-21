@@ -20,7 +20,7 @@ export const EchoCard = defineComponent({
       { 'echo-card--interactive': props.interactive }
     ])
     return () => (
-      <div class={cls.value} onClick={() => props.interactive && emit('click')}>
+      <div class={cls.value} onClick={props.interactive ? (e) => emit('click', e) : undefined}>
         {props.title && (
           <div class="echo-card__head">
             <h3 class="echo-card__title">{props.title}</h3>
@@ -113,12 +113,12 @@ export const MingeGauge = defineComponent({
   name: 'MingeGauge',
   props: {
     value: { type: Number, default: 0 }, // 0-100
-    level: { type: Number, default: 1 },
     label: { type: String, default: '命格可信度' }
   },
   setup(props) {
     const circumference = 2 * Math.PI * 52
-    const offset = computed(() => circumference * (1 - props.value / 100))
+    const clamped = computed(() => Math.max(0, Math.min(100, props.value)))
+    const offset = computed(() => circumference * (1 - clamped.value / 100))
     return () => (
       <div class="minge-gauge">
         <svg viewBox="0 0 120 120" class="minge-gauge__svg">
@@ -132,7 +132,7 @@ export const MingeGauge = defineComponent({
           />
         </svg>
         <div class="minge-gauge__center">
-          <div class="minge-gauge__num">{props.value}<span class="minge-gauge__pct">%</span></div>
+          <div class="minge-gauge__num">{clamped.value}<span class="minge-gauge__pct">%</span></div>
           <div class="minge-gauge__label">{props.label}</div>
         </div>
       </div>
@@ -174,6 +174,8 @@ export const EchoModal = defineComponent({
 const toastQueue = ref([])
 let toastId = 0
 export function showToast(message, variant = 'default', duration = 2000) {
+  // 'danger' 别名映射到 'error'（CSS 统一使用 .toast--error）
+  if (variant === 'danger') variant = 'error'
   const id = ++toastId
   toastQueue.value.push({ id, message, variant })
   setTimeout(() => {

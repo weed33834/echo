@@ -9,7 +9,7 @@ export default defineComponent({
     const store = useEchoStore()
     const activeTab = ref('pending') // pending | reviewed | all
     const reviewModal = ref(null) // 当前复盘的 assumption
-    const reviewForm = ref({ actualEvent: '', matchScore: 0.5, dimensions: { timing: 0.5, direction: 0.5, degree: 0.5 } })
+    const reviewForm = ref({ actualEvent: '', dimensions: { timing: 0.3, direction: 0.3, degree: 0.3 } })
 
     const tabs = computed(() => [
       { key: 'pending', label: '待印证', count: store.pendingAssumptions.length },
@@ -25,7 +25,7 @@ export default defineComponent({
 
     const openReview = (a) => {
       reviewModal.value = a
-      reviewForm.value = { actualEvent: '', matchScore: 0.5, dimensions: { timing: 0.5, direction: 0.5, degree: 0.5 } }
+      reviewForm.value = { actualEvent: '', dimensions: { timing: 0.3, direction: 0.3, degree: 0.3 } }
     }
 
     const submitReview = () => {
@@ -40,6 +40,10 @@ export default defineComponent({
         matchScore: score,
         dimensions: reviewForm.value.dimensions
       })
+      if (!result) {
+        showToast('复盘失败：找不到对应的预测记录', 'error')
+        return
+      }
       showToast(`复盘完成 · 获得 ${result.expGain} 经验`, 'success', 2000)
       reviewModal.value = null
     }
@@ -65,7 +69,7 @@ export default defineComponent({
           <section class="echo-center__gauge-section">
             <EchoCard level="primary">
               <div class="echo-center__gauge-wrap">
-                <MingeGauge value={store.accuracyRate} level={store.minge.level} label="命格可信度" />
+                <MingeGauge value={store.accuracyRate} label="命格可信度" />
               </div>
               <div class="echo-center__gauge-stats">
                 <div class="echo-center__stat">
@@ -95,6 +99,7 @@ export default defineComponent({
           <div class="echo-center__tabs">
             {tabs.value.map(t => (
               <button
+                key={t.key}
                 class={`echo-center__tab ${activeTab.value === t.key ? 'echo-center__tab--active' : ''}`}
                 onClick={() => activeTab.value = t.key}
               >
@@ -169,6 +174,7 @@ export default defineComponent({
                   <div class="review-form__scores">
                     {scoreLabels.map(s => (
                       <button
+                        key={`timing-${s.v}`}
                         class={`review-form__score ${reviewForm.value.dimensions.timing === s.v ? 'review-form__score--active' : ''}`}
                         onClick={() => reviewForm.value.dimensions.timing = s.v}
                       >{s.l}</button>
@@ -180,6 +186,7 @@ export default defineComponent({
                   <div class="review-form__scores">
                     {scoreLabels.map(s => (
                       <button
+                        key={`direction-${s.v}`}
                         class={`review-form__score ${reviewForm.value.dimensions.direction === s.v ? 'review-form__score--active' : ''}`}
                         onClick={() => reviewForm.value.dimensions.direction = s.v}
                       >{s.l}</button>
@@ -191,6 +198,7 @@ export default defineComponent({
                   <div class="review-form__scores">
                     {scoreLabels.map(s => (
                       <button
+                        key={`degree-${s.v}`}
                         class={`review-form__score ${reviewForm.value.dimensions.degree === s.v ? 'review-form__score--active' : ''}`}
                         onClick={() => reviewForm.value.dimensions.degree = s.v}
                       >{s.l}</button>

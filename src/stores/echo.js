@@ -11,6 +11,14 @@ const LS_KEY = 'echo_store_v2'
 // 命格等级阈值（经验值）
 const LEVEL_THRESHOLDS = [0, 100, 300, 600, 1000, 1500, 2200, 3000, 4000, 5500, 7500]
 
+/** 获取本地日期字符串（YYYY-MM-DD），避免 UTC 偏移导致跨午夜签到异常 */
+function todayStr(d = new Date()) {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY)
@@ -146,11 +154,11 @@ export const useEchoStore = defineStore('echo', {
       return { expGain, leveledUp: this.minge.level }
     },
     doCheckin() {
-      const today = new Date().toISOString().slice(0, 10)
+      const today = todayStr()
       if (this.checkin.lastDate === today) {
         return { ok: false, message: '今日已签到' }
       }
-      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+      const yesterday = todayStr(new Date(Date.now() - 86400000))
       const newStreak = this.checkin.lastDate === yesterday ? this.checkin.streak + 1 : 1
       const points = 10 + Math.min(newStreak, 30)
       this.checkin.streak = newStreak
@@ -201,11 +209,11 @@ export const useEchoStore = defineStore('echo', {
     },
     // 每日运势缓存
     setFortuneCache(data) {
-      this.fortuneCache = { date: new Date().toISOString().slice(0, 10), data }
+      this.fortuneCache = { date: todayStr(), data }
       this.persist()
     },
     getFortuneCache() {
-      const today = new Date().toISOString().slice(0, 10)
+      const today = todayStr()
       if (this.fortuneCache && this.fortuneCache.date === today) {
         return this.fortuneCache.data
       }

@@ -11,7 +11,6 @@
  *   - getCurrentJieqi from '@/utils/engines.js'
  */
 import { defineComponent, ref, computed, onMounted, nextTick, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { TopBar } from '@/components/TabBar.jsx'
 import {
   EchoCard,
@@ -19,8 +18,7 @@ import {
   EchoBadge,
   EchoTag,
   EchoModal,
-  showToast,
-  EmptyState
+  showToast
 } from '@/components/EchoUI.jsx'
 import { useChatStore } from '@/stores/chat.js'
 import { useEchoStore } from '@/stores/echo.js'
@@ -211,7 +209,6 @@ function formatTime(ts) {
 export default defineComponent({
   name: 'Chat',
   setup() {
-    const router = useRouter()
     const chatStore = useChatStore()
     const echoStore = useEchoStore()
 
