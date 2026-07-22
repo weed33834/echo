@@ -17,7 +17,7 @@
   letter-spacing: var(--ls-tight);
 }
 .home__brand-name { color: var(--accent); }
-.home__brand-dot { color: var(--gold); margin: 0 var(--sp-1); }
+.home__brand-dot { color: var(--accent); margin: 0 var(--sp-1); }
 .home__brand-sub { color: var(--muted); font-size: var(--fs-lg); }
 .home__slogan {
   font-size: var(--fs-sm);
@@ -31,14 +31,14 @@
   justify-content: center;
   gap: var(--sp-2);
   padding: var(--sp-2) var(--sp-4);
-  background: var(--gold-soft);
+  background: var(--accent-soft);
   border-bottom: 1px solid var(--rule);
   font-size: var(--fs-xs);
   color: var(--ink);
   overflow-x: auto;
   white-space: nowrap;
 }
-.home__shichen-time { font-weight: var(--fw-bold); color: var(--gold); }
+.home__shichen-time { font-weight: var(--fw-bold); color: var(--accent); }
 .home__shichen-divider { color: var(--muted-2); }
 .home__shichen-yi { color: var(--ok); }
 .home__shichen-ji { color: var(--danger); }
@@ -205,8 +205,8 @@
   font-weight: var(--fw-bold);
 }
 .home__quick-icon--gold {
-  background: var(--gold-soft);
-  color: var(--gold);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 .home__quick-label {
   font-size: var(--fs-sm);
@@ -613,7 +613,7 @@
   justify-content: center;
   gap: var(--sp-2);
   padding: var(--sp-2);
-  background: var(--gold-soft);
+  background: var(--accent-soft);
   border-radius: var(--r-md);
 }
 .tool-detail__daymaster-label {
@@ -624,7 +624,7 @@
   font-family: 'Lora', serif;
   font-size: var(--fs-xl);
   font-weight: var(--fw-bold);
-  color: var(--gold);
+  color: var(--accent);
 }
 .tool-detail__assume {
   text-align: center;
@@ -1019,8 +1019,8 @@
 .settings-page__manifesto {
   margin-top: var(--sp-4);
   padding: var(--sp-3);
-  border-left: 2px solid var(--gold);
-  background: var(--gold-soft);
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
 }
 .settings-page__manifesto p {
   font-size: var(--fs-xs);
@@ -1191,8 +1191,8 @@
   font-size: 10px;
   padding: 1px 6px;
   border-radius: var(--r-full);
-  background: var(--gold-soft);
-  color: var(--gold);
+  background: var(--accent-soft);
+  color: var(--accent);
   font-weight: var(--fw-bold);
 }
 
@@ -1204,7 +1204,7 @@
   font-family: 'Lora', serif;
   font-size: 48px;
   font-weight: var(--fw-bold);
-  color: var(--gold);
+  color: var(--accent);
   line-height: 1;
 }
 .checkin-page__streak-lbl {
@@ -1237,8 +1237,8 @@
 }
 .checkin-page__milestone--reached {
   opacity: 1;
-  border-color: var(--gold);
-  background: var(--gold-soft);
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 .checkin-page__milestone-days {
   font-family: 'Lora', serif;

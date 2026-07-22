@@ -1,6 +1,7 @@
 /**
- * Echo Global Base
+ * Echo Global Base v4
  * 重置 + 全局排版 + 通用工具类
+ * 参考：Rauno.me 减法哲学 · Vercel 系统字体栈 · Stripe 细字重
  */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -16,9 +17,12 @@ html {
 }
 
 body {
-  font-family: 'Lora', 'Noto Serif CJK SC', 'Songti SC', serif;
+  /* 系统字体栈优先（参考 Rauno.me），减少加载、贴近原生体验 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+               'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
   font-size: var(--fs-base);
-  line-height: var(--lh-relaxed);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
   color: var(--ink);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
@@ -28,6 +32,15 @@ body {
   min-height: 100dvh;
   overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
+  /* 防止文字选中闪烁 */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 允许输入区域选中 */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 #app {
@@ -35,46 +48,30 @@ body {
   min-height: 100dvh;
   padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom));
   padding-left: var(--layout-gutter);
-  transition: padding-left 0.3s ease;
+  transition: padding-left var(--dur-slow) var(--ease-smooth);
 }
 
-/* 触摸优化：交互元素最小命中区 */
+/* 触摸优化 */
 button, a, [role="button"], input[type="checkbox"], input[type="radio"] {
   touch-action: manipulation;
 }
 
-/* 防止 iOS 输入框缩放 */
+/* 输入框 */
 input, textarea, select {
   font-size: var(--fs-base);
   -webkit-appearance: none;
   appearance: none;
+  font-family: inherit;
 }
-
-/* 允许 textarea 原生外观 */
 textarea {
   -webkit-appearance: auto;
   appearance: auto;
 }
 
-/* 桌面端：移除底部 padding（TabBar 已变为侧边栏） */
-@media (min-width: 1024px) {
-  #app {
-    padding-bottom: 0;
-  }
-  body {
-    background: var(--bg-3);
-  }
-  /* 内容区背景卡片化 */
-  .app-main {
-    min-height: 100vh;
-    background: var(--bg);
-    box-shadow: 0 0 40px rgba(21, 19, 31, 0.04);
-  }
-}
-
-/* === 排版 === */
+/* === 排版 — 编辑式左对齐风格 === */
 h1, h2, h3, h4 {
-  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  /* 标题用衬线字体，营造典籍感 */
+  font-family: 'Lora', 'Noto Serif CJK SC', 'Songti SC', Georgia, serif;
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
@@ -82,34 +79,47 @@ h1, h2, h3, h4 {
 h1 { font-size: var(--fs-xl); }
 h2 { font-size: var(--fs-lg); }
 h3 { font-size: var(--fs-base); }
+h4 { font-size: var(--fs-sm); }
 
-p { line-height: var(--lh-normal); }
+p {
+  line-height: var(--lh-normal);
+  letter-spacing: var(--ls-snug);
+}
 
 a {
   color: var(--accent);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 a:hover { color: var(--accent-2); }
 
 button {
   font-family: inherit;
   font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
   cursor: pointer;
   border: none;
   background: none;
   color: inherit;
+  transition: all var(--dur-fast) var(--ease-out);
 }
 
 ul, ol { padding-left: var(--sp-4); }
 
 code {
-  font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
+  font-family: 'SF Mono', 'JetBrains Mono', Menlo, monospace;
   font-size: 0.86em;
   background: var(--bg-3);
   padding: 0.1em 0.35em;
   border-radius: var(--r-sm);
-  color: var(--accent);
+  color: var(--accent-2);
+}
+
+/* 数字用等宽字体（参考 Stripe tnum） */
+.tabular {
+  font-family: 'SF Mono', 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 /* === 通用工具类 === */
@@ -120,8 +130,12 @@ code {
 }
 
 .muted { color: var(--muted); }
-.gold { color: var(--gold); }
+.muted-2 { color: var(--muted-2); }
 .accent { color: var(--accent); }
+.accent-2 { color: var(--accent-2); }
+.ink { color: var(--ink); }
+.ink-2 { color: var(--ink-2); }
+.ink-3 { color: var(--ink-3); }
 
 .text-xs { font-size: var(--fs-xs); }
 .text-sm { font-size: var(--fs-sm); }
@@ -130,8 +144,14 @@ code {
 .text-xl { font-size: var(--fs-xl); }
 .text-2xl { font-size: var(--fs-2xl); }
 
+.fw-light { font-weight: var(--fw-light); }
 .fw-medium { font-weight: var(--fw-medium); }
 .fw-bold { font-weight: var(--fw-bold); }
+
+.ls-tight { letter-spacing: var(--ls-tight); }
+.ls-wide { letter-spacing: var(--ls-wide); }
+.ls-xwide { letter-spacing: var(--ls-xwide); }
+.uppercase { text-transform: uppercase; }
 
 .mt-1 { margin-top: var(--sp-1); }
 .mt-2 { margin-top: var(--sp-2); }
@@ -149,29 +169,117 @@ code {
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
+.items-start { align-items: flex-start; }
 .justify-between { justify-content: space-between; }
 .justify-center { justify-content: center; }
 .gap-1 { gap: var(--sp-1); }
 .gap-2 { gap: var(--sp-2); }
 .gap-3 { gap: var(--sp-3); }
 .gap-4 { gap: var(--sp-4); }
+.gap-5 { gap: var(--sp-5); }
 
+.text-left { text-align: left; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
-/* === 滚动条 === */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* === 滚动条 — 极简 === */
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--rule-strong); }
 
-/* === 焦点可见（可访问性） === */
+/* === 焦点环 — Vercel Geist 双层环 === */
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  border-radius: var(--r-sm);
 }
 
 /* === 选中文本 === */
 ::selection {
   background: var(--accent-soft);
-  color: var(--ink);
+  color: var(--accent-2);
+}
+
+/* === 桌面端 === */
+@media (min-width: 1024px) {
+  #app {
+    padding-bottom: 0;
+  }
+  body {
+    background: var(--bg-2);
+  }
+  .app-main {
+    min-height: 100vh;
+    background: var(--bg);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* === 动画关键帧 === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* === 路由转场动画 === */
+.route-enter-active {
+  animation: fadeIn var(--dur-slow) var(--ease-out);
+}
+.route-leave-active {
+  animation: fadeIn var(--dur-fast) var(--ease-out) reverse;
+}
+
+/* === 渐入动画工具类 === */
+.fade-in { animation: fadeIn var(--dur-slow) var(--ease-out) both; }
+.fade-in-up { animation: fadeInUp var(--dur-slow) var(--ease-out) both; }
+.fade-in-down { animation: fadeInDown var(--dur-slow) var(--ease-out) both; }
+.scale-in { animation: scaleIn var(--dur-normal) var(--ease-out) both; }
+
+/* 交错动画 */
+.stagger { animation: fadeInUp var(--dur-slow) var(--ease-out) both; }
+.stagger[style*="--i"] {
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+/* === 骨架屏 === */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-3) 25%,
+    var(--bg-4) 50%,
+    var(--bg-3) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--r-sm);
+}
+
+/* === 减少动画偏好 === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

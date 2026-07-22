@@ -11,6 +11,7 @@ import { TopBar } from '@/components/TabBar.jsx'
 import { useEchoStore } from '@/stores/echo.js'
 import { BaziChart } from '@/components/BaziChart.jsx'
 import { zodiacOf, zodiacSignOf, solarToLunar } from '@/utils/engines.js'
+import { UIIcon } from '@/components/ToolIcons.jsx'
 
 // 十二地支时辰选项（value 为该时辰起始小时，范围 0-23）
 const TIME_SLOTS = [
@@ -221,8 +222,10 @@ export default defineComponent({
     // 空状态
     const renderEmpty = () => (
       <div class="profile-page__empty">
-        <EchoCard class="profile-page__empty-card">
-          <div class="profile-page__empty-icon">回</div>
+        <EchoCard class="profile-page__empty-card stagger" style={{ '--i': 0 }}>
+          <div class="profile-page__empty-icon">
+            <UIIcon name="profile" size={48} />
+          </div>
           <h2 class="profile-page__empty-title">尚未设置个人档案</h2>
           <p class="profile-page__empty-desc">
             完善您的出生信息，让回响为您推演命理八字
@@ -236,7 +239,7 @@ export default defineComponent({
 
     // 个人档案英雄卡
     const renderHero = () => (
-      <EchoCard class="profile-page__hero">
+      <EchoCard class="profile-page__hero stagger" style={{ '--i': 0 }}>
         <div class="profile-page__hero-top">
           <div class="profile-page__avatar">
             {profile.value?.name?.charAt(0) || '回'}
@@ -277,7 +280,7 @@ export default defineComponent({
         { label: '纳音', value: nayin.value || '—' },
       ]
       return (
-        <EchoCard class="profile-page__info">
+        <EchoCard class="profile-page__info stagger" style={{ '--i': 2 }}>
           <div class="profile-page__info-grid">
             {items.map((item) => (
               <div class="profile-page__info-item" key={item.label}>
@@ -391,14 +394,14 @@ export default defineComponent({
               {renderHero()}
 
               {profileBazi.value && (
-                <div class="profile-page__bazi">
+                <div class="profile-page__bazi stagger" style={{ '--i': 1 }}>
                   <BaziChart bazi={profileBazi.value} />
                 </div>
               )}
 
               {renderInfoGrid()}
 
-              <div class="profile-page__hint">
+              <div class="profile-page__hint stagger" style={{ '--i': 3 }}>
                 <EchoTag variant="muted">提示</EchoTag>
                 <span class="profile-page__hint-text">
                   填写出生时辰可显著提升推算准确度

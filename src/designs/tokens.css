@@ -1,72 +1,92 @@
 /**
- * Echo Design Tokens
- * 单源真理：所有颜色/字号/间距/圆角/阴影只在 :root 定义一次
- * 硬性指标：最小字号 13px、间距 8pt 节奏、对比度 ≥4.5:1
+ * Echo Design Tokens v4
+ * 设计哲学：古观象台档案 — 墨黑画布、古铜刻线、暖白墨迹
+ * 参考：Co-Star 去神秘化 · Linear 暗色表面分层 · Vercel 半透明边框 · Stripe 细字重
+ * 去AI味：禁紫色渐变 · 禁文字图标 · 禁居中模板 · 禁等宽网格
  */
 :root {
-  /* === 颜色 === */
-  /* 墨砚系（文本与深色背景） */
-  --ink: #15131f;
-  --ink-2: #2a2540;
-  --ink-3: #3d3656;
-  /* 宣纸系（亮色背景与表面） */
-  --bg: #f7f5f0;
-  --bg-2: #ffffff;
-  --bg-3: #efeafb;
+  /* === 颜色 — 墨砚系 === */
+  /* 画布：带暖色调的近黑，不是冷紫黑 */
+  --ink: #e8e0d4;
+  --ink-2: #c4b8a4;
+  --ink-3: #8a7e6b;
+  /* 表面：暖灰分层，每层差值约 6-8% 亮度 */
+  --bg: #0a0908;
+  --bg-2: #12100e;
+  --bg-3: #1a1715;
+  --bg-4: #221e1b;
   /* 静音文本 */
-  --muted: #6b6779;
-  --muted-2: #9b97a9;
-  /* 描边 */
-  --rule: #e6e1d6;
-  --rule-2: #d8d2c4;
-  /* 主色：回响紫 */
-  --accent: #5b3fd6;
-  --accent-2: #7a5ff0;
-  --accent-soft: rgba(91, 63, 214, 0.08);
-  /* 副色：鎏金 */
-  --gold: #b8893a;
-  --gold-2: #d4a85a;
-  --gold-soft: rgba(184, 137, 58, 0.10);
-  /* 语义色 */
-  --ok: #2d8f5b;
-  --ok-soft: rgba(45, 143, 91, 0.12);
-  --danger: #b8453c;
-  --danger-soft: rgba(184, 69, 60, 0.12);
-  --warn: #c98a2b;
-  --warn-soft: rgba(201, 138, 43, 0.12);
-  /* 五行色（仅命盘可视化，不渗入 UI 框架） */
-  --wuxing-metal: #c9b078;
-  --wuxing-wood: #5a9e6f;
-  --wuxing-water: #4a78b0;
-  --wuxing-fire: #c8483a;
-  --wuxing-earth: #a8824a;
+  --muted: #6b6256;
+  --muted-2: #4a4438;
+  /* 描边：半透明白（参考 Vercel Geist） */
+  --rule: rgba(255, 245, 220, 0.06);
+  --rule-2: rgba(255, 245, 220, 0.12);
+  --rule-strong: rgba(255, 245, 220, 0.18);
 
-  /* === 字号（5 档，最小 13px） === */
+  /* 主色：古铜金（低饱和度，非紫非蓝） */
+  --accent: #a68b5b;
+  --accent-2: #c4a263;
+  --accent-soft: rgba(166, 139, 91, 0.10);
+  --accent-glow: rgba(166, 139, 91, 0.20);
+
+  /* === 向后兼容别名（旧变量名 → 新token） === */
+  --gold: #a68b5b;
+  --gold-soft: rgba(166, 139, 91, 0.10);
+  --gold-2: #c4a263;
+  --purple: #8b5cf6;
+  --purple-soft: rgba(139, 92, 246, 0.10);
+  --bg-1: #12100e;
+  --border: var(--rule);
+  --fs-md: var(--fs-base);
+
+  /* 副色：朱砂红（仅用于关键警示和五行火） */
+  --vermilion: #9c3a2e;
+  --vermilion-soft: rgba(156, 58, 46, 0.10);
+
+  /* 语义色 — 全部降低饱和度 */
+  --ok: #5a7a4e;
+  --ok-soft: rgba(90, 122, 78, 0.10);
+  --danger: #9c3a2e;
+  --danger-soft: rgba(156, 58, 46, 0.10);
+  --warn: #8a6d2e;
+  --warn-soft: rgba(138, 109, 46, 0.10);
+
+  /* 五行色（仅命盘可视化） */
+  --wuxing-metal: #b8a070;
+  --wuxing-wood: #6a8a5a;
+  --wuxing-water: #4a6a8a;
+  --wuxing-fire: #9c3a2e;
+  --wuxing-earth: #8a7440;
+
+  /* === 字号（最小 13px） === */
   --fs-xs: 13px;
-  --fs-sm: 15px;
-  --fs-base: 16px;
-  --fs-lg: 20px;
-  --fs-xl: 28px;
-  --fs-2xl: 36px;
+  --fs-sm: 14px;
+  --fs-base: 15px;
+  --fs-lg: 19px;
+  --fs-xl: 26px;
+  --fs-2xl: 34px;
+  --fs-3xl: 44px;
 
-  /* === 字重 === */
+  /* === 字重 — Stripe 式细体偏好 === */
+  --fw-light: 300;
   --fw-regular: 400;
   --fw-medium: 500;
-  --fw-bold: 700;
+  --fw-bold: 600;
 
   /* === 行高 === */
-  --lh-tight: 1.25;
-  --lh-snug: 1.4;
-  --lh-normal: 1.6;
-  --lh-relaxed: 1.78;
+  --lh-tight: 1.2;
+  --lh-snug: 1.35;
+  --lh-normal: 1.55;
+  --lh-relaxed: 1.75;
 
-  /* === 字间距 === */
-  --ls-tight: -0.01em;
+  /* === 字间距 — 大字号负间距（Linear/Vercel 风格） === */
+  --ls-tight: -0.02em;
+  --ls-snug: -0.01em;
   --ls-normal: 0;
-  --ls-wide: 0.04em;
+  --ls-wide: 0.03em;
   --ls-xwide: 0.08em;
 
-  /* === 间距（8pt 节奏） === */
+  /* === 间距（4px 基础，8pt 节奏） === */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -75,21 +95,30 @@
   --sp-6: 32px;
   --sp-7: 48px;
   --sp-8: 64px;
+  --sp-9: 80px;
 
-  /* === 圆角 === */
-  --r-sm: 4px;
+  /* === 圆角 — Vercel 风格克制 === */
+  --r-xs: 4px;
+  --r-sm: 6px;
   --r-md: 8px;
   --r-lg: 12px;
   --r-xl: 16px;
+  --r-2xl: 20px;
   --r-full: 999px;
 
-  /* === 阴影（克制，3 档） === */
-  --shadow-sm: 0 1px 2px rgba(21, 19, 31, 0.06);
-  --shadow-md: 0 2px 8px rgba(21, 19, 31, 0.08);
-  --shadow-lg: 0 8px 24px rgba(21, 19, 31, 0.12);
-  /* === 光晕（暗色主题增强） === */
-  --glow-accent: 0 0 16px rgba(91, 63, 214, 0.12);
-  --glow-gold: 0 0 12px rgba(184, 137, 58, 0.1);
+  /* === 阴影 — 暗色模式极克制（参考 Linear：用表面分层替代阴影） === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
+  /* 品牌色阴影（参考 Stripe 的蓝调阴影） */
+  --shadow-accent: 0 4px 12px rgba(166, 139, 91, 0.15);
+
+  /* === 过渡 — Vercel 风格 === */
+  --ease-out: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-normal: 200ms;
+  --dur-slow: 300ms;
 
   /* === z-index === */
   --z-base: 1;
@@ -106,57 +135,52 @@
   /* === 布局 === */
   --content-max: 480px;
   --tabbar-h: 56px;
-  --sidebar-w: 0px;       /* 移动端无侧边栏 */
-  --layout-gutter: 0px;   /* 内容区左侧让位 */
+  --sidebar-w: 0px;
+  --layout-gutter: 0px;
 }
 
-/* 平板：加宽内容 */
+/* 平板 */
 @media (min-width: 768px) {
   :root {
     --content-max: 720px;
-    --sp-4: 20px;
-    --sp-5: 28px;
+    --fs-base: 16px;
+    --fs-lg: 21px;
   }
 }
 
-/* 桌面：侧边栏模式 */
+/* 桌面 */
 @media (min-width: 1024px) {
   :root {
     --content-max: 960px;
-    --sidebar-w: 240px;
+    --sidebar-w: 220px;
     --layout-gutter: var(--sidebar-w);
-    --tabbar-h: 0px;       /* 桌面端无底部栏 */
-    --fs-base: 17px;
+    --tabbar-h: 0px;
+    --fs-base: 16px;
     --fs-lg: 22px;
     --fs-xl: 30px;
     --fs-2xl: 40px;
+    --fs-3xl: 52px;
   }
 }
 @media (min-width: 1440px) {
-  :root { --content-max: 1120px; }
+  :root { --content-max: 1080px; }
 }
-
-/* 超宽屏（≥1920px）：限制最大宽度，居中阅读 */
 @media (min-width: 1920px) {
-  :root {
-    --content-max: 1280px;
-    --sp-5: 32px;
-    --sp-6: 40px;
-  }
+  :root { --content-max: 1240px; }
 }
 
-/* 超窄屏（≤340px）：压缩间距与字号，确保不溢出 */
+/* 超窄屏 */
 @media (max-width: 340px) {
   :root {
     --sp-3: 10px;
     --sp-4: 12px;
     --sp-5: 18px;
-    --fs-sm: 14px;
-    --fs-lg: 18px;
+    --fs-sm: 13px;
+    --fs-lg: 17px;
   }
 }
 
-/* 横屏矮视口（高 ≤500px 且宽 ≥568px）：减少垂直间距 */
+/* 横屏矮视口 */
 @media (max-height: 500px) and (min-width: 568px) and (orientation: landscape) {
   :root {
     --sp-4: 10px;
@@ -167,72 +191,45 @@
   }
 }
 
-/* 暗色模式（东方暗色宇宙美学） */
-@media (prefers-color-scheme: dark) {
-  :root.theme-auto {
-    --ink: #e8e4f0;
-    --ink-2: #c4bdd6;
-    --ink-3: #8b82a8;
-    --bg: #0d0a1a;
-    --bg-2: #16112a;
-    --bg-3: #1f1840;
-    --muted: #9b8fb5;
-    --muted-2: #6b5f80;
-    --rule: #2d2548;
-    --rule-2: #3d3460;
-    --accent: #7a5ff0;
-    --accent-2: #9b7fff;
-    --accent-soft: rgba(122, 95, 240, 0.14);
-    --gold: #c9a84c;
-    --gold-2: #e0c068;
-    --gold-soft: rgba(201, 168, 76, 0.12);
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
-    --glow-accent: 0 0 20px rgba(122, 95, 240, 0.25);
-    --glow-gold: 0 0 16px rgba(201, 168, 76, 0.2);
-  }
+/* === 暗色主题即默认主题（不需要单独的 dark mode 覆盖） === */
+/* 亮色主题（可选切换） */
+[data-theme="light"] {
+  --ink: #1a1715;
+  --ink-2: #3d362e;
+  --ink-3: #6b6256;
+  --bg: #f5f1ea;
+  --bg-2: #ffffff;
+  --bg-3: #ebe5da;
+  --bg-4: #ddd6c8;
+  --muted: #8a7e6b;
+  --muted-2: #b0a690;
+  --rule: rgba(0, 0, 0, 0.06);
+  --rule-2: rgba(0, 0, 0, 0.12);
+  --rule-strong: rgba(0, 0, 0, 0.18);
+  --accent: #8a6d3e;
+  --accent-2: #a68b5b;
+  --accent-soft: rgba(138, 109, 62, 0.08);
+  --accent-glow: rgba(138, 109, 62, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-accent: 0 4px 12px rgba(138, 109, 62, 0.10);
+
+  /* === 向后兼容别名（亮色） === */
+  --gold: #8a6d3e;
+  --gold-soft: rgba(138, 109, 62, 0.08);
+  --gold-2: #a68b5b;
+  --purple: #7c5e1e;
+  --purple-soft: rgba(124, 94, 30, 0.08);
+  --bg-1: #ffffff;
+  --border: rgba(0, 0, 0, 0.06);
+  --fs-md: var(--fs-base);
 }
 
-/* === 显式暗色主题（东方暗色宇宙美学） === */
-[data-theme="dark"] {
-  --ink: #e8e4f0;
-  --ink-2: #c4bdd6;
-  --ink-3: #8b82a8;
-  --bg: #0d0a1a;
-  --bg-2: #16112a;
-  --bg-3: #1f1840;
-  --muted: #9b8fb5;
-  --muted-2: #6b5f80;
-  --rule: #2d2548;
-  --rule-2: #3d3460;
-  --accent: #7a5ff0;
-  --accent-2: #9b7fff;
-  --accent-soft: rgba(122, 95, 240, 0.14);
-  --gold: #c9a84c;
-  --gold-2: #e0c068;
-  --gold-soft: rgba(201, 168, 76, 0.12);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
-  --glow-accent: 0 0 20px rgba(122, 95, 240, 0.25);
-  --glow-gold: 0 0 16px rgba(201, 168, 76, 0.2);
-}
-
-/* === 字号缩放（用户偏好） === */
+/* === 字号缩放 === */
 [data-font-scale="sm"] {
-  --fs-xs: 12px;
-  --fs-sm: 14px;
-  --fs-base: 15px;
-  --fs-lg: 18px;
-  --fs-xl: 25px;
-  --fs-2xl: 32px;
+  --fs-xs: 12px; --fs-sm: 13px; --fs-base: 14px; --fs-lg: 17px; --fs-xl: 23px; --fs-2xl: 30px;
 }
 [data-font-scale="lg"] {
-  --fs-xs: 14px;
-  --fs-sm: 16px;
-  --fs-base: 18px;
-  --fs-lg: 22px;
-  --fs-xl: 31px;
-  --fs-2xl: 40px;
+  --fs-xs: 14px; --fs-sm: 15px; --fs-base: 17px; --fs-lg: 22px; --fs-xl: 30px; --fs-2xl: 40px;
 }

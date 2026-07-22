@@ -22,7 +22,7 @@
   color: var(--muted);
   text-decoration: none;
   font-size: var(--fs-xs);
-  font-family: 'WorkSans', 'Noto Sans CJK SC', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
   transition: color 0.2s;
   min-height: var(--tabbar-h);
 }

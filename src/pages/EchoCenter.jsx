@@ -2,6 +2,7 @@ import { defineComponent, ref, computed } from 'vue'
 import { useEchoStore } from '@/stores/echo.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, MingeGauge, EchoProgress, EchoModal, EmptyState, showToast } from '@/components/EchoUI.jsx'
+import { UIIcon } from '@/components/ToolIcons.jsx'
 
 export default defineComponent({
   name: 'EchoCenter',
@@ -66,7 +67,7 @@ export default defineComponent({
         
         <div class="container">
           {/* 命格仪表 */}
-          <section class="echo-center__gauge-section">
+          <section class="echo-center__gauge-section stagger" style={{ '--i': 0 }}>
             <EchoCard level="primary">
               <div class="echo-center__gauge-wrap">
                 <MingeGauge value={store.accuracyRate} label="命格可信度" />
@@ -96,7 +97,7 @@ export default defineComponent({
           </section>
 
           {/* Tab 切换 */}
-          <div class="echo-center__tabs">
+          <div class="echo-center__tabs stagger" style={{ '--i': 1 }}>
             {tabs.value.map(t => (
               <button
                 key={t.key}
@@ -113,8 +114,13 @@ export default defineComponent({
           <section class="echo-center__list">
             {list.value.length === 0 ? (
               <EmptyState
+                class="stagger"
+                style={{ '--i': 0 }}
                 title={activeTab.value === 'pending' ? '暂无待印证' : '还没有印证记录'}
                 desc="用工具发起一个预测，到期后回来复盘"
+                vSlots={{
+                  icon: () => <UIIcon name="compass" size={32} />
+                }}
               />
             ) : (
               list.value.map((a, i) => (

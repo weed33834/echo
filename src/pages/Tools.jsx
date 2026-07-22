@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { TOOLS, CATEGORIES } from '@/stores/echo.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoBadge } from '@/components/EchoUI.jsx'
+import { ToolIcon } from '@/components/ToolIcons.jsx'
 
 export default defineComponent({
   name: 'Tools',
@@ -24,7 +25,7 @@ export default defineComponent({
                 <div class="tools-page__grid">
                   {tools.map(t => (
                     <button key={t.key} class="tool-card" onClick={() => router.push(`/tools/${t.key}`)}>
-                      <div class="tool-card__glyph">{t.glyph}</div>
+                      <div class="tool-card__glyph"><ToolIcon name={t.key} size={24} /></div>
                       <div class="tool-card__info">
                         <div class="tool-card__name">{t.name}</div>
                         <div class="tool-card__desc">{t.desc}</div>

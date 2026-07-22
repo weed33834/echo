@@ -7,6 +7,7 @@ import { EchoCard, EchoButton, EchoTag, EchoBadge, EchoModal, EchoProgress, show
 import { TarotCardFace } from '@/components/TarotCardFace.jsx'
 import { ShareButton } from '@/components/ShareButton.jsx'
 import { ShakeDiviner } from '@/components/ShakeDiviner.jsx'
+import { ToolIcon } from '@/components/ToolIcons.jsx'
 import '@/components/share-button.css'
 import '@/components/shake-diviner.css'
 
@@ -1204,7 +1205,7 @@ export default defineComponent({
           <div class="container">
             <EchoCard level="tertiary">
               <div class="tool-detail__intro">
-                <div class="tool-detail__glyph">{tool.value.glyph}</div>
+                <div class="tool-detail__glyph"><ToolIcon name={tool.value.key} size={28} /></div>
                 <div>
                   <div class="tool-detail__name">{tool.value.name}</div>
                   <div class="tool-detail__desc">{tool.value.desc} · 作为 Echo 假设的输入端</div>

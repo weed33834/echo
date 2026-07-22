@@ -23,7 +23,7 @@
   gap: 2px;
   padding: var(--sp-2) var(--sp-3);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   min-width: 60px;
   position: relative;
 }
@@ -66,11 +66,11 @@
   gap: var(--sp-2);
   padding: var(--sp-2) var(--sp-3);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   font-size: var(--fs-sm);
 }
 .bazi-chart__dm-label { color: var(--muted); }
-.bazi-chart__dm-val { font-weight: var(--fw-bold); font-size: var(--fs-md); }
+.bazi-chart__dm-val { font-weight: var(--fw-bold); font-size: var(--fs-base); }
 .bazi-chart__dm-str {
   padding: 2px 8px;
   border-radius: var(--r-xs);
@@ -86,7 +86,7 @@
 .bazi-chart__wx-bars { display: flex; flex-direction: column; gap: 4px; }
 .bazi-chart__wx-bar { display: flex; align-items: center; gap: var(--sp-2); }
 .bazi-chart__wx-label { width: 16px; font-weight: var(--fw-bold); text-align: center; }
-.bazi-chart__wx-track { flex: 1; height: 8px; background: var(--bg-1); border-radius: 4px; overflow: hidden; }
+.bazi-chart__wx-track { flex: 1; height: 8px; background: var(--bg-2); border-radius: 4px; overflow: hidden; }
 .bazi-chart__wx-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
 .bazi-chart__wx-count { width: 16px; text-align: right; font-size: var(--fs-xs); color: var(--muted); font-family: 'GeistMono', monospace; }
 .bazi-chart__current {
@@ -95,7 +95,7 @@
   gap: var(--sp-1);
   padding: var(--sp-2) var(--sp-3);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .bazi-chart__current-row { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); }
 .bazi-chart__current-label { color: var(--muted); font-size: var(--fs-xs); }
@@ -133,13 +133,13 @@
   z-index: 1;
 }
 .timeline__item--current .timeline__dot {
-  background: var(--gold);
+  background: var(--accent);
   box-shadow: 0 0 0 4px rgba(212, 168, 67, 0.2);
 }
 .timeline__line {
   width: 2px;
   flex: 1;
-  background: var(--border);
+  background: var(--rule);
   margin-top: 2px;
 }
 .timeline__item:last-child .timeline__line { display: none; }
@@ -159,11 +159,11 @@
   font-family: 'GeistMono', monospace;
 }
 .timeline__name {
-  font-size: var(--fs-md);
+  font-size: var(--fs-base);
   font-weight: var(--fw-bold);
   color: var(--ink);
 }
-.timeline__item--current .timeline__name { color: var(--gold); }
+.timeline__item--current .timeline__name { color: var(--accent); }
 .timeline__god {
   font-size: var(--fs-xs);
   padding: 1px 6px;
@@ -207,7 +207,7 @@
   gap: 2px;
   padding: var(--sp-2);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .profile-page__info-label { font-size: var(--fs-xs); color: var(--muted); }
 .profile-page__info-val { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--ink); }
@@ -216,9 +216,9 @@
 .profile-page__label { font-size: var(--fs-xs); color: var(--muted); font-weight: var(--fw-medium); }
 .profile-page__input {
   padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   color: var(--ink);
   font-size: var(--fs-sm);
   font-family: inherit;
@@ -226,9 +226,9 @@
 .profile-page__input:focus { outline: none; border-color: var(--accent); }
 .profile-page__select {
   padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   color: var(--ink);
   font-size: var(--fs-sm);
 }
@@ -236,9 +236,9 @@
 .profile-page__gender-btn {
   flex: 1;
   padding: var(--sp-2);
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   color: var(--muted);
   font-size: var(--fs-sm);
   cursor: pointer;
@@ -276,7 +276,7 @@
   gap: var(--sp-2);
   padding: var(--sp-3);
   border-radius: var(--r-md);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .compat-page__person-title { font-size: var(--fs-sm); font-weight: var(--fw-bold); color: var(--accent); }
 .compat-page__score-wrap {
@@ -301,7 +301,7 @@
 .compat-page__score-circle--high { background: rgba(90, 158, 90, 0.15); color: #5a9e5a; }
 .compat-page__score-circle--mid { background: rgba(212, 168, 67, 0.15); color: #d4a843; }
 .compat-page__score-circle--low { background: rgba(212, 90, 90, 0.15); color: #d45a5a; }
-.compat-page__level { font-size: var(--fs-md); font-weight: var(--fw-bold); }
+.compat-page__level { font-size: var(--fs-base); font-weight: var(--fw-bold); }
 .compat-page__dims { display: flex; flex-direction: column; gap: var(--sp-2); }
 .compat-page__dim {
   display: flex;
@@ -309,7 +309,7 @@
   gap: 4px;
   padding: var(--sp-2);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .compat-page__dim-head { display: flex; justify-content: space-between; align-items: center; }
 .compat-page__dim-name { font-size: var(--fs-sm); font-weight: var(--fw-medium); }
@@ -325,7 +325,7 @@
   align-items: center;
   gap: 2px;
   padding-bottom: var(--sp-3);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--rule);
   margin-bottom: var(--sp-3);
 }
 .compat-page__mscore-total-num {
@@ -342,11 +342,11 @@
   gap: 4px;
   padding: var(--sp-2);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .compat-page__mscore-head { display: flex; justify-content: space-between; align-items: center; }
 .compat-page__mscore-name { font-size: var(--fs-sm); font-weight: var(--fw-medium); display: flex; align-items: center; gap: 6px; }
-.compat-page__mscore-val { font-size: var(--fs-md); font-family: 'GeistMono', monospace; font-weight: var(--fw-bold); }
+.compat-page__mscore-val { font-size: var(--fs-base); font-family: 'GeistMono', monospace; font-weight: var(--fw-bold); }
 .compat-page__mscore-unit { font-size: var(--fs-xs); font-weight: normal; opacity: 0.7; }
 .compat-page__mscore-bar { height: 6px; background: var(--bg-2); border-radius: 3px; overflow: hidden; }
 .compat-page__mscore-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
@@ -366,18 +366,18 @@
   font-size: var(--fs-xs);
   color: var(--muted);
   font-weight: var(--fw-medium);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--rule);
   padding-bottom: var(--sp-2);
 }
 .compat-page__pcmp-row {
-  background: var(--bg-1);
+  background: var(--bg-2);
   border-radius: var(--r-sm);
   padding: var(--sp-2);
 }
 .compat-page__pcmp-col-label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--accent); }
 .compat-page__pcmp-col-mid { display: flex; gap: 4px; align-items: baseline; }
-.compat-page__pcmp-gan { font-size: var(--fs-md); font-weight: var(--fw-bold); font-family: 'GeistMono', monospace; }
-.compat-page__pcmp-zhi { font-size: var(--fs-md); font-weight: var(--fw-bold); font-family: 'GeistMono', monospace; }
+.compat-page__pcmp-gan { font-size: var(--fs-base); font-weight: var(--fw-bold); font-family: 'GeistMono', monospace; }
+.compat-page__pcmp-zhi { font-size: var(--fs-base); font-weight: var(--fw-bold); font-family: 'GeistMono', monospace; }
 .compat-page__pcmp-col-rel { display: flex; flex-wrap: wrap; gap: 4px; }
 
 /* ---- 五行互补分析 ---- */
@@ -423,7 +423,7 @@
 .learn-page__cat {
   padding: var(--sp-1) var(--sp-3);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   color: var(--muted);
   font-size: var(--fs-sm);
   white-space: nowrap;
@@ -438,7 +438,7 @@
   gap: var(--sp-3);
   padding: var(--sp-3);
   border-radius: var(--r-md);
-  background: var(--bg-1);
+  background: var(--bg-2);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -471,9 +471,9 @@
 .learn-page__quiz-options { display: flex; flex-direction: column; gap: var(--sp-2); }
 .learn-page__quiz-opt {
   padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
   color: var(--ink);
   font-size: var(--fs-sm);
   text-align: left;
@@ -493,7 +493,7 @@
   gap: var(--sp-2);
   padding: var(--sp-3);
   border-radius: var(--r-md);
-  background: linear-gradient(135deg, var(--accent-soft), var(--bg-1));
+  background: linear-gradient(135deg, var(--accent-soft), var(--bg-2));
 }
 .daily-page__hero-date { font-size: var(--fs-lg); font-weight: var(--fw-bold); }
 .daily-page__hero-lunar { font-size: var(--fs-sm); color: var(--muted); }
@@ -503,7 +503,7 @@
   gap: var(--sp-3);
   padding: var(--sp-3);
   border-radius: var(--r-md);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .daily-page__overall-score {
   font-size: 36px;
@@ -516,7 +516,7 @@
 .daily-page__ai-reading {
   padding: var(--sp-3);
   border-radius: var(--r-md);
-  background: var(--bg-1);
+  background: var(--bg-2);
   font-size: var(--fs-sm);
   line-height: 1.7;
   color: var(--ink);
@@ -530,7 +530,7 @@
   gap: var(--sp-2);
   padding: var(--sp-2);
   border-radius: var(--r-sm);
-  background: var(--bg-1);
+  background: var(--bg-2);
 }
 .daily-page__lucky-icon { font-size: var(--fs-lg); }
 .daily-page__lucky-label { font-size: var(--fs-xs); color: var(--muted); }
@@ -558,6 +558,6 @@
   flex-shrink: 0;
 }
 .home__profile-info { flex: 1; min-width: 0; }
-.home__profile-name { font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--ink); }
+.home__profile-name { font-size: var(--fs-base); font-weight: var(--fw-bold); color: var(--ink); }
 .home__profile-meta { font-size: var(--fs-xs); color: var(--muted); margin-top: 2px; }
-.home__profile-arrow { color: var(--muted); font-size: var(--fs-md); flex-shrink: 0; }
+.home__profile-arrow { color: var(--muted); font-size: var(--fs-base); flex-shrink: 0; }

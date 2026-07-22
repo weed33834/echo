@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { useEchoStore } from '@/stores/echo.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoModal, MingeGauge, showToast } from '@/components/EchoUI.jsx'
+import { UIIcon } from '@/components/ToolIcons.jsx'
 
 export default defineComponent({
   name: 'Me',
@@ -47,12 +48,16 @@ export default defineComponent({
       return animals[((y - 4) % 12 + 12) % 12]
     }
 
+    // 菜单图标样式
+    const menuIconStyle = { color: 'var(--muted)' }
+    const menuLabelStyle = { display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-3)' }
+
     return () => (
       <div class="me-page">
         <TopBar title="我的" />
         <div class="container">
           {/* 命格档案 */}
-          <EchoCard level="primary">
+          <EchoCard level="primary" class="stagger" style={{ '--i': 0 }}>
             <div class="me-page__profile">
               <MingeGauge value={store.accuracyRate} />
               <div class="me-page__profile-info">
@@ -72,7 +77,7 @@ export default defineComponent({
 
           {/* 档案详情（已设置时显示） */}
           {store.profile?.birthday && (
-            <EchoCard level="tertiary">
+            <EchoCard level="tertiary" class="stagger" style={{ '--i': 1 }}>
               <div class="me-page__profile-detail">
                 <div class="me-page__detail-row">
                   <span class="me-page__detail-label">生辰</span>
@@ -99,7 +104,7 @@ export default defineComponent({
           )}
 
           {/* 数据统计 */}
-          <div class="me-page__stats-grid">
+          <div class="me-page__stats-grid stagger" style={{ '--i': 2 }}>
             <EchoCard level="tertiary">
               <div class="me-page__stat">
                 <div class="me-page__stat-num">{store.assumptions.length}</div>
@@ -121,49 +126,67 @@ export default defineComponent({
           </div>
 
           {/* 菜单 */}
-          <EchoCard level="secondary">
+          <EchoCard level="secondary" class="stagger" style={{ '--i': 3 }}>
             <div class="me-page__menu">
               <button class="me-page__menu-item" onClick={() => router.push('/profile')}>
-                <span class="me-page__menu-label">个人档案</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="profile" size={18} style={menuIconStyle} />
+                  个人档案
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/graph')}>
-                <span class="me-page__menu-label">命运图谱</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="graph" size={18} style={menuIconStyle} />
+                  命运图谱
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/dashboard')}>
-                <span class="me-page__menu-label">命格面板</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="dashboard" size={18} style={menuIconStyle} />
+                  命格面板
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/compatibility')}>
-                <span class="me-page__menu-label">合婚匹配</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="compatibility" size={18} style={menuIconStyle} />
+                  合婚匹配
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/learn')}>
-                <span class="me-page__menu-label">命理学堂</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="learn" size={18} style={menuIconStyle} />
+                  命理学堂
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/echo')}>
-                <span class="me-page__menu-label">印证中心</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="compass" size={18} style={menuIconStyle} />
+                  印证中心
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/checkin')}>
-                <span class="me-page__menu-label">每日签到</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="checkin" size={18} style={menuIconStyle} />
+                  每日签到
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/daily')}>
-                <span class="me-page__menu-label">每日渡</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="daily" size={18} style={menuIconStyle} />
+                  每日渡
+                </span>
               </button>
               <button class="me-page__menu-item" onClick={() => router.push('/settings')}>
-                <span class="me-page__menu-label">设置</span>
-                <span class="me-page__menu-arrow">→</span>
+                <span class="me-page__menu-label" style={menuLabelStyle}>
+                  <UIIcon name="settings" size={18} style={menuIconStyle} />
+                  设置
+                </span>
               </button>
             </div>
           </EchoCard>
 
           {/* 危险区 */}
-          <EchoCard level="tertiary">
+          <EchoCard level="tertiary" class="stagger" style={{ '--i': 4 }}>
             <div class="me-page__danger">
               <div class="me-page__danger-title">重置数据</div>
               <p class="me-page__danger-desc">清空所有预测与印证记录，命格等级归零。此操作不可恢复。</p>
@@ -176,7 +199,7 @@ export default defineComponent({
             </div>
           </EchoCard>
 
-          <div class="me-page__footer">
+          <div class="me-page__footer stagger" style={{ '--i': 5 }}>
             <div class="me-page__brand">Echo · 回响</div>
             <div class="me-page__version">v0.2.0 · 发起预测，等待回响</div>
           </div>

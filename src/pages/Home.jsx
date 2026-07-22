@@ -2,6 +2,7 @@ import { defineComponent, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEchoStore, TOOLS } from '@/stores/echo.js'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, MingeGauge, EchoProgress, showToast } from '@/components/EchoUI.jsx'
+import { ToolIcon, UIIcon } from '@/components/ToolIcons.jsx'
 
 // 时辰宜忌计算（简化版，基于当下时辰）
 const SHICHEN = [
@@ -62,8 +63,8 @@ export default defineComponent({
 
     return () => (
       <div class="home">
-        {/* Hero */}
-        <section class="home__hero">
+        {/* Hero —— 左对齐编辑式 */}
+        <section class="home__hero" style={{ textAlign: 'left' }}>
           <div class="home__brand">
             <span class="home__brand-name">Echo</span>
             <span class="home__brand-dot">·</span>
@@ -82,7 +83,7 @@ export default defineComponent({
 
         <div class="container">
           {/* 个人档案快捷卡 */}
-          <section class="home__section">
+          <section class="home__section stagger" style={{ '--i': 0 }}>
             <EchoCard level="secondary" interactive onClick={() => router.push('/profile')}>
               <div class="home__profile-card">
                 <div class="home__profile-avatar">
@@ -102,8 +103,9 @@ export default defineComponent({
               </div>
             </EchoCard>
           </section>
+
           {/* EchoCard 队列 - 首屏第一卡 */}
-          <section class="home__section">
+          <section class="home__section stagger" style={{ '--i': 1 }}>
             <div class="home__section-head">
               <h2 class="home__section-title">待印证</h2>
               {dueToday.value > 0 && <EchoBadge variant="danger">{dueToday.value} 条今日到期</EchoBadge>}
@@ -138,7 +140,7 @@ export default defineComponent({
           </section>
 
           {/* 命格仪表 + 快捷 */}
-          <section class="home__section">
+          <section class="home__section stagger" style={{ '--i': 2 }}>
             <EchoCard level="secondary">
               <div class="home__minge">
                 <div class="home__minge-gauge">
@@ -166,53 +168,67 @@ export default defineComponent({
             </EchoCard>
           </section>
 
-          {/* 每日快捷 */}
-          <section class="home__section">
+          {/* 每日快捷 —— 首项放大，形成视觉层级 */}
+          <section class="home__section stagger" style={{ '--i': 3 }}>
             <div class="home__quick">
-              <EchoCard level="tertiary" interactive onClick={() => router.push('/dashboard')}>
+              <EchoCard level="tertiary" interactive style={{ gridColumn: 'span 2' }} onClick={() => router.push('/dashboard')}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon home__quick-icon--gold">面</div>
+                  <div class="home__quick-icon home__quick-icon--gold">
+                    <UIIcon name="dashboard" size={20} />
+                  </div>
                   <div class="home__quick-label">命格面板</div>
                   <div class="home__quick-sub">五行·建议</div>
                 </div>
               </EchoCard>
               <EchoCard level="tertiary" interactive onClick={() => router.push('/daily')}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon">运</div>
+                  <div class="home__quick-icon">
+                    <UIIcon name="daily" size={20} />
+                  </div>
                   <div class="home__quick-label">今日运势</div>
                 </div>
               </EchoCard>
               <EchoCard level="tertiary" interactive onClick={goCheckin}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon home__quick-icon--gold">签</div>
+                  <div class="home__quick-icon home__quick-icon--gold">
+                    <UIIcon name="checkin" size={20} />
+                  </div>
                   <div class="home__quick-label">每日签到</div>
                   {store.checkin.streak > 0 && <div class="home__quick-sub">{store.checkin.streak} 天</div>}
                 </div>
               </EchoCard>
               <EchoCard level="tertiary" interactive onClick={() => router.push('/graph')}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon">图</div>
+                  <div class="home__quick-icon">
+                    <UIIcon name="graph" size={20} />
+                  </div>
                   <div class="home__quick-label">命运图谱</div>
                   <div class="home__quick-sub">关系网络</div>
                 </div>
               </EchoCard>
               <EchoCard level="tertiary" interactive onClick={() => router.push('/compatibility')}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon home__quick-icon--gold">合</div>
+                  <div class="home__quick-icon home__quick-icon--gold">
+                    <UIIcon name="compatibility" size={20} />
+                  </div>
                   <div class="home__quick-label">合婚匹配</div>
                   <div class="home__quick-sub">六维分析</div>
                 </div>
               </EchoCard>
               <EchoCard level="tertiary" interactive onClick={() => router.push('/compass')}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon">盘</div>
+                  <div class="home__quick-icon">
+                    <UIIcon name="compass" size={20} />
+                  </div>
                   <div class="home__quick-label">风水罗盘</div>
                   <div class="home__quick-sub">实时方位</div>
                 </div>
               </EchoCard>
               <EchoCard level="tertiary" interactive onClick={() => router.push('/learn')}>
                 <div class="home__quick-item">
-                  <div class="home__quick-icon">学</div>
+                  <div class="home__quick-icon">
+                    <UIIcon name="learn" size={20} />
+                  </div>
                   <div class="home__quick-label">命理学堂</div>
                   <div class="home__quick-sub">入门课程</div>
                 </div>
@@ -221,7 +237,7 @@ export default defineComponent({
           </section>
 
           {/* 命运侦探推荐 */}
-          <section class="home__section">
+          <section class="home__section stagger" style={{ '--i': 4 }}>
             <div class="home__section-head">
               <h2 class="home__section-title">命运侦探</h2>
             </div>
@@ -238,17 +254,22 @@ export default defineComponent({
             </EchoCard>
           </section>
 
-          {/* 工具入口（折叠） */}
-          <section class="home__section">
+          {/* 工具入口 —— 编辑式卡片：名称 + 简述 */}
+          <section class="home__section stagger" style={{ '--i': 5 }}>
             <div class="home__section-head">
               <h2 class="home__section-title">工具</h2>
               <EchoButton variant="ghost" size="sm" onClick={() => router.push('/tools')}>全部 →</EchoButton>
             </div>
-            <div class="home__tool-grid">
+            <div class="tools-page__grid">
               {TOOLS.slice(0, 8).map(t => (
-                <button key={t.key} class="home__tool-item" onClick={() => router.push(`/tools/${t.key}`)}>
-                  <div class="home__tool-glyph">{t.glyph}</div>
-                  <div class="home__tool-name">{t.name}</div>
+                <button key={t.key} class="tool-card" onClick={() => router.push(`/tools/${t.key}`)}>
+                  <div class="tool-card__glyph">
+                    <ToolIcon name={t.key} size={20} />
+                  </div>
+                  <div class="tool-card__info">
+                    <div class="tool-card__name">{t.name}</div>
+                    <div class="tool-card__desc">{t.desc}</div>
+                  </div>
                 </button>
               ))}
             </div>
