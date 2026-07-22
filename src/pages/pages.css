@@ -169,7 +169,7 @@
   font-family: 'Lora', serif;
   font-size: var(--fs-lg);
   font-weight: var(--fw-bold);
-  color: var(--ink);
+  color: var(--accent-2);
 }
 .home__minge-stat-lbl {
   font-size: var(--fs-xs);
@@ -303,7 +303,7 @@
   font-family: 'Lora', serif;
   font-size: var(--fs-lg);
   font-weight: var(--fw-bold);
-  color: var(--ink);
+  color: var(--accent-2);
 }
 .echo-center__stat-lbl {
   font-size: var(--fs-xs);

@@ -32,6 +32,9 @@
 .tabbar__item--active .tabbar__icon {
   transform: translateY(-1px);
 }
+.tabbar__item--active .tabbar__label {
+  color: var(--accent-2);
+}
 .tabbar__icon {
   display: flex;
   align-items: center;
@@ -101,6 +104,7 @@
     background: var(--accent-soft);
     color: var(--accent);
     font-weight: var(--fw-bold);
+    border-left: 3px solid var(--accent-2);
   }
   .tabbar__item--active .tabbar__icon {
     transform: none;
