@@ -1,101 +1,56 @@
-# Changelog
+# 更新日志
 
-All notable changes to this project will be documented in this file.
+所有重要变更记录于此文件。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/spec/v2.0.0.html).
+格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
+版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [0.3.0] - 2026-07-22
 
-### Fixed
-- 修复塔罗牌结果显示内部代码名（如 three-pf、career）而非中文标签
-- 修复个人档案页生肖星座显示错误（传入字符串而非解析后的数字）
-- 修复风水布局建议显示英文房间类型名（bedroom）而非中文（卧室）
-- 修复 getCurrentJieqi 节气计算错误（7 月显示大寒而非小暑，因 1 月节气排序问题）
-- 修复八字大运起运年龄不一致（bazi 引擎改用 computeDayuns 统一计算）
-- 修复首页档案卡片显示异常
-- 修复 showToast 的 danger 变体与 CSS 类名不匹配（toast--danger → toast--error）
-- 修复 Dashboard 五行雷达图和今日建议因 dayMaster 路径错误而始终显示默认值
-- 修复 EchoCenter 复盘提交时 result 为空导致崩溃
-- 修复 Checkin 签到页面使用 UTC 日期导致跨午夜/时区签到异常
-- 修复 Admin 模型编辑和知识库编辑弹窗的 footer 按钮被错误放入 body slot
-- 修复 Me 页面日主显示依赖 store.profile.dayMaster（仅 Me 页面写入）的不一致问题
-- 修复 MingeGauge 未对 value 做 0-100 边界检查
-- 修复 EchoCard 的 onClick 不传递事件对象
-- 修复 Me.jsx zodiacOf 对公元前年份返回 undefined
-- 修复 Settings.jsx watch 清空 baseUrl 默认值
-- 修复 Dashboard 工具使用统计中 compat 显示原始 key 而非中文名
+### 新增
+- 新手引导组件（Onboarding）：3 步引导弹窗，首次访问自动展示
+- 首页每日洞察模块：每日一句话钩子，基于日期轮换
+- 墨砚系设计系统：暖黑画布 + 古铜金 + 暖白墨迹
+- 18 个自定义 SVG 工具图标 + 9 个 UI 图标
+- 品牌 LOGO 生成（回响纹样 + 山影）
+- GitHub Actions CI/CD（最小化，全绿）
+- SEO 增强：sitemap.xml、robots.txt、JSON-LD 结构化数据
 
-### Changed
-- MingeGauge 移除未使用的 level prop
-- EchoCenter 复盘表单初始值改为 0.3（部分）以匹配 scoreLabels 选项
-- Checkin nextMilestone 在所有里程碑达成后显示"所有里程碑已达成"而非回退到最后一项
+### 变更
+- 依赖全量升级：Vite 8.1、Pinia 4.0、Vue Router 5.2
+- Node.js 最低版本要求提升至 22
+- 首页改为左对齐编辑式排版
+- 所有文字字符图标替换为 SVG 图标
+- 配色从紫色系改为古铜金系
+- 进度环、统计数字、侧边栏视觉优化
 
-### Removed
-- 清理 Home.jsx 未使用的 onMounted、CATEGORIES、zodiacOfYear 死代码
-- 清理 Dashboard.jsx 未使用的 ref、onMounted、getDayMaster、showToast、goToBazi
-- 清理 Me.jsx 未使用的 computed、EchoProgress、getDayMaster 及 saveProfile 中的 dayMaster 冗余计算
-- 清理 Chat.jsx 未使用的 useRouter、EmptyState
-- 清理 ToolDetail.jsx 未使用的 reactive
-- 清理 Tools.jsx 未使用的 useEchoStore
-- 清理 Compatibility.jsx 未使用的 genderLabel
-- 清理 Profile.jsx 未使用的 isProfileComplete、handleBack
-- 清理 Admin.jsx 未使用的 onMounted、useRouter、useEchoStore、EchoTag
+### 移除
+- Dependabot 自动依赖更新（改为手动更新）
+- 紫色渐变、emoji 图标、居中模板等 AI 设计味
 
-### Added
-- 多语言 README 支持（中文默认 / English / 日本語）
-- 开源仓库标准文件（ISSUE 模板、PR 模板、CODE_OF_CONDUCT、CI 工作流）
-- 为全部组件和页面的列表渲染补充 key prop（ToolDetail 38 处、BaziChart 2 处、Timeline 2 处等）
-- 添加 SECURITY.md 安全策略文档
-- 添加 .env.example 环境变量模板
-- 添加 .nvmrc Node 版本声明
-- 添加 .prettierrc 代码格式化配置
-- CI 工作流新增 Node 22.x 矩阵和构建产物上传
-- 添加 .github/dependabot.yml 依赖自动更新配置（npm + GitHub Actions 每周检查）
-- 添加 .github/workflows/deploy.yml GitHub Pages 自动部署工作流
+## [0.2.0] - 2026-07-21
 
-### Changed
-- 升级 pinia 2.2→2.3.1、vue-router 4.4→4.6.4、vite 5.4.0→5.4.20
-- SPEC.md 从内部 AI agent 规范重写为开源项目技术文档
-- CONTRIBUTING.md 补充项目结构说明、环境变量配置、代码风格规范
-- package.json 新增 lint 脚本
-- README 三语言版本徽章更新（Pinia 2.2→2.3、Vue Router 4.4→4.6、新增 Node ≥18 徽章）
-- README 三语言新增项目文档索引表和 .env.example 配置说明
-- vite.config.js 新增 GitHub Pages base 路径条件配置
+### 新增
+- 摇卦功能（ShakeDiviner + CoinToss）
+- 风水罗盘（Compass）：实时方位 + 24 山
+- 粒子星空背景（ParticleBackground）
+- 命运图谱（Graph）：五行关系网络
+- 合婚匹配（Compatibility）：六维分析
+- 命理学堂（Learn）：课程 + 测验
+- 命格面板（Dashboard）：五行雷达 + 建议
+- 分享卡片（ShareButton）：Canvas 海报生成
+- 连签系统：连续签到 + 里程碑
+- AI 对话系统：多会话 + 流式输出
 
-## [0.2.0] - 2026-07-20
+### 变更
+- TabBar 底部导航（移动端）/ 侧边栏（桌面端）
+- 18 种命理工具引擎
+- PWA 支持（manifest + service worker）
 
-### Added
-- 命格面板：五行雷达图、五行生克关系图、今日建议矩阵、推演时间线、工具使用统计
-- AI 对话：多模型切换、工具调用循环守卫、联网搜索（Tavily API）、Few-shot 示例注入
-- 安全沙箱：参数校验、超时控制、Prompt Injection 检测、输出验证、工具结果净化
-- 命运图谱：SVG 关系网络可视化（五行节点 + 工具节点 + 交互式调摄建议）
-- 管理后台：模型管理（预设/自定义 CRUD）、提示词管理、用量统计、系统配置
-- 每日签到：连续签到奖励、里程碑系统
-- 今日运势：老黄历宜忌、时辰宜忌、每日渡言
-- 响应式设计：超窄屏（≤340px）、横屏矮视口、超宽屏（≥1920px）适配
-- 暗色模式、字号缩放、安全区适配
+## [0.1.0] - 2026-07-20
 
-### Changed
-- 设计令牌系统重构：统一颜色、间距、字号、圆角、阴影变量
-- TabBar 响应式：移动端底部导航 → 桌面端侧边栏
-- Modal 组件：移动端底部弹出 → 桌面端居中弹窗
-
-### Fixed
-- 修复 Chat 模型选择器 id/name 字段错配导致名称空白
-- 修复 Admin 退出按钮因 TopBar slot 问题丢失
-- 移除硬编码管理员默认密码
-- 接入 Prompt Injection 检测（此前定义但未调用）
-- 复用 sandbox.escapeHtml，消除重复代码
-- 修复 CSS 重复导入（dashboard.css / admin.css）
-- 修复 showToast 变体名不一致（warning/error → warn/danger）
-
-## [0.1.0] - 2026-07-19
-
-### Added
-- 项目初始版本
-- 18 个命理工具引擎（八字、紫微、六爻、梅花、摇钱、奇门、大六壬、子午流注、风水、老黄历等）
-- 命运印证引擎：设节点 → 等回响 → 复盘
-- 命格等级系统：经验值、等级、应验率
-- Vue3 + Pinia + Vue Router SPA 架构
-- 设计系统：宣纸/墨砚双主题
+### 新增
+- 项目初始化
+- Vue 3 + Vite + Pinia + Vue Router 脚手架
+- 基础页面：首页、工具、印证中心、我的
+- 命格等级系统 + localStorage 持久化

@@ -3,35 +3,115 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#15131f" />
-<meta name="description" content="Echo · 回响 — 命运印证引擎。18 种命理工具（八字、紫微、六爻、梅花、奇门等）+ AI 对话 + 命格面板。发起预测，等待回响。" />
-<meta name="keywords" content="命理,八字,紫微斗数,六爻,梅花易数,奇门遁甲,大六壬,风水,老黄历,AI对话,命运印证" />
+<meta name="theme-color" content="#0a0908" />
+<meta name="color-scheme" content="dark light" />
+
+<!-- 核心 SEO -->
+<title>Echo · 回响 — 命运印证引擎 | 八字·紫微·六爻·奇门 18 种命理工具</title>
+<meta name="description" content="Echo · 回响 — 命运印证引擎。18 种命理工具（八字排盘、紫微斗数、六爻占卜、梅花易数、奇门遁甲、大六壬、风水罗盘等）+ AI 对话 + 命格面板。发起预测，等待回响，用印证机制验证命理准确度。" />
+<meta name="keywords" content="命理,八字,八字排盘,紫微斗数,六爻,六爻占卜,梅花易数,奇门遁甲,大六壬,风水,风水罗盘,老黄历,择吉日,每日运势,合婚,姓名学,塔罗牌,西洋占星,玛雅历,周公解梦,AI对话,命运印证,命格,子午流注,节气养生,子平,四柱,干支,五行,命理学堂" />
 <meta name="author" content="Echo Contributors" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="language" content="zh-CN" />
+<meta name="application-name" content="Echo · 回响" />
+<meta name="apple-mobile-web-app-title" content="Echo回响" />
+<link rel="canonical" href="https://weed33834.github.io/echo/" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Echo · 回响 — 命运印证引擎" />
-<meta property="og:description" content="18 种命理工具 + AI 对话 + 命格面板。发起预测，等待回响。" />
+<meta property="og:description" content="18 种命理工具（八字·紫微·六爻·奇门）+ AI 对话 + 命格面板。发起预测，等待回响，用印证机制验证命理准确度。" />
 <meta property="og:locale" content="zh_CN" />
 <meta property="og:site_name" content="Echo · 回响" />
+<meta property="og:url" content="https://weed33834.github.io/echo/" />
+<meta property="og:image" content="https://weed33834.github.io/echo/logo-icon.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Echo · 回响 — 命运印证引擎" />
-<meta name="twitter:description" content="18 种命理工具 + AI 对话 + 命格面板" />
+<meta name="twitter:description" content="18 种命理工具 + AI 对话 + 命格面板。发起预测，等待回响。" />
+<meta name="twitter:image" content="https://weed33834.github.io/echo/logo-icon.jpg" />
 
-<!-- Favicon (inline SVG) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2315131f'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' fill='%235b3fd6' text-anchor='middle' font-weight='bold'%3E回%3C/text%3E%3C/svg%3E" />
+<!-- Favicon (inline SVG — 古铜金回响纹样) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a0908'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a68b5b' stroke-width='2.5'/%3E%3Ccircle cx='50' cy='50' r='18' fill='none' stroke='%23a68b5b' stroke-width='1.5' opacity='0.6'/%3E%3Ccircle cx='50' cy='50' r='8' fill='none' stroke='%23a68b5b' stroke-width='1' opacity='0.4'/%3E%3Cpath d='M50 22 L50 78 M22 50 L78 50' stroke='%23a68b5b' stroke-width='1' opacity='0.3'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="logo-icon.jpg" />
 
-<!-- PWA Manifest：相对路径，dev(base '/')解析为 /manifest.json，prod(base '/echo/')解析为 /echo/manifest.json -->
+<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json" />
 
-<!-- iOS 安装态补充：独立显示与状态栏配色 -->
+<!-- iOS 安装态 -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Echo回响" />
 
-<title>Echo · 回响 — 命运印证引擎</title>
+<!-- JSON-LD 结构化数据 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Echo · 回响 — 命运印证引擎",
+  "alternateName": "Echo回响",
+  "description": "18 种命理工具（八字排盘、紫微斗数、六爻占卜、梅花易数、奇门遁甲、大六壬、风水罗盘等）+ AI 对话 + 命格面板。发起预测，等待回响，用印证机制验证命理准确度。",
+  "url": "https://weed33834.github.io/echo/",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Web Browser",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "inLanguage": "zh-CN",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "CNY"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Echo Contributors",
+    "url": "https://github.com/weed33834/echo"
+  },
+  "featureList": [
+    "八字排盘 — 四柱干支推演",
+    "紫微斗数 — 星盘四化推演",
+    "六爻占卜 — 金钱课起卦",
+    "梅花易数 — 时间起卦",
+    "奇门遁甲 — 九宫时盘",
+    "大六壬 — 四课三传",
+    "风水罗盘 — 实时方位",
+    "AI 对话 — 命理咨询",
+    "命格面板 — 五行分析",
+    "合婚匹配 — 六维分析",
+    "命运图谱 — 关系网络",
+    "命理学堂 — 入门课程"
+  ],
+  "softwareVersion": "0.3.0",
+  "license": "https://github.com/weed33834/echo/blob/main/LICENSE"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Echo · 回响",
+      "item": "https://weed33834.github.io/echo/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "命理工具",
+      "item": "https://weed33834.github.io/echo/#/tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "印证中心",
+      "item": "https://weed33834.github.io/echo/#/echo"
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <div id="app"></div>

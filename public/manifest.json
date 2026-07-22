@@ -1,25 +1,25 @@
 {
   "name": "Echo · 回响 — 命运印证引擎",
   "short_name": "Echo回响",
-  "description": "18种命理工具 + AI对话 + 命格面板",
+  "description": "18种命理工具（八字·紫微·六爻·奇门）+ AI对话 + 命格面板。发起预测，等待回响。",
   "lang": "zh-CN",
   "dir": "ltr",
-  "theme_color": "#15131f",
-  "background_color": "#15131f",
+  "theme_color": "#0a0908",
+  "background_color": "#0a0908",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/echo/",
   "scope": "/echo/",
-  "categories": ["lifestyle", "entertainment", "books"],
+  "categories": ["lifestyle", "entertainment", "books", "education"],
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2315131f'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' fill='%235b3fd6' text-anchor='middle' font-weight='bold'%3E%E5%9B%9E%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a0908'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a68b5b' stroke-width='2.5'/%3E%3Ccircle cx='50' cy='50' r='18' fill='none' stroke='%23a68b5b' stroke-width='1.5' opacity='0.6'/%3E%3Ccircle cx='50' cy='50' r='8' fill='none' stroke='%23a68b5b' stroke-width='1' opacity='0.4'/%3E%3Cpath d='M50 22 L50 78 M22 50 L78 50' stroke='%23a68b5b' stroke-width='1' opacity='0.3'/%3E%3C/svg%3E",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2315131f'/%3E%3Ctext x='50' y='68' font-family='serif' font-size='52' fill='%235b3fd6' text-anchor='middle' font-weight='bold'%3E%E5%9B%9E%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a0908'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23a68b5b' stroke-width='2.5'/%3E%3Ccircle cx='50' cy='50' r='18' fill='none' stroke='%23a68b5b' stroke-width='1.5' opacity='0.6'/%3E%3C/svg%3E",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
