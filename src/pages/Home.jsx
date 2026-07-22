@@ -47,6 +47,28 @@ export default defineComponent({
       return '晚上好'
     })
 
+    const dateStr = computed(() => {
+      const d = new Date()
+      return `${d.getMonth() + 1}月${d.getDate()}日`
+    })
+    const dailyInsight = computed(() => {
+      // 基于日期生成每日一句话洞察
+      const insights = [
+        '今日宜静观其变，不宜急于决断。',
+        '变化中藏着机遇，保持开放的心态。',
+        '细节决定成败，留意身边的征兆。',
+        '内省的时刻，答案在心中而非外求。',
+        '顺时而动，量力而行。',
+        '旧事有回响，留意过去的线索。',
+        '能量充沛，适合推进搁置的计划。',
+        '宜独处思考，不宜群体决策。',
+        '直觉敏锐，信任第一感觉。',
+        '稳扎稳打，不追求速成。',
+      ]
+      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
+      return insights[dayOfYear % insights.length]
+    })
+
     const goCreateAssumption = () => {
       router.push('/tools')
       showToast('选一个工具发起预测', 'default', 1500)
@@ -81,9 +103,16 @@ export default defineComponent({
           <span class="home__shichen-ji">忌 {shichen.value.ji}</span>
         </div>
 
+        {/* 每日洞察 —— 首屏钩子 */}
+        <section class="home__daily-hook stagger" style={{ '--i': 0 }}>
+          <p class="home__hook-date">{dateStr.value}</p>
+          <p class="home__hook-text">{dailyInsight.value}</p>
+          <button class="home__hook-link" onClick={() => router.push('/daily')}>查看完整运势 →</button>
+        </section>
+
         <div class="container">
           {/* 个人档案快捷卡 */}
-          <section class="home__section stagger" style={{ '--i': 0 }}>
+          <section class="home__section stagger" style={{ '--i': 1 }}>
             <EchoCard level="secondary" interactive onClick={() => router.push('/profile')}>
               <div class="home__profile-card">
                 <div class="home__profile-avatar">
@@ -105,7 +134,7 @@ export default defineComponent({
           </section>
 
           {/* EchoCard 队列 - 首屏第一卡 */}
-          <section class="home__section stagger" style={{ '--i': 1 }}>
+          <section class="home__section stagger" style={{ '--i': 2 }}>
             <div class="home__section-head">
               <h2 class="home__section-title">待印证</h2>
               {dueToday.value > 0 && <EchoBadge variant="danger">{dueToday.value} 条今日到期</EchoBadge>}
@@ -140,7 +169,7 @@ export default defineComponent({
           </section>
 
           {/* 命格仪表 + 快捷 */}
-          <section class="home__section stagger" style={{ '--i': 2 }}>
+          <section class="home__section stagger" style={{ '--i': 3 }}>
             <EchoCard level="secondary">
               <div class="home__minge">
                 <div class="home__minge-gauge">
@@ -169,7 +198,7 @@ export default defineComponent({
           </section>
 
           {/* 每日快捷 —— 首项放大，形成视觉层级 */}
-          <section class="home__section stagger" style={{ '--i': 3 }}>
+          <section class="home__section stagger" style={{ '--i': 4 }}>
             <div class="home__quick">
               <EchoCard level="tertiary" interactive style={{ gridColumn: 'span 2' }} onClick={() => router.push('/dashboard')}>
                 <div class="home__quick-item">
@@ -237,7 +266,7 @@ export default defineComponent({
           </section>
 
           {/* 命运侦探推荐 */}
-          <section class="home__section stagger" style={{ '--i': 4 }}>
+          <section class="home__section stagger" style={{ '--i': 5 }}>
             <div class="home__section-head">
               <h2 class="home__section-title">命运侦探</h2>
             </div>
@@ -255,7 +284,7 @@ export default defineComponent({
           </section>
 
           {/* 工具入口 —— 编辑式卡片：名称 + 简述 */}
-          <section class="home__section stagger" style={{ '--i': 5 }}>
+          <section class="home__section stagger" style={{ '--i': 6 }}>
             <div class="home__section-head">
               <h2 class="home__section-title">工具</h2>
               <EchoButton variant="ghost" size="sm" onClick={() => router.push('/tools')}>全部 →</EchoButton>

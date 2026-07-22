@@ -6,6 +6,7 @@ import { TabBar } from '@/components/TabBar.jsx'
 import { ChatFab } from '@/components/ChatFab.jsx'
 import { ParticleBackground } from '@/components/ParticleBackground.jsx'
 import { ToastHost } from '@/components/EchoUI.jsx'
+import { Onboarding } from '@/components/Onboarding.jsx'
 import { useEchoStore } from '@/stores/echo.js'
 
 import './designs/tokens.css'
@@ -49,7 +50,8 @@ const App = defineComponent({
       h('main', { class: 'app-main' }, [h(RouterView)]),
       h(TabBar),
       h(ChatFab),
-      h(ToastHost)
+      h(ToastHost),
+      h(Onboarding)
     ])
   }
 })

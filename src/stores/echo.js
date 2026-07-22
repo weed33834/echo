@@ -187,6 +187,15 @@ export const useEchoStore = defineStore('echo', {
       this.learnProgress = { completedLessons: [], quizScores: {} }
       this.persist()
     },
+    // 完成新手引导：标记完成并给予命格经验奖励，鼓励开始印证之旅
+    completeOnboarding() {
+      try { localStorage.setItem('echo_onboarding_done', '1') } catch {}
+      this.minge.exp += 20
+      while (this.minge.level < LEVEL_THRESHOLDS.length && this.minge.exp >= LEVEL_THRESHOLDS[this.minge.level]) {
+        this.minge.level += 1
+      }
+      this.persist()
+    },
     // 推演档案：记录每次推演结果（功能B）
     pushHistory(entry) {
       const record = {
