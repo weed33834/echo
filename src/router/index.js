@@ -14,6 +14,7 @@ const routes = [
   { path: '/chat', name: 'chat', component: () => import('@/pages/Chat.jsx') },
   { path: '/compatibility', name: 'compatibility', component: () => import('@/pages/Compatibility.jsx') },
   { path: '/learn', name: 'learn', component: () => import('@/pages/Learn.jsx') },
+  { path: '/compass', name: 'compass', component: () => import('@/pages/Compass.jsx') },
   { path: '/settings', name: 'settings', component: () => import('@/pages/Settings.jsx') },
   { path: '/admin', name: 'admin', component: () => import('@/pages/Admin.jsx') }
 ]

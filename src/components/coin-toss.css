@@ -1,0 +1,127 @@
+/**
+ * CoinToss — 铜钱掷卦 Canvas 动画样式
+ *
+ * 暗色宇宙美学：深紫墨底 + 鎏金铜钱，配合 Canvas 物理动画。
+ * 所有色值/字号/间距均取自 tokens.css 设计令牌，零硬编码。
+ */
+
+/* ============================================================
+ * 容器
+ * ============================================================ */
+.coin-toss-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* ============================================================
+ * Canvas 画布
+ * 逻辑尺寸 300×120，按 dpr 放大保证清晰；CSS 自适应宽度。
+ * ============================================================ */
+.coin-toss-canvas {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 300 / 120;
+  border-radius: var(--r-lg);
+  /* 内层暗色宇宙底由 Canvas 绘制，外层加金色微光描边 */
+  border: 1px solid var(--rule-2);
+  box-shadow:
+    var(--glow-gold),
+    var(--shadow-md);
+  background: var(--ink);
+  touch-action: none; /* 摇动时不触发滚动 */
+}
+
+/* ============================================================
+ * 结果展示
+ * ============================================================ */
+.coin-toss-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  color: var(--gold);
+  min-height: 22px;
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+/* 爻名标签（老阳/少阴 等） */
+.coin-toss-result__label {
+  color: var(--gold-2);
+}
+
+/* 动爻标记（○ / ✕） */
+.coin-toss-result__mark {
+  color: var(--accent-2);
+  font-size: var(--fs-base);
+}
+
+/* 三枚铜钱正反缩略（阳/阴 字符） */
+.coin-toss-result__coins {
+  font-family: 'GeistMono', monospace;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  letter-spacing: var(--ls-xwide);
+}
+
+/* ============================================================
+ * 提示文字
+ * ============================================================ */
+.coin-toss-hint {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  letter-spacing: var(--ls-wide);
+  text-align: center;
+  min-height: 18px;
+  animation: fadeIn 0.4s ease-out both;
+}
+
+/* ============================================================
+ * 响应式
+ * ============================================================ */
+
+/* 平板及以上：略微放大画布上限 */
+@media (min-width: 768px) {
+  .coin-toss-wrap {
+    max-width: 360px;
+  }
+  .coin-toss-canvas {
+    max-width: 340px;
+  }
+}
+
+/* 超窄屏：紧凑 */
+@media (max-width: 340px) {
+  .coin-toss-canvas {
+    max-width: 100%;
+  }
+  .coin-toss-result {
+    font-size: var(--fs-xs);
+  }
+}
+
+/* 横屏矮视口：压缩高度感 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .coin-toss-wrap {
+    gap: var(--sp-1);
+  }
+}
+
+/* 尊重减弱动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .coin-toss-result,
+  .coin-toss-hint {
+    animation: none;
+  }
+}

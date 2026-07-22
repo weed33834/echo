@@ -1,0 +1,376 @@
+/**
+ * ShakeDiviner — 摇卦主组件样式
+ *
+ * 暗色宇宙美学 + 鎏金点缀，营造仪式感。
+ * 所有色值/字号/间距均取自 tokens.css 设计令牌。
+ */
+
+/* ============================================================
+ * 主容器：暗色仪式台
+ * ============================================================ */
+.shake-diviner {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--sp-5) var(--sp-4) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-5);
+  /* 暗色宇宙底：深紫墨渐变 + 鎏金微光 */
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--accent-soft) 0%, transparent 55%),
+    radial-gradient(100% 60% at 50% 100%, var(--gold-soft) 0%, transparent 60%),
+    linear-gradient(180deg, var(--ink-2) 0%, var(--ink) 100%);
+  border: 1px solid var(--rule-2);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg), var(--glow-accent);
+  overflow: hidden;
+}
+
+/* 背景流光装饰（伪元素，不干扰交互） */
+.shake-diviner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(2px 2px at 12% 18%, var(--gold-2) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 82% 22%, var(--accent-2) 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 75%, var(--gold-2) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 68% 82%, var(--accent-2) 50%, transparent 51%),
+    radial-gradient(1px 1px at 50% 12%, var(--gold-2) 50%, transparent 51%);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: wuxingFlow 4s ease-in-out infinite;
+}
+
+/* ============================================================
+ * 头部：标题 + 指引
+ * ============================================================ */
+.shake-diviner__header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.shake-diviner__title {
+  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-xwide);
+  color: var(--gold);
+  text-shadow: var(--glow-gold);
+}
+
+.shake-diviner__subtitle {
+  font-size: var(--fs-xs);
+  color: var(--muted-2);
+  letter-spacing: var(--ls-wide);
+}
+
+/* 指引文字（动态） */
+.shake-diviner__hint {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: var(--lh-normal);
+  max-width: 320px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  letter-spacing: var(--ls-wide);
+  animation: fadeIn 0.4s ease-out both;
+}
+
+/* ============================================================
+ * 进度：六爻自下而上累积
+ * ============================================================ */
+.shake-diviner__progress {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-5);
+  background: rgba(13, 10, 26, 0.45);
+  border: 1px solid var(--rule-2);
+  border-radius: var(--r-lg);
+  /* 自下而上：第一爻（初爻）在最底 */
+}
+
+/* 单爻行 */
+.shake-diviner__yao-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 26px;
+  transition: opacity 0.3s ease;
+}
+
+/* 爻位标签（初爻 / 二爻 …） */
+.shake-diviner__yao-label {
+  flex-shrink: 0;
+  width: 36px;
+  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  text-align: right;
+  letter-spacing: var(--ls-wide);
+}
+
+/* 爻象容器 */
+.shake-diviner__yao {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.shake-diviner__yao-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+/* 爻段（阳=整段，阴=两段） */
+.shake-diviner__yao-seg {
+  height: 7px;
+  border-radius: var(--r-sm);
+  background: var(--muted-2);
+  flex: 1;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 阳爻：实线（满宽单段） */
+.shake-diviner__yao--yang .shake-diviner__yao-seg--full {
+  flex: 1;
+  background: var(--gold-2);
+  box-shadow: var(--glow-gold);
+}
+
+/* 阴爻：两段（中间留隙） */
+.shake-diviner__yao--yin .shake-diviner__yao-seg {
+  background: var(--accent-2);
+  flex: 1;
+  max-width: 44%;
+}
+
+/* 动爻光晕动画 */
+.shake-diviner__yao--moving .shake-diviner__yao-seg--full,
+.shake-diviner__yao--moving .shake-diviner__yao-seg {
+  animation: yaoPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes yaoPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(201, 168, 76, 0.25); }
+  50% { box-shadow: 0 0 14px rgba(201, 168, 76, 0.7); }
+}
+
+/* 动爻标记（○ 老阳 / ✕ 老阴） */
+.shake-diviner__yao-mark {
+  flex-shrink: 0;
+  font-family: 'GeistMono', monospace;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--gold-2);
+  width: 16px;
+  text-align: center;
+}
+
+/* 待掷爻位（占位虚线） */
+.shake-diviner__yao-line--pending .shake-diviner__yao-seg {
+  background: transparent;
+  border: 1px dashed var(--rule-2);
+  height: 7px;
+  flex: 1;
+  opacity: 0.5;
+}
+
+/* 当前正在摇动的爻位：高亮 + 脉冲 */
+.shake-diviner__yao-row--current .shake-diviner__yao-label {
+  color: var(--gold);
+  font-weight: var(--fw-bold);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.shake-diviner__yao-row--current {
+  position: relative;
+}
+.shake-diviner__yao-row--current::after {
+  content: '◀';
+  position: absolute;
+  right: -18px;
+  color: var(--gold);
+  font-size: var(--fs-xs);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* 已完成爻位 */
+.shake-diviner__yao-row--done .shake-diviner__yao-label {
+  color: var(--gold-2);
+}
+
+/* ============================================================
+ * 操作区：启用 / 掷卦 / 重置 按钮
+ * ============================================================ */
+.shake-diviner__actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  max-width: 260px;
+}
+
+.shake-diviner__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--sp-5);
+  font-family: 'WorkSans', 'Noto Sans CJK SC', sans-serif;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  border-radius: var(--r-full);
+  border: 1px solid var(--gold);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow: var(--glow-gold), var(--shadow-md);
+}
+.shake-diviner__button:hover {
+  box-shadow: 0 0 22px rgba(201, 168, 76, 0.4), var(--shadow-md);
+}
+.shake-diviner__button:active {
+  transform: scale(0.97);
+}
+.shake-diviner__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 次级按钮（启用感应） */
+.shake-diviner__button--ghost {
+  background: transparent;
+  color: var(--gold-2);
+  border: 1px solid var(--gold);
+  box-shadow: none;
+}
+.shake-diviner__button--ghost:hover {
+  background: var(--gold-soft);
+  box-shadow: var(--glow-gold);
+}
+
+/* 状态徽标（感应已开启 / 第 N 爻） */
+.shake-diviner__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-family: 'GeistMono', monospace;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  padding: 0.2em 0.7em;
+  border-radius: var(--r-full);
+  background: var(--gold-soft);
+  color: var(--gold-2);
+  border: 1px solid var(--gold);
+}
+
+.shake-diviner__badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-full);
+  background: var(--ok);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* ============================================================
+ * 完成态：卦象总览
+ * ============================================================ */
+.shake-diviner__complete {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  animation: scaleIn 0.5s ease-out both;
+}
+
+.shake-diviner__complete-title {
+  font-family: 'Lora', 'Noto Serif CJK SC', serif;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--gold);
+  letter-spacing: var(--ls-wide);
+}
+
+.shake-diviner__complete-desc {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  line-height: var(--lh-normal);
+  max-width: 300px;
+}
+
+/* ============================================================
+ * 响应式
+ * ============================================================ */
+@media (max-width: 340px) {
+  .shake-diviner {
+    padding: var(--sp-4) var(--sp-3) var(--sp-5);
+    gap: var(--sp-4);
+  }
+  .shake-diviner__progress {
+    padding: var(--sp-3) var(--sp-4);
+  }
+  .shake-diviner__yao-label {
+    width: 30px;
+  }
+}
+
+@media (min-width: 768px) {
+  .shake-diviner {
+    max-width: 480px;
+    padding: var(--sp-6) var(--sp-5) var(--sp-7);
+  }
+}
+
+/* 横屏矮视口：压缩垂直间距 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .shake-diviner {
+    padding: var(--sp-3) var(--sp-4);
+    gap: var(--sp-3);
+  }
+}
+
+/* 尊重减弱动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .shake-diviner::before,
+  .shake-diviner__yao--moving .shake-diviner__yao-seg,
+  .shake-diviner__yao-row--current .shake-diviner__yao-label,
+  .shake-diviner__yao-row--current::after,
+  .shake-diviner__badge-dot {
+    animation: none;
+  }
+}

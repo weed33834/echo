@@ -6,7 +6,9 @@ import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoTag, EchoBadge, EchoModal, EchoProgress, showToast } from '@/components/EchoUI.jsx'
 import { TarotCardFace } from '@/components/TarotCardFace.jsx'
 import { ShareButton } from '@/components/ShareButton.jsx'
+import { ShakeDiviner } from '@/components/ShakeDiviner.jsx'
 import '@/components/share-button.css'
+import '@/components/shake-diviner.css'
 
 /* ============================================================
  * 结果渲染器：每种 resultType 对应独立的 JSX 渲染函数
@@ -1214,9 +1216,19 @@ export default defineComponent({
               <div class="tool-detail__form">
                 {e.inputConfig.map(f => <Fragment key={f.key}>{renderField(f)}</Fragment>)}
               </div>
-              <EchoButton variant="primary" block loading={loading.value} onClick={calc} class="tool-detail__calc-btn">
-                {loading.value ? '推演中…' : calcLabel.value}
-              </EchoButton>
+              {/* 摇手机起卦模式 */}
+              {tool.value.key === 'liuyao' && form.value.divMethod === 'shake' ? (
+                <div class="tool-detail__shake">
+                  <ShakeDiviner onHexagramComplete={(yaos) => {
+                    form.value.shakeYaos = yaos
+                    calc()
+                  }} />
+                </div>
+              ) : (
+                <EchoButton variant="primary" block loading={loading.value} onClick={calc} class="tool-detail__calc-btn">
+                  {loading.value ? '推演中…' : calcLabel.value}
+                </EchoButton>
+              )}
             </EchoCard>
 
             {result.value && Renderer && (

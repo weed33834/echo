@@ -203,6 +203,13 @@ export default defineComponent({
                   <div class="home__quick-sub">六维分析</div>
                 </div>
               </EchoCard>
+              <EchoCard level="tertiary" interactive onClick={() => router.push('/compass')}>
+                <div class="home__quick-item">
+                  <div class="home__quick-icon">盘</div>
+                  <div class="home__quick-label">风水罗盘</div>
+                  <div class="home__quick-sub">实时方位</div>
+                </div>
+              </EchoCard>
               <EchoCard level="tertiary" interactive onClick={() => router.push('/learn')}>
                 <div class="home__quick-item">
                   <div class="home__quick-icon">学</div>

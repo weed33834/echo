@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router'
 import router from './router'
 import { TabBar } from '@/components/TabBar.jsx'
 import { ChatFab } from '@/components/ChatFab.jsx'
+import { ParticleBackground } from '@/components/ParticleBackground.jsx'
 import { ToastHost } from '@/components/EchoUI.jsx'
 import { useEchoStore } from '@/stores/echo.js'
 
@@ -44,6 +45,7 @@ const App = defineComponent({
     // 监听变化
     watch(() => store.settings, (s) => applySettings(s), { deep: true })
     return () => h('div', { class: 'app-root' }, [
+      h(ParticleBackground),
       h('main', { class: 'app-main' }, [h(RouterView)]),
       h(TabBar),
       h(ChatFab),

@@ -1,0 +1,47 @@
+/**
+ * ParticleBackground 样式
+ * Canvas 固定铺满视口、置于内容之下（z-index:0），不拦截指针事件；
+ * 明暗主题下调整可见度，避免干扰阅读。
+ */
+.particle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* 暗色主题：粒子更清晰 */
+[data-theme="dark"] .particle-bg {
+  opacity: 0.6;
+}
+
+/* 亮色主题：压低透明度，避免干扰阅读 */
+:root:not([data-theme="dark"]) .particle-bg {
+  opacity: 0.3;
+}
+
+/* 自动主题跟随系统暗色（main.js 中 .theme-auto 表示 auto 模式） */
+@media (prefers-color-scheme: dark) {
+  :root.theme-auto .particle-bg {
+    opacity: 0.6;
+  }
+}
+
+/* 降低动态偏好：进一步压低，并以 !important 确保覆盖主题规则 */
+@media (prefers-reduced-motion: reduce) {
+  .particle-bg {
+    opacity: 0.2 !important;
+  }
+}
+
+/* 确保应用内容位于粒子背景之上。
+   .app-main 默认非定位，否则 position:fixed 的 Canvas（z-index:0）
+   会绘制在普通流内容之上。此处仅做最小层级提升，不影响布局。 */
+.app-main {
+  position: relative;
+  z-index: var(--z-base, 1);
+}

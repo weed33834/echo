@@ -794,7 +794,8 @@ export const ENGINES = {
       ], default: 'career', col: 4 },
       { key: 'divMethod', label: '起卦方式', type: 'select', options: [
         { value: 'time', label: '时间起卦' }, { value: 'coins', label: '金钱摇卦' },
-        { value: 'numbers', label: '三数起卦' }, { value: 'chars', label: '两字起卦' }
+        { value: 'numbers', label: '三数起卦' }, { value: 'chars', label: '两字起卦' },
+        { value: 'shake', label: '摇手机起卦' }
       ], default: 'time', col: 4 },
       { key: 'methodInput', label: '起卦参数', type: 'textarea', default: '', placeholder: '报数：三个1-99的数空格分隔；或两字', showIf: { key: 'divMethod', in: ['numbers', 'chars'] }, col: 4 },
       { key: 'refHour', label: '参考时辰', type: 'select', options: SHICHEN.map(s => ({ value: s.zhi, label: s.name })), default: '午', col: 6 },
@@ -816,6 +817,16 @@ export const ENGINES = {
         const chars = f.methodInput.trim() || '问卜'
         upperIdx = chars.charCodeAt(0) % 8; lowerIdx = (chars.charCodeAt(1) || chars.charCodeAt(0)) % 8
         dongYao = (chars.charCodeAt(0) + (chars.charCodeAt(1) || 0)) % 6 || 1
+      } else if (f.divMethod === 'shake' && f.shakeYaos) {
+        // 摇手机起卦：yao 值 6(老阴)/7(少阳)/8(少阴)/9(老阳)
+        const yaos = f.shakeYaos // [初爻, 二爻, ..., 上爻]
+        // 从六爻推算上下卦
+        const lowerBits = (yaos[0] >= 7 ? 1 : 0) | ((yaos[1] >= 7 ? 1 : 0) << 1) | ((yaos[2] >= 7 ? 1 : 0) << 2)
+        const upperBits = (yaos[3] >= 7 ? 1 : 0) | ((yaos[4] >= 7 ? 1 : 0) << 1) | ((yaos[5] >= 7 ? 1 : 0) << 2)
+        upperIdx = lowerBits
+        lowerIdx = upperBits
+        // 动爻：取第一个 6 或 9
+        dongYao = (yaos.findIndex(v => v === 6 || v === 9) + 1) || (Math.floor(Math.random() * 6) + 1)
       } else {
         const seed = hashStr(f.question + f.methodInput) || now.getTime()
         const rng = seededRandom(seed)
