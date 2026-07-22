@@ -11,10 +11,13 @@
 **[Live Demo →](https://weed33834.github.io/echo/)**
 
 ![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vuedotjs&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5.4-646cff?logo=vite&logoColor=white)
-![Pinia](https://img.shields.io/badge/Pinia-2.3-ffd859?logo=pinia&logoColor=black)
-![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8.1-646cff?logo=vite&logoColor=white)
+![Pinia](https://img.shields.io/badge/Pinia-4.0-ffd859?logo=pinia&logoColor=black)
+![Vue Router](https://img.shields.io/badge/Vue_Router-5.2-42b883?logo=vuedotjs&logoColor=white)
+![Node](https://img.shields.io/badge/Node-%E2%89%A522-339933?logo=nodedotjs&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue)
+![CI](https://img.shields.io/github/actions/workflow/status/weed33834/echo/ci.yml?branch=main&label=CI)
+![Deploy](https://img.shields.io/github/actions/workflow/status/weed33834/echo/deploy.yml?branch=main&label=Deploy)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 ![Stars](https://img.shields.io/github/stars/weed33834/echo?style=social)
 

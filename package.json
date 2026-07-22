@@ -1,7 +1,7 @@
 {
   "name": "echo-fortune",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "Echo · 回响 — 命运印证引擎。发起预测，等待回响。18 种命理工具 + AI 对话 + 命格面板",
   "keywords": [
@@ -30,7 +30,7 @@
     "url": "https://github.com/weed33834/echo/issues"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
@@ -39,13 +39,13 @@
     "lint": "eslint src --ext .js,.jsx --fix || true"
   },
   "dependencies": {
-    "pinia": "^2.3.1",
+    "pinia": "^4.0.2",
     "vue": "^3.5.40",
-    "vue-router": "^4.6.4"
+    "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
-    "vite": "^5.4.20"
+    "vite": "^8.1.5"
   }
 }
