@@ -13,8 +13,8 @@ import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, showToast } from '@/components/EchoUI.jsx'
 
 const THEME_OPTIONS = [
+  { value: 'dark', label: '玄夜', desc: '暗色宇宙', glyph: '月' },
   { value: 'light', label: '宣纸', desc: '日间明亮', glyph: '日' },
-  { value: 'dark', label: '墨砚', desc: '夜间沉静', glyph: '月' },
   { value: 'auto', label: '随天', desc: '跟随系统', glyph: '天' }
 ]
 

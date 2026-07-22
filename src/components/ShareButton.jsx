@@ -48,13 +48,14 @@ export const ShareButton = {
       showMenu.value = false
       generating.value = true
       try {
-        const theme = document.documentElement.dataset.theme || 'light'
+        const docTheme = document.documentElement.dataset.theme
+        const isDark = docTheme === 'dark' || (!docTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
         const dataURL = await generatePoster({
           title: props.posterTitle || `Echo · ${props.toolName}`,
           subtitle: props.result?.summary || '',
           score: props.score,
           items: props.posterItems,
-          theme: theme === 'dark' ? 'dark' : 'light',
+          theme: isDark ? 'dark' : 'light',
         })
         downloadPoster(dataURL, `echo-${props.toolName}-${Date.now()}.png`)
         showToast('海报已保存到相册')

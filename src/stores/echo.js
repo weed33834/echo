@@ -35,6 +35,10 @@ function saveState(state) {
 export const useEchoStore = defineStore('echo', {
   state: () => {
     const saved = loadState()
+    // 一次性迁移：将 'light' 主题升级为 'dark'（东方暗色宇宙美学改版）
+    const settings = saved?.settings
+      ? (saved._themeV2 ? saved.settings : { ...saved.settings, theme: 'dark' })
+      : { theme: 'dark', fontScale: 'md' }
     return {
       // 用户档案
       profile: saved?.profile || null, // { name, birthday, gender, dayMaster }
@@ -46,14 +50,16 @@ export const useEchoStore = defineStore('echo', {
       minge: saved?.minge || { level: 1, exp: 0, totalReviews: 0, accurateCount: 0 },
       // 签到
       checkin: saved?.checkin || { streak: 0, lastDate: null, dates: [] },
-      // 设置
-      settings: saved?.settings || { theme: 'light', fontScale: 'md' },
+      // 设置（默认暗色宇宙主题）
+      settings,
       // 推演档案（功能B：个人档案与轨迹）
       history: saved?.history || [],
       // 每日运势缓存 { date: 'YYYY-MM-DD', data: {...} }
       fortuneCache: saved?.fortuneCache || null,
       // 学习进度 { completedLessons: [], quizScores: {} }
       learnProgress: saved?.learnProgress || { completedLessons: [], quizScores: {} },
+      // 主题迁移标记（防止重复迁移）
+      _themeV2: true,
       ...({ __saved: saved ? true : false })
     }
   },
