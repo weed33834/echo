@@ -7,6 +7,14 @@ import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, showToast } fro
 import { generateDailyFortune } from '@/services/fortune.js'
 import { getCurrentJieqi, solarToLunar } from '@/utils/engines.js'
 import { chatCompletion } from '@/services/ai.js'
+import {
+  getPermissionStatus,
+  requestNotificationPermission,
+  isDailyFortuneEnabled,
+  restoreDailyFortuneIfNeeded
+} from '@/services/notifications.js'
+import { ShareButton } from '@/components/ShareButton.jsx'
+import '@/components/share-button.css'
 
 export default defineComponent({
   name: 'Daily',
@@ -45,6 +53,25 @@ export default defineComponent({
       store.setFortuneCache(f)
     }
     onMounted(loadFortune)
+
+    // --- 通知权限检查与恢复（页面加载时） ---
+    onMounted(async () => {
+      // 应用重开时恢复已开启的每日运势调度
+      restoreDailyFortuneIfNeeded()
+
+      // 若用户已在设置中开启每日推送但尚未授权，则在进入每日页时请求权限
+      const status = getPermissionStatus()
+      if (status === 'default' && isDailyFortuneEnabled()) {
+        const result = await requestNotificationPermission()
+        if (result === 'granted') {
+          showToast('已开启每日运势推送通知', 'success', 2000)
+          // 权限刚刚授予，重新调度以确保生效
+          restoreDailyFortuneIfNeeded()
+        } else if (result === 'denied') {
+          showToast('通知权限被拒绝，可在「设置」中重新开启', 'danger', 2500)
+        }
+      }
+    })
 
     // 四维列表
     const scoreList = computed(() => {
@@ -191,6 +218,17 @@ export default defineComponent({
                     </div>
                   </div>
                 </EchoCard>
+
+                {/* 分享今日运势 */}
+                <div class="daily-page__share">
+                  <ShareButton
+                    toolName="每日运势"
+                    result={{ summary: f.summary, score: f.overall }}
+                    posterTitle="今日运势"
+                    posterItems={scoreList.value.map(s => ({ label: s.label, value: s.value, color: s.value >= 70 ? 'var(--gold)' : 'var(--accent)' }))}
+                    score={f.overall}
+                  />
+                </div>
 
                 {/* 四维评分 */}
                 <EchoCard level="secondary" title="四维运势">

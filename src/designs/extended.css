@@ -318,6 +318,104 @@
 .compat-page__dim-bar { height: 4px; background: var(--bg-2); border-radius: 2px; overflow: hidden; }
 .compat-page__dim-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
 
+/* ---- 合婚多维评分 ---- */
+.compat-page__mscore-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-3);
+}
+.compat-page__mscore-total-num {
+  font-size: 36px;
+  font-weight: var(--fw-bold);
+  font-family: 'GeistMono', monospace;
+  line-height: 1;
+}
+.compat-page__mscore-total-label { font-size: var(--fs-xs); color: var(--muted); }
+.compat-page__mscores { display: flex; flex-direction: column; gap: var(--sp-2); }
+.compat-page__mscore {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--sp-2);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+}
+.compat-page__mscore-head { display: flex; justify-content: space-between; align-items: center; }
+.compat-page__mscore-name { font-size: var(--fs-sm); font-weight: var(--fw-medium); display: flex; align-items: center; gap: 6px; }
+.compat-page__mscore-val { font-size: var(--fs-md); font-family: 'GeistMono', monospace; font-weight: var(--fw-bold); }
+.compat-page__mscore-unit { font-size: var(--fs-xs); font-weight: normal; opacity: 0.7; }
+.compat-page__mscore-bar { height: 6px; background: var(--bg-2); border-radius: 3px; overflow: hidden; }
+.compat-page__mscore-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+.compat-page__mscore-desc { font-size: var(--fs-xs); color: var(--muted); line-height: 1.5; }
+
+/* ---- 八字四柱对比 ---- */
+.compat-page__pcmp { display: flex; flex-direction: column; gap: 2px; }
+.compat-page__pcmp-header,
+.compat-page__pcmp-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 1fr 1.2fr;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+}
+.compat-page__pcmp-header {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-weight: var(--fw-medium);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-2);
+}
+.compat-page__pcmp-row {
+  background: var(--bg-1);
+  border-radius: var(--r-sm);
+  padding: var(--sp-2);
+}
+.compat-page__pcmp-col-label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--accent); }
+.compat-page__pcmp-col-mid { display: flex; gap: 4px; align-items: baseline; }
+.compat-page__pcmp-gan { font-size: var(--fs-md); font-weight: var(--fw-bold); font-family: 'GeistMono', monospace; }
+.compat-page__pcmp-zhi { font-size: var(--fs-md); font-weight: var(--fw-bold); font-family: 'GeistMono', monospace; }
+.compat-page__pcmp-col-rel { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ---- 五行互补分析 ---- */
+.compat-page__wxcmp-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-2);
+}
+.compat-page__wxcmp-info { font-size: var(--fs-xs); color: var(--muted); }
+.compat-page__wxcmp-legend {
+  display: flex;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+.compat-page__wxcmp-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.compat-page__wxcmp-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.compat-page__wxcmp-row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) 0;
+}
+.compat-page__wxcmp-wx { font-size: var(--fs-sm); font-weight: var(--fw-bold); text-align: center; }
+.compat-page__wxcmp-bars { display: flex; flex-direction: column; gap: 3px; }
+.compat-page__wxcmp-bar-row { display: flex; align-items: center; gap: 6px; }
+.compat-page__wxcmp-track { flex: 1; height: 8px; background: var(--bg-2); border-radius: 4px; overflow: hidden; }
+.compat-page__wxcmp-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
+.compat-page__wxcmp-count { font-size: var(--fs-xs); font-family: 'GeistMono', monospace; color: var(--muted); min-width: 14px; text-align: right; }
+
 /* ============================================================
  * Learn 学习页
  * ============================================================ */
@@ -414,6 +512,7 @@
   color: var(--accent);
 }
 .daily-page__overall-label { font-size: var(--fs-sm); color: var(--muted); }
+.daily-page__share { display: flex; justify-content: center; margin: var(--sp-2) 0; }
 .daily-page__ai-reading {
   padding: var(--sp-3);
   border-radius: var(--r-md);

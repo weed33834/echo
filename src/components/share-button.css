@@ -1,0 +1,109 @@
+/* === ShareButton 分享按钮 === */
+.share-btn-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--accent-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-full);
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: var(--glow-accent);
+}
+.share-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+.share-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.share-btn-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: var(--z-overlay);
+  background: transparent;
+}
+
+.share-btn-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: var(--z-modal);
+  min-width: 180px;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: shareMenuIn 0.2s ease;
+}
+@keyframes shareMenuIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.share-btn-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: none;
+  border: none;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-btn-item:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.share-btn-item:not(:last-child) {
+  border-bottom: 1px solid var(--rule);
+}
+.share-btn-item svg {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.share-btn-item:hover svg {
+  color: var(--accent);
+}
+
+.share-btn-toast {
+  position: fixed;
+  bottom: calc(var(--tabbar-h) + var(--sp-5) + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-toast);
+  padding: var(--sp-2) var(--sp-5);
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: var(--r-full);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s ease;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}

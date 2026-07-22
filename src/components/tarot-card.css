@@ -1,0 +1,216 @@
+/**
+ * TarotCardFace — 塔罗牌面样式
+ *
+ * 包含：
+ *  1. SVG 颜色工具类（CSS 变量无法用于 SVG presentation 属性，需通过 CSS class 注入）
+ *  2. 渐变 stop 颜色
+ *  3. 牌面容器样式（尺寸、逆位旋转、关键牌高亮）
+ *  4. SVG 响应式缩放
+ *  5. 与已有 .tarot-card 布局的集成适配
+ */
+
+/* ============================================================
+ * 1. SVG 颜色工具类（fill / stroke）
+ * 使用 CSS 变量以适配亮/暗主题
+ * ============================================================ */
+
+/* 填充色 */
+.tarot-card-face .tcf-f-gold { fill: var(--gold); }
+.tarot-card-face .tcf-f-accent { fill: var(--accent); }
+.tarot-card-face .tcf-f-accent2 { fill: var(--accent-2); }
+.tarot-card-face .tcf-f-ink { fill: var(--ink); }
+.tarot-card-face .tcf-f-ink2 { fill: var(--ink-2); }
+.tarot-card-face .tcf-f-ink3 { fill: var(--ink-3); }
+.tarot-card-face .tcf-f-muted { fill: var(--muted); }
+.tarot-card-face .tcf-f-bg2 { fill: var(--bg-2); }
+.tarot-card-face .tcf-f-bg3 { fill: var(--bg-3); }
+.tarot-card-face .tcf-f-none { fill: none; }
+
+/* 描边色 */
+.tarot-card-face .tcf-s-gold { stroke: var(--gold); }
+.tarot-card-face .tcf-s-accent { stroke: var(--accent); }
+.tarot-card-face .tcf-s-accent2 { stroke: var(--accent-2); }
+.tarot-card-face .tcf-s-ink { stroke: var(--ink); }
+.tarot-card-face .tcf-s-muted { stroke: var(--muted); }
+.tarot-card-face .tcf-s-none { stroke: none; }
+
+/* 描边路径（fill:none + stroke:色） */
+.tarot-card-face .tcf-line-gold { fill: none; stroke: var(--gold); }
+.tarot-card-face .tcf-line-accent { fill: none; stroke: var(--accent); }
+.tarot-card-face .tcf-line-ink { fill: none; stroke: var(--ink); }
+.tarot-card-face .tcf-line-muted { fill: none; stroke: var(--muted); }
+
+/* 渐变 stop 颜色 */
+.tarot-card-face .tcf-stop-bg3 { stop-color: var(--bg-3); }
+.tarot-card-face .tcf-stop-ink2 { stop-color: var(--ink-2); }
+.tarot-card-face .tcf-stop-ink { stop-color: var(--ink); }
+
+/* ============================================================
+ * 2. 牌面容器
+ * ============================================================ */
+
+.tarot-card-face {
+  display: inline-block;
+  width: 100%;
+  max-width: 180px;
+  margin: 0 auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.4s ease;
+  /* 关键牌微浮阴影 */
+  box-shadow: var(--shadow-md);
+}
+
+.tarot-card-face__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 确保文字清晰 */
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 逆位：整个卡牌 180 度旋转 */
+.tarot-card-face--reversed {
+  transform: rotate(180deg);
+}
+
+/* 关键牌：金色光晕 */
+.tarot-card-face--key {
+  box-shadow:
+    0 0 0 2px var(--gold),
+    0 0 12px 2px var(--gold-soft),
+    var(--shadow-md);
+}
+
+/* ============================================================
+ * 3. 与已有 .tarot-card 布局集成
+ * 牌面替换为 SVG 组件后，调整外层卡片样式
+ * ============================================================ */
+
+/* 外层卡片容器：不再需要自己的背景/边框（牌面自带），保留间距 */
+.tarot-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--sp-2);
+  position: relative;
+  /* 网格内自适应 */
+  min-width: 0;
+}
+
+/* 关键牌标记的定位调整 */
+.tarot-card--key {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* 位置标签（过去/现在/未来）保留在牌面上方 */
+.tarot-card__position {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-bottom: var(--sp-1);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide);
+}
+
+/* 正逆位文字标签（原 tarot-card__orient 已融入 SVG，此处保留兼容） */
+.tarot-card__orient {
+  display: none;
+}
+
+/* 牌面编号（原 tarot-card__num 已融入 SVG，此处保留兼容） */
+.tarot-card__num {
+  display: none;
+}
+
+/* 牌名（原 tarot-card__name 已融入 SVG，此处保留兼容） */
+.tarot-card__name {
+  display: none;
+}
+
+/* 解读文字 */
+.tarot-card__meaning {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  line-height: var(--lh-normal);
+  margin-top: var(--sp-2);
+  padding: 0 var(--sp-1);
+  word-break: break-word;
+}
+
+/* 关键牌徽章 */
+.tarot-card__key {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: var(--fs-xs);
+  padding: 2px 6px;
+  border-radius: var(--r-full);
+  font-weight: var(--fw-bold);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * 4. 牌阵网格适配
+ * SVG 牌面会自动缩放到列宽，保持 180:300 竖版比例
+ * ============================================================ */
+
+/* 单张牌阵：居中，限制宽度 */
+.tarot-cards--single {
+  max-width: 200px;
+  margin: 0 auto var(--sp-3);
+}
+
+/* 三牌阵：保持三列 */
+.tarot-cards--three-pf,
+.tarot-cards--three-bsb,
+.tarot-cards--relationship,
+.tarot-cards--choice {
+  gap: var(--sp-2);
+}
+
+/* 凯尔特十字（10张）：5列改为自动换行，避免过窄 */
+.tarot-cards--celtic {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--sp-2);
+}
+
+/* ============================================================
+ * 5. 响应式调整
+ * ============================================================ */
+
+/* 平板及以上：三牌阵间距加大 */
+@media (min-width: 768px) {
+  .tarot-cards--three-pf,
+  .tarot-cards--three-bsb,
+  .tarot-cards--relationship,
+  .tarot-cards--choice {
+    gap: var(--sp-3);
+  }
+  .tarot-card__meaning {
+    font-size: var(--fs-sm);
+  }
+}
+
+/* 超窄屏：牌面缩小，解读文字紧凑 */
+@media (max-width: 360px) {
+  .tarot-cards--three-pf,
+  .tarot-cards--three-bsb,
+  .tarot-cards--relationship,
+  .tarot-cards--choice {
+    gap: var(--sp-1);
+  }
+  .tarot-card {
+    padding: var(--sp-1);
+  }
+  .tarot-card__meaning {
+    font-size: 11px;
+    margin-top: var(--sp-1);
+  }
+}

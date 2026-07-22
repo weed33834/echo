@@ -4,6 +4,9 @@ import { useEchoStore, TOOLS } from '@/stores/echo.js'
 import { getEngine, crossVerify } from '@/utils/engines.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoTag, EchoBadge, EchoModal, EchoProgress, showToast } from '@/components/EchoUI.jsx'
+import { TarotCardFace } from '@/components/TarotCardFace.jsx'
+import { ShareButton } from '@/components/ShareButton.jsx'
+import '@/components/share-button.css'
 
 /* ============================================================
  * 结果渲染器：每种 resultType 对应独立的 JSX 渲染函数
@@ -670,11 +673,9 @@ const ResultRenderers = {
       <div class="tarot-question">所问：{r.question || '（未填写）'} · {r.spread}牌阵 · 关注{r.focusArea}</div>
       <div class={`tarot-cards tarot-cards--${r.spread}`}>
         {r.cards.map((c, i) => (
-          <div class={`tarot-card ${c.upright ? '' : 'tarot-card--reversed'} ${c.isKeyCard ? 'tarot-card--key' : ''}`} key={c.position}>
+          <div class={`tarot-card ${c.isKeyCard ? 'tarot-card--key' : ''}`} key={c.position}>
             <div class="tarot-card__position">{c.position}</div>
-            <div class="tarot-card__num">{c.card.num || '★'}</div>
-            <div class="tarot-card__name">{c.card.name}</div>
-            <div class="tarot-card__orient">{c.upright ? '正位' : '逆位'}</div>
+            <TarotCardFace card={c.card} upright={c.upright} isKeyCard={c.isKeyCard} />
             <div class="tarot-card__meaning">{c.meaning}</div>
             {c.isKeyCard && <div class="tarot-card__key">关键牌</div>}
           </div>
@@ -1039,6 +1040,39 @@ export default defineComponent({
       return map[tool.value.key] || []
     })
 
+    // 分享海报内容
+    const posterItems = computed(() => {
+      if (!result.value) return []
+      const r = result.value
+      const items = []
+      if (r.pillars) {
+        r.pillars.forEach(p => {
+          if (p.label && p.value) items.push({ label: p.label, value: 80, color: 'var(--accent)' })
+        })
+      }
+      if (r.wuxing) {
+        Object.entries(r.wuxing).forEach(([k, v]) => {
+          if (typeof v === 'number') items.push({ label: `${k}行`, value: Math.min(100, v * 10), color: `var(--wuxing-${k === '金' ? 'metal' : k === '木' ? 'wood' : k === '水' ? 'water' : k === '火' ? 'fire' : 'earth'})` })
+        })
+      }
+      if (r.score !== undefined) {
+        items.push({ label: '吉凶评分', value: r.score, color: r.score >= 70 ? 'var(--ok)' : r.score >= 40 ? 'var(--warn)' : 'var(--danger)' })
+      }
+      if (r.dimensions) {
+        r.dimensions.forEach(d => {
+          if (d.label && d.score !== undefined) items.push({ label: d.label, value: d.score, color: 'var(--accent)' })
+        })
+      }
+      return items.slice(0, 6)
+    })
+
+    const posterScore = computed(() => {
+      if (!result.value) return null
+      if (result.value.score !== undefined) return result.value.score
+      if (result.value.totalScore !== undefined) return result.value.totalScore
+      return null
+    })
+
     // 渲染输入字段（支持 radio/checkbox/showIf/unit）
     const renderField = (f) => {
       if (!shouldShow(f)) return null
@@ -1188,6 +1222,17 @@ export default defineComponent({
             {result.value && Renderer && (
               <div class="tool-detail__result">
                 {Renderer(result.value)}
+
+                {/* 分享按钮 */}
+                <div class="tool-detail__share">
+                  <ShareButton
+                    toolName={tool.value.name}
+                    result={result.value}
+                    posterTitle={`Echo · ${tool.value.name}`}
+                    posterItems={posterItems.value}
+                    score={posterScore.value}
+                  />
+                </div>
 
                 {/* 交叉印证（功能A） */}
                 {crossVerifyTargets.value.length > 0 && (

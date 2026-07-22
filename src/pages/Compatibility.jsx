@@ -8,9 +8,54 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useEchoStore } from '@/stores/echo.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, showToast } from '@/components/EchoUI.jsx'
-import { computeProfileBazi, compatibilityCalc } from '@/utils/engines.js'
+import {
+  computeProfileBazi,
+  compatibilityCalc,
+  TIAN_GAN,
+  DI_ZHI,
+  GAN_WX,
+  ZHI_WX,
+  ganHeOf,
+  heOf,
+  sanheOf,
+  chongOf,
+  xingOf,
+  haiOf
+} from '@/utils/engines.js'
 import { BaziChart } from '@/components/BaziChart.jsx'
 import { Timeline } from '@/components/Timeline.jsx'
+
+// 五行颜色映射（与 BaziChart 一致）
+const WX_COLORS = {
+  '木': '#5a9e5a',
+  '火': '#d45a5a',
+  '土': '#a8825a',
+  '金': '#d4a843',
+  '水': '#5a8db5'
+}
+const WUXING_LIST = ['木', '火', '土', '金', '水']
+const wxColor = (wx) => WX_COLORS[wx] || 'var(--muted)'
+const ganWxOf = (gan) => GAN_WX[TIAN_GAN.indexOf(gan)] || ''
+const zhiWxOf = (zhi) => ZHI_WX[DI_ZHI.indexOf(zhi)] || ''
+
+// 五行序号：木0 火1 土2 金3 水4
+// 相生：(i+1)%5  相克：(i+2)%5
+const wxRelation = (wx1, wx2) => {
+  const i = WUXING_LIST.indexOf(wx1), j = WUXING_LIST.indexOf(wx2)
+  if (i < 0 || j < 0) return { type: 'unknown', label: '未知' }
+  if (i === j) return { type: 'same', label: '比和' }
+  if ((i + 1) % 5 === j) return { type: 'generate', label: `${wx1}生${wx2}` }
+  if ((j + 1) % 5 === i) return { type: 'generated', label: `${wx2}生${wx1}` }
+  if ((i + 2) % 5 === j) return { type: 'restrain', label: `${wx1}克${wx2}` }
+  return { type: 'restrained', label: `${wx2}克${wx1}` }
+}
+
+// 我克者为财 — 返回日主的财星五行
+const wealthWxOf = (dayMasterWx) => {
+  const i = WUXING_LIST.indexOf(dayMasterWx)
+  if (i < 0) return ''
+  return WUXING_LIST[(i + 2) % 5]
+}
 
 // 12 时辰：子时=23, 丑时=1, 寅时=3 ... 亥时=21（值为对应小时数）
 const SHICHEN = [
@@ -129,6 +174,182 @@ export default defineComponent({
       bazi2.value = null
     }
 
+    // ===== 合婚多维评分（性格匹配 / 情感和谐 / 财运互助 / 家庭和睦） =====
+    const matchScores = computed(() => {
+      const b1 = bazi1.value, b2 = bazi2.value
+      if (!b1 || !b2) return null
+      const scores = []
+
+      // --- 1. 性格匹配（日主五行 + 生肖配对） ---
+      const dmRel = wxRelation(b1.dayMasterWx, b2.dayMasterWx)
+      let dmScore = 50
+      if (dmRel.type === 'same') dmScore = 80
+      else if (dmRel.type === 'generate' || dmRel.type === 'generated') dmScore = 90
+      else dmScore = 45
+      // 生肖配对（年支关系）
+      const yearZhi1 = b1.pillars[0].zhi, yearZhi2 = b2.pillars[0].zhi
+      let zodiacScore = 55
+      if (chongOf(yearZhi1) === yearZhi2) zodiacScore = 30
+      else if (xingOf(yearZhi1, yearZhi2)) zodiacScore = 35
+      else if (haiOf(yearZhi1, yearZhi2)) zodiacScore = 40
+      else {
+        const he1 = heOf(yearZhi1)
+        if (he1 && he1.partner === yearZhi2) zodiacScore = 85
+        else {
+          const s1 = sanheOf(yearZhi1), s2 = sanheOf(yearZhi2)
+          if (s1 && s2 && s1.name === s2.name) zodiacScore = 80
+        }
+      }
+      const personalityScore = Math.round(dmScore * 0.55 + zodiacScore * 0.45)
+      scores.push({
+        name: '性格匹配',
+        score: personalityScore,
+        desc: `日主${dmRel.label}，生肖${b1.zodiac}与${b2.zodiac}${zodiacScore >= 75 ? '相合' : zodiacScore >= 50 ? '平和' : '相冲'}`
+      })
+
+      // --- 2. 情感和谐（日支关系） ---
+      const dayZhi1 = b1.pillars[2].zhi, dayZhi2 = b2.pillars[2].zhi
+      let harmonyScore = 55, harmonyDesc = '日支无明显合冲'
+      if (chongOf(dayZhi1) === dayZhi2) {
+        harmonyScore = 25; harmonyDesc = `日支${dayZhi1}${dayZhi2}相冲，易有摩擦`
+      } else if (xingOf(dayZhi1, dayZhi2)) {
+        harmonyScore = 35; harmonyDesc = `日支${dayZhi1}${dayZhi2}相刑，需多包容`
+      } else if (haiOf(dayZhi1, dayZhi2)) {
+        harmonyScore = 40; harmonyDesc = `日支${dayZhi1}${dayZhi2}相害，需多沟通`
+      } else {
+        const dhe = heOf(dayZhi1)
+        if (dhe && dhe.partner === dayZhi2) {
+          harmonyScore = 90; harmonyDesc = `日支${dayZhi1}${dayZhi2}六合，感情深厚`
+        } else {
+          const ds1 = sanheOf(dayZhi1), ds2 = sanheOf(dayZhi2)
+          if (ds1 && ds2 && ds1.name === ds2.name) {
+            harmonyScore = 80; harmonyDesc = `日支同属${ds1.name}，气场相合`
+          }
+        }
+      }
+      scores.push({ name: '情感和谐', score: harmonyScore, desc: harmonyDesc })
+
+      // --- 3. 财运互助（财星互补 + 五行平衡） ---
+      const wealth1 = wealthWxOf(b1.dayMasterWx), wealth2 = wealthWxOf(b2.dayMasterWx)
+      const s1Strong = b1.strongest, s2Strong = b2.strongest
+      let wealthMutual = 0
+      let wealthDescParts = []
+      if (s1Strong === wealth2) { wealthMutual += 1; wealthDescParts.push('甲方旺气助乙方财运') }
+      if (s2Strong === wealth1) { wealthMutual += 1; wealthDescParts.push('乙方旺气助甲方财运') }
+      // 合并五行方差越小越均衡
+      const merged = {}
+      WUXING_LIST.forEach(k => { merged[k] = (b1.wuxing[k] || 0) + (b2.wuxing[k] || 0) })
+      const vals = Object.values(merged)
+      const avg = vals.reduce((a, b) => a + b, 0) / vals.length
+      const variance = vals.reduce((a, b) => a + (b - avg) ** 2, 0) / vals.length
+      const balanceBonus = Math.max(0, Math.round(20 - variance * 2.5))
+      let financeScore
+      if (wealthMutual === 2) financeScore = 85 + balanceBonus
+      else if (wealthMutual === 1) financeScore = 65 + balanceBonus
+      else financeScore = 45 + balanceBonus
+      financeScore = Math.min(100, financeScore)
+      const financeDesc = wealthDescParts.length
+        ? wealthDescParts.join('；') + (variance < 1.5 ? '，合并五行均衡' : '')
+        : '财星无互补' + (variance < 1.5 ? '，但合并五行均衡' : '，合并五行偏枯')
+      scores.push({ name: '财运互助', score: financeScore, desc: financeDesc })
+
+      // --- 4. 家庭和睦（喜用互补 + 无严重冲刑 + 五行平衡） ---
+      const fav1 = b1.favorable || [], fav2 = b2.favorable || []
+      const favComplement = fav1.some(f => fav2.includes(f))
+      let familyScore = 0
+      let familyDescParts = []
+      // 喜用互补 +35
+      if (favComplement) { familyScore += 35; familyDescParts.push('喜用神互补') }
+      else { familyScore += 15; familyDescParts.push('喜用神无互补') }
+      // 无严重冲刑（日支+年支） +35
+      const hasChong = chongOf(dayZhi1) === dayZhi2 || chongOf(yearZhi1) === yearZhi2
+      const hasXing = !!xingOf(dayZhi1, dayZhi2) || !!xingOf(yearZhi1, yearZhi2)
+      if (!hasChong && !hasXing) { familyScore += 35; familyDescParts.push('无冲无刑') }
+      else if (hasChong) { familyScore += 10; familyDescParts.push('有相冲需化解') }
+      else { familyScore += 18; familyDescParts.push('有相刑需包容') }
+      // 合并五行均衡 +30
+      familyScore += Math.round(Math.max(0, 30 - variance * 3))
+      familyScore = Math.min(100, familyScore)
+      scores.push({ name: '家庭和睦', score: familyScore, desc: familyDescParts.join('，') })
+
+      const total = Math.round(scores.reduce((a, s) => a + s.score, 0) / scores.length)
+      return { scores, total }
+    })
+
+    // ===== 五行互补分析数据 =====
+    const wuxingCompare = computed(() => {
+      const b1 = bazi1.value, b2 = bazi2.value
+      if (!b1 || !b2) return null
+      const wx1 = b1.wuxing || {}, wx2 = b2.wuxing || {}
+      const total1 = Object.values(wx1).reduce((a, b) => a + b, 0) || 8
+      const total2 = Object.values(wx2).reduce((a, b) => a + b, 0) || 8
+      const rows = WUXING_LIST.map(wx => {
+        const c1 = wx1[wx] || 0, c2 = wx2[wx] || 0
+        const pct1 = Math.round((c1 / total1) * 100)
+        const pct2 = Math.round((c2 / total2) * 100)
+        // 互补：一方偏弱（≤1）另一方偏强（≥3）→ 互补
+        // 冲突：双方都偏强（≥3）→ 过旺冲突
+        let tag = null
+        if (c1 >= 3 && c2 >= 3) tag = { variant: 'danger', text: '过旺' }
+        else if (c1 <= 1 && c2 >= 3) tag = { variant: 'ok', text: '乙方补' }
+        else if (c2 <= 1 && c1 >= 3) tag = { variant: 'ok', text: '甲方补' }
+        else if (c1 <= 1 && c2 <= 1) tag = { variant: 'gold', text: '偏弱' }
+        return { wx, c1, c2, pct1, pct2, tag }
+      })
+      // 整体互补判定
+      const fav1 = b1.favorable || [], fav2 = b2.favorable || []
+      const complementary = fav1.some(f => fav2.includes(f))
+      return { rows, complementary, fav1, fav2, strongest1: b1.strongest, strongest2: b2.strongest }
+    })
+
+    // ===== 四柱对比数据 =====
+    const pillarCompare = computed(() => {
+      const b1 = bazi1.value, b2 = bazi2.value
+      if (!b1 || !b2) return null
+      return b1.pillars.map((p1, i) => {
+        const p2 = b2.pillars[i]
+        // 天干关系
+        const ganHe1 = ganHeOf(p1.gan)
+        const ganMatch = ganHe1 && ganHe1.partner === p2.gan
+          ? { type: '合', label: `${p1.gan}${p2.gan}合化${ganHe1.wx}`, tone: 'pos' }
+          : null
+        // 地支关系
+        const z1 = p1.zhi, z2 = p2.zhi
+        let zhiMatch = null
+        if (chongOf(z1) === z2) zhiMatch = { type: '冲', label: `${z1}${z2}冲`, tone: 'neg' }
+        else if (xingOf(z1, z2)) zhiMatch = { type: '刑', label: `${z1}${z2}刑`, tone: 'neg' }
+        else if (haiOf(z1, z2)) zhiMatch = { type: '害', label: `${z1}${z2}害`, tone: 'neg' }
+        else {
+          const he = heOf(z1)
+          if (he && he.partner === z2) zhiMatch = { type: '合', label: `${z1}${z2}六合`, tone: 'pos' }
+          else {
+            const s1 = sanheOf(z1), s2 = sanheOf(z2)
+            if (s1 && s2 && s1.name === s2.name) zhiMatch = { type: '合', label: `同属${s1.name}`, tone: 'pos' }
+          }
+        }
+        return {
+          name: p1.name,
+          gan1: p1.gan, gan2: p2.gan,
+          ganWx1: ganWxOf(p1.gan), ganWx2: ganWxOf(p2.gan),
+          zhi1: z1, zhi2: z2,
+          zhiWx1: zhiWxOf(z1), zhiWx2: zhiWxOf(z2),
+          ganMatch, zhiMatch
+        }
+      })
+    })
+
+    // 评分色阶
+    const scoreBarColor = (s) => {
+      if (s >= 75) return '#5a9e5a'
+      if (s >= 55) return '#d4a843'
+      return '#d45a5a'
+    }
+    const scoreJudge = (s) => {
+      if (s >= 75) return { variant: 'ok', text: '吉' }
+      if (s >= 55) return { variant: 'gold', text: '平' }
+      return { variant: 'danger', text: '忌' }
+    }
+
     // 渲染单人输入卡（复用 profile-form 样式）
     const renderPerson = (p, opts) => (
       <div class="compat-page__person">
@@ -221,6 +442,125 @@ export default defineComponent({
                   </div>
                 </div>
               </EchoCard>
+
+              {/* 合婚多维评分 */}
+              {matchScores.value && (
+                <EchoCard level="primary" title="合婚评分">
+                  <div class="compat-page__mscore-total">
+                    <div class="compat-page__mscore-total-num" style={{ color: scoreColor(matchScores.value.total) }}>
+                      {matchScores.value.total}
+                    </div>
+                    <div class="compat-page__mscore-total-label">综合均分</div>
+                  </div>
+                  <div class="compat-page__mscores">
+                    {matchScores.value.scores.map((s) => {
+                      const judge = scoreJudge(s.score)
+                      return (
+                        <div key={s.name} class="compat-page__mscore">
+                          <div class="compat-page__mscore-head">
+                            <span class="compat-page__mscore-name">
+                              {s.name}
+                              <EchoTag variant={judge.variant}>{judge.text}</EchoTag>
+                            </span>
+                            <span class="compat-page__mscore-val" style={{ color: scoreBarColor(s.score) }}>
+                              {s.score}<span class="compat-page__mscore-unit">分</span>
+                            </span>
+                          </div>
+                          <div class="compat-page__mscore-bar">
+                            <div
+                              class="compat-page__mscore-fill"
+                              style={{ width: `${s.score}%`, background: scoreBarColor(s.score) }}
+                            />
+                          </div>
+                          <div class="compat-page__mscore-desc">{s.desc}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </EchoCard>
+              )}
+
+              {/* 八字四柱对比 */}
+              {pillarCompare.value && (
+                <EchoCard level="secondary" title="八字四柱对比">
+                  <div class="compat-page__pcmp">
+                    <div class="compat-page__pcmp-header">
+                      <span class="compat-page__pcmp-col-label">柱位</span>
+                      <span class="compat-page__pcmp-col-mid">甲方</span>
+                      <span class="compat-page__pcmp-col-mid">乙方</span>
+                      <span class="compat-page__pcmp-col-rel">干支关系</span>
+                    </div>
+                    {pillarCompare.value.map((row) => (
+                      <div key={row.name} class="compat-page__pcmp-row">
+                        <span class="compat-page__pcmp-col-label">{row.name}</span>
+                        <div class="compat-page__pcmp-col-mid">
+                          <span class="compat-page__pcmp-gan" style={{ color: wxColor(row.ganWx1) }}>{row.gan1}</span>
+                          <span class="compat-page__pcmp-zhi" style={{ color: wxColor(row.zhiWx1) }}>{row.zhi1}</span>
+                        </div>
+                        <div class="compat-page__pcmp-col-mid">
+                          <span class="compat-page__pcmp-gan" style={{ color: wxColor(row.ganWx2) }}>{row.gan2}</span>
+                          <span class="compat-page__pcmp-zhi" style={{ color: wxColor(row.zhiWx2) }}>{row.zhi2}</span>
+                        </div>
+                        <div class="compat-page__pcmp-col-rel">
+                          {row.ganMatch && (
+                            <EchoTag variant={row.ganMatch.tone === 'pos' ? 'ok' : 'danger'}>{row.ganMatch.label}</EchoTag>
+                          )}
+                          {row.zhiMatch && (
+                            <EchoTag variant={row.zhiMatch.tone === 'pos' ? 'ok' : 'danger'}>{row.zhiMatch.label}</EchoTag>
+                          )}
+                          {!row.ganMatch && !row.zhiMatch && (
+                            <span style={{ fontSize: 'var(--fs-xs)', color: 'var(--muted)' }}>—</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </EchoCard>
+              )}
+
+              {/* 五行互补分析 */}
+              {wuxingCompare.value && (
+                <EchoCard level="secondary" title="五行互补分析">
+                  <div class="compat-page__wxcmp-summary">
+                    {wuxingCompare.value.complementary ? (
+                      <EchoBadge variant="ok">喜用神互补 · 五行可互济</EchoBadge>
+                    ) : (
+                      <EchoBadge variant="gold">喜用神无互补 · 五行各自独立</EchoBadge>
+                    )}
+                    <span class="compat-page__wxcmp-info">
+                      甲方最旺{wuxingCompare.value.strongest1} · 乙方最旺{wuxingCompare.value.strongest2}
+                    </span>
+                  </div>
+                  <div class="compat-page__wxcmp-legend">
+                    <span class="compat-page__wxcmp-legend-item">
+                      <span class="compat-page__wxcmp-dot" style={{ background: 'var(--accent)' }} />甲方
+                    </span>
+                    <span class="compat-page__wxcmp-legend-item">
+                      <span class="compat-page__wxcmp-dot" style={{ background: '#b07acc' }} />乙方
+                    </span>
+                  </div>
+                  {wuxingCompare.value.rows.map((r) => (
+                    <div key={r.wx} class="compat-page__wxcmp-row">
+                      <span class="compat-page__wxcmp-wx" style={{ color: wxColor(r.wx) }}>{r.wx}</span>
+                      <div class="compat-page__wxcmp-bars">
+                        <div class="compat-page__wxcmp-bar-row">
+                          <div class="compat-page__wxcmp-track">
+                            <div class="compat-page__wxcmp-fill" style={{ width: `${r.pct1}%`, background: 'var(--accent)' }} />
+                          </div>
+                          <span class="compat-page__wxcmp-count">{r.c1}</span>
+                        </div>
+                        <div class="compat-page__wxcmp-bar-row">
+                          <div class="compat-page__wxcmp-track">
+                            <div class="compat-page__wxcmp-fill" style={{ width: `${r.pct2}%`, background: '#b07acc' }} />
+                          </div>
+                          <span class="compat-page__wxcmp-count">{r.c2}</span>
+                        </div>
+                      </div>
+                      {r.tag && <EchoTag variant={r.tag.variant}>{r.tag.text}</EchoTag>}
+                    </div>
+                  ))}
+                </EchoCard>
+              )}
 
               {/* 六维分解 */}
               <EchoCard level="secondary" title="维度分解">

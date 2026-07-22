@@ -1,7 +1,14 @@
-import { defineComponent, computed, ref, watch } from 'vue'
+import { defineComponent, computed, ref, watch, onMounted } from 'vue'
 import { useEchoStore } from '@/stores/echo.js'
 import { useChatStore } from '@/stores/chat.js'
 import { DEFAULT_MODELS, testConnection } from '@/services/ai.js'
+import {
+  getPermissionStatus,
+  setDailyFortuneEnabled,
+  isDailyFortuneEnabled,
+  sendNotification,
+  restoreDailyFortuneIfNeeded
+} from '@/services/notifications.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, showToast } from '@/components/EchoUI.jsx'
 
@@ -129,6 +136,69 @@ export default defineComponent({
       })
       showToast(`已切换到 ${m.label}`, 'success', 1500)
     }
+
+    /* === 每日运势推送通知 === */
+    const notifySupported = computed(() => getPermissionStatus() !== 'unsupported')
+    const notifyPermission = ref(getPermissionStatus())
+    const dailyFortuneEnabled = ref(isDailyFortuneEnabled())
+
+    const permissionLabel = computed(() => {
+      const p = notifyPermission.value
+      if (p === 'granted') return '已授权'
+      if (p === 'denied') return '已被拒绝'
+      if (p === 'unsupported') return '浏览器不支持'
+      return '未授权'
+    })
+
+    const permissionHint = computed(() => {
+      const p = notifyPermission.value
+      if (p === 'denied') return '通知权限已被拒绝，请在浏览器站点设置中重新允许 Echo 发送通知。'
+      if (p === 'unsupported') return '当前浏览器不支持推送通知。'
+      if (dailyFortuneEnabled.value) return '将于每日 08:00 推送今日运势提醒（应用保持打开时生效）。'
+      return '开启后将请求通知权限，每日定时提醒你查看专属运程。'
+    })
+
+    const toggleDailyFortune = async () => {
+      if (!notifySupported.value) {
+        showToast('当前浏览器不支持通知', 'danger', 2000)
+        return
+      }
+      const next = !dailyFortuneEnabled.value
+      if (next) {
+        // 乐观开启，权限未通过则回滚
+        dailyFortuneEnabled.value = true
+        const res = await setDailyFortuneEnabled(true)
+        notifyPermission.value = getPermissionStatus()
+        if (res.ok) {
+          showToast('已开启每日运势推送', 'success', 2000)
+        } else if (res.reason === 'permission-denied') {
+          dailyFortuneEnabled.value = false
+          showToast('通知权限未授予，请允许后重试', 'danger', 2500)
+        }
+      } else {
+        setDailyFortuneEnabled(false)
+        dailyFortuneEnabled.value = false
+        showToast('已关闭每日运势推送', 'success', 1500)
+      }
+    }
+
+    const testNotification = () => {
+      if (notifyPermission.value !== 'granted') {
+        showToast('请先开启并授权通知权限', 'danger', 2000)
+        return
+      }
+      sendNotification(
+        'Echo · 回响 — 测试通知',
+        '每日运势推送已就绪，将在每日定时提醒你查看运程。'
+      )
+      showToast('已发送测试通知', 'success', 1500)
+    }
+
+    onMounted(() => {
+      // 进入设置页时同步最新权限状态，并恢复已开启的调度
+      notifyPermission.value = getPermissionStatus()
+      restoreDailyFortuneIfNeeded()
+    })
 
     return () => (
       <div class="settings-page">
@@ -317,6 +387,36 @@ export default defineComponent({
                     {m.isDefault && <span class="settings-page__ai-preset-badge">默认</span>}
                   </button>
                 ))}
+              </div>
+            </EchoCard>
+          </section>
+
+          {/* 每日运势推送 */}
+          <section class="settings-page__section">
+            <div class="settings-page__section-head">
+              <h2 class="settings-page__section-title">每日运势推送</h2>
+              <span class="settings-page__section-desc">定时提醒查看今日运程</span>
+            </div>
+            <EchoCard level="tertiary">
+              <div class="settings-page__ai-body">
+                {/* 推送开关 */}
+                <div class="settings-page__ai-row">
+                  <div class="settings-page__ai-row-label">每日运势推送</div>
+                  <button
+                    class={`settings-page__ai-toggle ${dailyFortuneEnabled.value ? 'on' : ''}`}
+                    onClick={toggleDailyFortune}
+                    type="button"
+                    disabled={!notifySupported.value}
+                  >{dailyFortuneEnabled.value ? '已开启' : '已关闭'}</button>
+                </div>
+                <div class="settings-page__ai-field-hint">
+                  权限状态：{permissionLabel.value} · {permissionHint.value}
+                </div>
+
+                {/* 测试通知 */}
+                <div class="settings-page__ai-actions">
+                  <EchoButton variant="secondary" size="sm" onClick={testNotification}>发送测试通知</EchoButton>
+                </div>
               </div>
             </EchoCard>
           </section>

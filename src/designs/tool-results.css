@@ -155,6 +155,7 @@
 
 .tool-detail__calc-btn { margin-top: var(--sp-2); }
 .tool-detail__result { animation: fadeInUp 0.4s ease; }
+.tool-detail__share { display: flex; justify-content: center; margin: var(--sp-3) 0 var(--sp-2); }
 .tool-detail__summary {
   margin-top: var(--sp-3);
   padding: var(--sp-2) var(--sp-3);
@@ -1228,23 +1229,18 @@
   gap: var(--sp-2);
   margin-bottom: var(--sp-3);
 }
-.tarot-cards--single { grid-template-columns: 1fr; max-width: 200px; margin: 0 auto var(--sp-3); }
+.tarot-cards--single { grid-template-columns: 1fr; }
 .tarot-cards--three-pf, .tarot-cards--three-bsb { grid-template-columns: repeat(3, 1fr); }
 .tarot-cards--relationship, .tarot-cards--choice { grid-template-columns: repeat(3, 1fr); }
-.tarot-cards--celtic { grid-template-columns: repeat(5, 1fr); }
+.tarot-cards--celtic { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 .tarot-card {
   text-align: center;
-  padding: var(--sp-3) var(--sp-2);
-  background: var(--bg-3);
-  border-radius: var(--r-md);
-  border: 1px solid var(--rule);
+  padding: var(--sp-2);
   position: relative;
+  /* 背景与边框由 TarotCardFace SVG 组件提供，此处不再重复设置 */
 }
-.tarot-card--reversed { opacity: 0.85; }
-.tarot-card--reversed .tarot-card__name { transform: rotate(180deg); display: inline-block; }
 .tarot-card--key {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 2px var(--gold-soft);
+  /* 关键牌高亮由 TarotCardFace--key 处理 */
 }
 .tarot-card__position { font-size: var(--fs-xs); color: var(--muted); margin-bottom: var(--sp-1); }
 .tarot-card__num { font-size: var(--fs-xs); color: var(--accent); }
