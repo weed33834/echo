@@ -140,7 +140,7 @@ export const MAYA_SEALS = [
 ]
 
 // 玛雅 13 音调
-export const MAYA_TONES = ['磁性', ' lunar', '电性', '自我存在', '超频', '韵律', '共鸣', '银河', '太阳', '行星', '光谱', '水晶', '宇宙']
+export const MAYA_TONES = ['磁性', '月性', '电性', '自我存在', '超频', '韵律', '共鸣', '银河', '太阳', '行星', '光谱', '水晶', '宇宙']
 
 // 塔罗 22 大阿卡纳
 export const TAROT_MAJOR = [

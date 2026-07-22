@@ -34,13 +34,13 @@
 | `style` | 代码格式 | `style: 统一缩进为 2 空格` |
 | `refactor` | 重构 | `refactor: 提取公共日期工具函数` |
 | `perf` | 性能优化 | `perf: 懒加载 ToolDetail 结果渲染器` |
-| `chore` | 构建/工具 | `chore: 升级 Vite 到 5.4.20` |
+| `chore` | 构建/工具 | `chore: 升级 Vite 到 8.1.5` |
 
 ## 开发环境
 
 ### 前置要求
 
-- Node.js ≥ 18（推荐 20.x，参见 `.nvmrc`）
+- Node.js ≥ 22（参见 `.nvmrc`）
 - npm ≥ 9
 
 ### 快速启动
@@ -83,7 +83,7 @@ src/
 ├── services/        # 业务服务（AI 对话 / 工具调度 / 安全沙箱）
 ├── utils/engines.js # 18 个命理引擎（纯函数）
 ├── components/      # 基础组件库（EchoUI / TabBar / BaziChart 等）
-├── pages/           # 15 个页面
+├── pages/           # 16 个页面
 ├── designs/         # 设计系统（tokens.css 设计令牌 + 页面样式）
 └── data/lessons.js  # 学习中心课程数据
 ```
@@ -100,7 +100,7 @@ src/
 
 ## 新增命理引擎
 
-1. 在 `src/utils/engines.js` 中实现引擎，导出 `{ calc, meta }` 结构
+1. 在 `src/utils/engines.js` 中实现引擎，导出 `{ inputConfig, calc }` 结构
 2. 在 `src/stores/echo.js` 的 `TOOLS` 数组中注册工具元信息
 3. 在 `src/services/tools.js` 的 `ENGINES` 映射中关联引擎
 4. 测试推演流程：工具页 → 推演 → 印证 → 命格面板

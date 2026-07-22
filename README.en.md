@@ -88,7 +88,7 @@ Core loop: **Set node → Await echo → Review**
 - Daily check-in + streak milestones
 - Compatibility matching: dual BaZi comparison
 - Learning center: fortune-telling introductory courses
-- Dark mode (Xuan paper / Ink stone dual themes)
+- Three-theme switching (XuanYe dark / Xuan paper light / auto by time of day)
 - Font size scaling (compact / standard / relaxed)
 - Fully responsive: 320px mobile → 4K display
 
@@ -97,7 +97,7 @@ Core loop: **Set node → Await echo → Review**
 ```
 src/
 ├── main.js                    # App entry
-├── router/index.js            # 15 routes
+├── router/index.js            # 16 routes
 ├── stores/
 │   ├── echo.js                # Destiny/history/profile/tools store
 │   └── chat.js                # AI chat/model config store
@@ -116,7 +116,7 @@ src/
 │   ├── ChatFab.jsx            # Floating AI entry
 │   ├── BaziChart.jsx          # BaZi visualization
 │   └── Timeline.jsx           # Timeline component
-├── pages/                     # 15 pages
+├── pages/                     # 16 pages
 │   ├── Home.jsx               # Home
 │   ├── Tools.jsx              # Tool list
 │   ├── ToolDetail.jsx         # Tool divination
@@ -131,7 +131,8 @@ src/
 │   ├── Me.jsx                 # Personal center
 │   ├── Settings.jsx           # Settings
 │   ├── Admin.jsx              # Admin panel
-│   └── Checkin.jsx            # Daily check-in
+│   ├── Checkin.jsx            # Daily check-in
+│   └── Compass.jsx            # Feng Shui Compass
 └── designs/                   # Design system
     ├── tokens.css             # Design tokens
     ├── base.css               # Global reset
@@ -144,9 +145,9 @@ src/
 | Tech | Version | Purpose |
 |------|---------|---------|
 | Vue 3 | 3.5 | Framework (JSX + Composition API) |
-| Pinia | 2.3 | State management |
-| Vue Router | 4.6 | Routing |
-| Vite | 5.4 | Build tool |
+| Pinia | 4.0 | State management |
+| Vue Router | 5.2 | Routing |
+| Vite | 8.1 | Build tool |
 
 **Zero runtime dependencies** — besides Vue/Pinia/Router, everything is self-implemented:
 - Markdown renderer (no marked/markdown-it)
@@ -155,7 +156,7 @@ src/
 
 ## Quick Start
 
-> Prerequisites: Node.js ≥ 18 (recommended 20.x, see `.nvmrc`), npm ≥ 9
+> Prerequisites: Node.js ≥ 22 (see `.nvmrc`), npm ≥ 9
 
 ```bash
 # Clone repository
@@ -238,18 +239,21 @@ AI output → validateOutput → append safety notice
 
 ## Destiny Level System
 
-| Level | Title | XP Required |
-|-------|-------|-------------|
+| Level | Title | XP Threshold |
+|-------|-------|--------------|
 | 1 | Initiate | 0 |
-| 2 | Awakening | 100 |
-| 3 | Profound | 300 |
-| 4 | Destiny-Knower | 600 |
-| 5 | Insightful | 1000 |
-| 6 | Deep Sight | 1500 |
-| 7 | Clear Mind | 2200 |
-| 8 | True Nature | 3000 |
+| 2 | Gradual Awakening | 100 |
+| 3 | Enlightenment | 300 |
+| 4 | Profound | 600 |
+| 5 | Clear Insight | 1,000 |
+| 6 | Knowing Destiny | 1,500 |
+| 7 | Deep Sight | 2,200 |
+| 8 | True Nature | 3,000 |
+| 9 | Reaching Truth | 4,000 |
+| 10 | Harmony | 5,500 |
+| 11 | Heavenly Revelation | 7,500 |
 
-XP = verification count × 10 + fulfilled count × 20
+XP = match score × 30 + 10 (weighted by review match), check-in +5, guide completion +20
 
 ## Documentation
 
@@ -266,7 +270,7 @@ XP = verification count × 10 + fulfilled count × 20
 Issues and Pull Requests are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
 
 Adding a new divination engine takes 3 steps:
-1. Implement `{ calc, meta }` structure in `engines.js`
+1. Implement `{ inputConfig, calc }` structure in `engines.js`
 2. Register tool metadata in `TOOLS` array in `echo.js`
 3. Associate engine in `ENGINES` map in `tools.js`
 
