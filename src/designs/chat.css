@@ -601,6 +601,113 @@
 }
 
 /* ============================================================
+ * 9.1 会话列表面板
+ * ============================================================ */
+.chat-conv-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: var(--sp-1);
+}
+.chat-conv-list__empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  padding: var(--sp-4) 0;
+}
+
+.chat-conv-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  background: var(--bg-2);
+  transition: border-color 0.2s, background 0.2s;
+}
+.chat-conv-item--active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.chat-conv-item__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--sp-1) var(--sp-2);
+}
+.chat-conv-item__title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat-conv-item__meta {
+  font-size: var(--fs-xs);
+  color: var(--muted-2);
+}
+
+.chat-conv-item__icon-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.chat-conv-item__icon-btn:hover {
+  background: var(--bg-3);
+  color: var(--ink);
+}
+.chat-conv-item__icon-btn--ok:hover {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.chat-conv-item__icon-btn--danger:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.chat-conv-item__rename {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+.chat-conv-item__input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ============================================================
  * 10. 悬浮对话按钮 ChatFab
  * ============================================================ */
 .chat-fab {

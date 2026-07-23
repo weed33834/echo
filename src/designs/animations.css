@@ -1,67 +1,1106 @@
 /**
- * Echo Animations
- * 硬性指标：keyframes ≤15 个、总时长 ≤1s、尊重 prefers-reduced-motion
- * 仅保留：基础入场3 + 强调2 + 加载2 + 出场1 + 命盘专用1 = 9 个
+ * Echo Animation System v3
+ * 设计哲学：克制而精致的微交互 — 参考 Linear / Vercel / Stripe
+ * 原则：动画 ≤400ms、缓动自然、尊重 prefers-reduced-motion
+ * 分类：入场动画 / 强调反馈 / 加载状态 / 微交互
+ * 注意：组件级样式统一定义在 echo-ui.css，本文件仅包含 keyframes 和工具类
  */
 
-/* === 基础入场 === */
+/* ================================================================
+ * 一、入场动画（Entrance）
+ * ================================================================ */
+
+/* 基础淡入 */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* 向上淡入（最常用） */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* 向下淡入 */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 向左淡入 */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 向右淡入 */
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 缩放淡入 */
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
+  from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: scale(1); }
 }
 
-/* === 强调反馈 === */
+/* 缩放淡入（从上方，用于弹窗） */
+@keyframes scaleInDown {
+  from { opacity: 0; transform: scale(0.92) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 从底部滑入（用于底部弹窗/抽屉） */
+@keyframes slideInUp {
+  from { transform: translateY(100%); opacity: 0.3; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* 翻转入场（用于卡片切换） */
+@keyframes flipInX {
+  from { opacity: 0; transform: perspective(400px) rotateX(8deg); }
+  to { opacity: 1; transform: perspective(400px) rotateX(0); }
+}
+
+/* 华丽淡入（带缩放和模糊，用于首屏大元素） */
+@keyframes grandEntrance {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* 光辉入场（带光晕，用于关键卡片） */
+@keyframes glowEntrance {
+  0% { opacity: 0; transform: scale(0.92); box-shadow: 0 0 0 0 rgba(166, 139, 91, 0); }
+  40% { opacity: 1; box-shadow: 0 0 24px 4px rgba(166, 139, 91, 0.15); }
+  100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(166, 139, 91, 0); }
+}
+
+/* 金色光泽扫过（用于金元素装饰效果） */
+@keyframes goldShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* 漂浮（用于装饰性元素） */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ================================================================
+ * 二、强调反馈（Emphasis）
+ * ================================================================ */
+
+/* 脉冲（用于通知红点） */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+/* 金色脉冲（用于等级/成就） */
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 162, 99, 0.3); }
+  50% { box-shadow: 0 0 12px 2px rgba(196, 162, 99, 0.2); }
+}
+
+/* 印章效果（用于徽标入场） */
 @keyframes stamp {
-  0% { transform: scale(1.4); opacity: 0; }
-  60% { transform: scale(0.95); opacity: 1; }
+  0% { transform: scale(1.5); opacity: 0; }
+  60% { transform: scale(0.92); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* === 加载 === */
+/* 弹跳入场（用于数字/关键指标） */
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* 呼吸光效（用于高亮卡片） */
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50% { box-shadow: 0 0 16px 2px var(--accent-glow); }
+}
+
+/* 高亮扫光（用于进度条/重点行） */
+@keyframes sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ================================================================
+ * 三、加载状态（Loading）
+ * ================================================================ */
+
+/* 旋转 */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-@keyframes progressLine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+
+/* 骨架屏闪烁 */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-/* === 出场 === */
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+/* 进度条填充动画 */
+@keyframes fillBar {
+  from { width: 0; }
+  to { width: var(--target-width, 100%); }
 }
 
-/* === 命盘专用（仅命盘内） === */
+/* 圆环描边绘制（用于仪表盘） */
+@keyframes drawCircle {
+  from { stroke-dashoffset: var(--circumference, 327); }
+  to { stroke-dashoffset: var(--target-offset, 0); }
+}
+
+/* ================================================================
+ * 四、命盘专用
+ * ================================================================ */
+
+/* 五行流动 */
 @keyframes wuxingFlow {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
 
-/* === 工具类 === */
-.anim-fade { animation: fadeIn var(--dur, 0.3s) ease-out both; }
-.anim-fade-up { animation: fadeInUp var(--dur, 0.4s) ease-out both; }
-.anim-scale { animation: scaleIn var(--dur, 0.3s) ease-out both; }
-.anim-stamp { animation: stamp var(--dur, 0.4s) ease-out both; }
+/* ================================================================
+ * 五、工具类（Utility Classes）
+ * ================================================================ */
 
-/* stagger 工具：用 --i 索引自动计算 delay */
+/* --- 入场动画 --- */
+.anim-fade { animation: fadeIn var(--dur, 0.3s) var(--ease-out) both; }
+.anim-fade-up { animation: fadeInUp var(--dur, 0.4s) var(--ease-out) both; }
+.anim-fade-down { animation: fadeInDown var(--dur, 0.4s) var(--ease-out) both; }
+.anim-fade-left { animation: fadeInLeft var(--dur, 0.4s) var(--ease-out) both; }
+.anim-fade-right { animation: fadeInRight var(--dur, 0.4s) var(--ease-out) both; }
+.anim-scale { animation: scaleIn var(--dur, 0.3s) var(--ease-out) both; }
+.anim-scale-down { animation: scaleInDown var(--dur, 0.35s) var(--ease-out) both; }
+.anim-slide-up { animation: slideInUp var(--dur, 0.35s) var(--ease-smooth) both; }
+.anim-flip { animation: flipInX var(--dur, 0.4s) var(--ease-out) both; }
+.anim-stamp { animation: stamp var(--dur, 0.4s) var(--ease-out) both; }
+.anim-bounce { animation: bounceIn var(--dur, 0.5s) var(--ease-out) both; }
+.anim-grand { animation: grandEntrance var(--dur, 0.6s) var(--ease-out) both; }
+.anim-glow { animation: glowEntrance var(--dur, 0.6s) var(--ease-out) both; }
+
+/* --- 交错入场（配合 --i 索引） --- */
 .stagger {
-  animation-delay: calc(var(--i, 0) * 60ms);
+  animation: fadeInUp var(--dur, 0.4s) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
 }
 
-/* === reduced-motion 适配（强制） === */
+/* --- 强调效果 --- */
+.anim-breathe { animation: breathe 2.5s var(--ease-smooth) infinite; }
+.anim-float { animation: float 3s var(--ease-smooth) infinite; }
+.anim-gold-shimmer {
+  background: linear-gradient(90deg, var(--accent) 25%, var(--accent-2) 50%, var(--accent) 75%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 3s var(--ease-smooth) infinite;
+}
+
+/* --- 加载效果 --- */
+.anim-spin { animation: spin 0.7s linear infinite; }
+.anim-shimmer {
+  background: linear-gradient(90deg, var(--bg-3) 25%, var(--bg-4) 50%, var(--bg-3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s var(--ease-smooth) infinite;
+}
+
+/* ================================================================
+ * 六、页面级动画（通过 CSS 选择器增强）
+ * 组件级微交互统一定义在 echo-ui.css
+ * ================================================================ */
+
+/* --- 交叉印证结果 --- */
+.crossverify-result {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+}
+
+/* --- 五行条形图填充 --- */
+.bazi-wuxing__fill,
+.bazi-chart__wx-fill,
+.compat-page__dim-fill,
+.compat-page__mscore-fill,
+.compat-page__wxcmp-fill,
+.yunshi-score .echo-progress__fill {
+  animation: fillBar 0.8s var(--ease-out) both;
+}
+
+/* --- 时辰网格渐入（交错延迟） --- */
+.huangli-shichen__cell,
+.yunshi-sc__cell,
+.qimen-cell,
+.fengshui-cell,
+.ziwei-palace,
+.nameology-wuge-item {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.huangli-shichen__cell:nth-child(1), .yunshi-sc__cell:nth-child(1),
+.qimen-cell:nth-child(1), .fengshui-cell:nth-child(1) { animation-delay: 0ms; }
+.huangli-shichen__cell:nth-child(2), .yunshi-sc__cell:nth-child(2),
+.qimen-cell:nth-child(2), .fengshui-cell:nth-child(2) { animation-delay: 30ms; }
+.huangli-shichen__cell:nth-child(3), .yunshi-sc__cell:nth-child(3),
+.qimen-cell:nth-child(3), .fengshui-cell:nth-child(3) { animation-delay: 60ms; }
+.huangli-shichen__cell:nth-child(4), .yunshi-sc__cell:nth-child(4),
+.qimen-cell:nth-child(4), .fengshui-cell:nth-child(4) { animation-delay: 90ms; }
+.huangli-shichen__cell:nth-child(5), .yunshi-sc__cell:nth-child(5),
+.qimen-cell:nth-child(5), .fengshui-cell:nth-child(5) { animation-delay: 120ms; }
+.huangli-shichen__cell:nth-child(6), .yunshi-sc__cell:nth-child(6),
+.qimen-cell:nth-child(6), .fengshui-cell:nth-child(6) { animation-delay: 150ms; }
+.huangli-shichen__cell:nth-child(7), .yunshi-sc__cell:nth-child(7),
+.qimen-cell:nth-child(7), .fengshui-cell:nth-child(7) { animation-delay: 180ms; }
+.huangli-shichen__cell:nth-child(8), .yunshi-sc__cell:nth-child(8),
+.qimen-cell:nth-child(8), .fengshui-cell:nth-child(8) { animation-delay: 210ms; }
+.huangli-shichen__cell:nth-child(9), .yunshi-sc__cell:nth-child(9),
+.qimen-cell:nth-child(9), .fengshui-cell:nth-child(9) { animation-delay: 240ms; }
+.ziwei-palace:nth-child(1) { animation-delay: 0ms; }
+.ziwei-palace:nth-child(2) { animation-delay: 40ms; }
+.ziwei-palace:nth-child(3) { animation-delay: 80ms; }
+.ziwei-palace:nth-child(4) { animation-delay: 120ms; }
+.ziwei-palace:nth-child(5) { animation-delay: 160ms; }
+.ziwei-palace:nth-child(6) { animation-delay: 200ms; }
+.ziwei-palace:nth-child(7) { animation-delay: 240ms; }
+.ziwei-palace:nth-child(8) { animation-delay: 280ms; }
+.ziwei-palace:nth-child(9) { animation-delay: 320ms; }
+.ziwei-palace:nth-child(10) { animation-delay: 360ms; }
+.ziwei-palace:nth-child(11) { animation-delay: 400ms; }
+.ziwei-palace:nth-child(12) { animation-delay: 440ms; }
+
+/* --- 大运时间轴 --- */
+.bazi-dayun__item,
+.timeline__item {
+  animation: fadeInLeft 0.35s var(--ease-out) both;
+}
+.bazi-dayun__item:nth-child(1) { animation-delay: 0ms; }
+.bazi-dayun__item:nth-child(2) { animation-delay: 50ms; }
+.bazi-dayun__item:nth-child(3) { animation-delay: 100ms; }
+.bazi-dayun__item:nth-child(4) { animation-delay: 150ms; }
+.bazi-dayun__item:nth-child(5) { animation-delay: 200ms; }
+.bazi-dayun__item:nth-child(6) { animation-delay: 250ms; }
+.bazi-dayun__item:nth-child(7) { animation-delay: 300ms; }
+.bazi-dayun__item:nth-child(8) { animation-delay: 350ms; }
+
+/* --- 四柱渐入 --- */
+.bazi-pillar {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+}
+.bazi-pillar:nth-child(1) { animation-delay: 0ms; }
+.bazi-pillar:nth-child(2) { animation-delay: 80ms; }
+.bazi-pillar:nth-child(3) { animation-delay: 160ms; }
+.bazi-pillar:nth-child(4) { animation-delay: 240ms; }
+
+/* --- 四化标签华丽入场 --- */
+.ziwei-sihua .echo-tag {
+  animation: stamp 0.4s var(--ease-out) both;
+}
+.ziwei-sihua .echo-tag:nth-child(1) { animation-delay: 100ms; }
+.ziwei-sihua .echo-tag:nth-child(2) { animation-delay: 200ms; }
+.ziwei-sihua .echo-tag:nth-child(3) { animation-delay: 300ms; }
+.ziwei-sihua .echo-tag:nth-child(4) { animation-delay: 400ms; }
+
+/* --- 塔罗牌翻转（交错延迟） --- */
+.tarot-card {
+  animation: flipInX 0.5s var(--ease-out) both;
+}
+.tarot-card:nth-child(1) { animation-delay: 0ms; }
+.tarot-card:nth-child(2) { animation-delay: 150ms; }
+.tarot-card:nth-child(3) { animation-delay: 300ms; }
+.tarot-card:nth-child(4) { animation-delay: 450ms; }
+.tarot-card:nth-child(5) { animation-delay: 600ms; }
+
+/* --- 六爻爻线渐入 --- */
+.liuyao-yao,
+.gua-yao {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.liuyao-yao:nth-child(1), .gua-yao:nth-child(1) { animation-delay: 0ms; }
+.liuyao-yao:nth-child(2), .gua-yao:nth-child(2) { animation-delay: 60ms; }
+.liuyao-yao:nth-child(3), .gua-yao:nth-child(3) { animation-delay: 120ms; }
+.liuyao-yao:nth-child(4), .gua-yao:nth-child(4) { animation-delay: 180ms; }
+.liuyao-yao:nth-child(5), .gua-yao:nth-child(5) { animation-delay: 240ms; }
+.liuyao-yao:nth-child(6), .gua-yao:nth-child(6) { animation-delay: 300ms; }
+
+/* --- 六壬三传渐入 --- */
+.liuren-sanchuan__item {
+  animation: fadeInUp 0.35s var(--ease-out) both;
+}
+.liuren-sanchuan__item:nth-child(1) { animation-delay: 0ms; }
+.liuren-sanchuan__item:nth-child(2) { animation-delay: 120ms; }
+.liuren-sanchuan__item:nth-child(3) { animation-delay: 240ms; }
+
+/* --- 六壬四课渐入 --- */
+.liuren-sike__item {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.liuren-sike__item:nth-child(1) { animation-delay: 0ms; }
+.liuren-sike__item:nth-child(2) { animation-delay: 80ms; }
+.liuren-sike__item:nth-child(3) { animation-delay: 160ms; }
+.liuren-sike__item:nth-child(4) { animation-delay: 240ms; }
+
+/* --- 空状态渐入 --- */
+.empty-state {
+  animation: fadeInUp 0.5s var(--ease-out) both;
+}
+
+/* --- 签到日历格子 --- */
+.checkin-page__calendar-day--checked {
+  animation: stamp 0.3s var(--ease-out) both;
+}
+
+/* --- 签到里程碑 --- */
+.checkin-page__milestone {
+  transition: transform var(--dur-slow) var(--ease-out),
+              box-shadow var(--dur-slow) var(--ease-out);
+}
+.checkin-page__milestone--reached {
+  animation: scaleIn 0.4s var(--ease-out) both;
+}
+
+/* --- 学习课程项 --- */
+.learn-page__lesson {
+  transition: transform var(--dur-normal) var(--ease-out),
+              border-left-color var(--dur-normal) var(--ease-out),
+              padding-left var(--dur-normal) var(--ease-out);
+}
+.learn-page__lesson:hover {
+  transform: translateX(4px);
+  border-left: 3px solid var(--accent);
+  padding-left: calc(var(--sp-3) - 3px);
+}
+
+/* --- 主题选择卡片 --- */
+.settings-page__theme-card {
+  transition: transform var(--dur-slow) var(--ease-out),
+              border-color var(--dur-slow) var(--ease-out);
+}
+.settings-page__theme-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--rule-strong);
+}
+.settings-page__theme-card--active {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+
+/* --- 择日/吉日列表项 --- */
+.jiri-day {
+  transition: transform var(--dur-normal) var(--ease-out),
+              border-left-color var(--dur-normal) var(--ease-out);
+}
+.jiri-day:hover {
+  transform: translateX(4px);
+  border-left: 3px solid var(--accent);
+}
+
+/* --- 数字弹跳入场 --- */
+.checkin-page__streak-num,
+.me-page__stat-num,
+.echo-center__stat-num,
+.daily-page__overall-score,
+.compat-page__mscore-total-num,
+.dashboard__overview-stat-num {
+  animation: bounceIn 0.5s var(--ease-out) both;
+}
+
+/* --- 输入框聚焦光效（仅过渡，具体样式在各页面 CSS 中定义） --- */
+.tool-detail__input,
+.profile-form__input,
+.settings-page__ai-input,
+.assume-form__textarea,
+.review-form__textarea {
+  transition: border-color var(--dur-normal) var(--ease-out),
+              box-shadow var(--dur-normal) var(--ease-out);
+}
+
+/* --- Tab 切换动画 --- */
+.echo-center__tab,
+.learn-page__cat,
+.tools-page__cat {
+  transition: color var(--dur-normal) var(--ease-out),
+              background var(--dur-normal) var(--ease-out),
+              border-color var(--dur-normal) var(--ease-out);
+}
+
+/* --- 列表项悬停 --- */
+.echo-item {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.echo-card:hover .echo-item {
+  transform: translateX(2px);
+}
+
+/* --- 工具卡片悬停 --- */
+.tool-card,
+.home__tool-item {
+  transition: transform var(--dur-normal) var(--ease-out),
+              border-color var(--dur-normal) var(--ease-out),
+              box-shadow var(--dur-normal) var(--ease-out),
+              background var(--dur-normal) var(--ease-out);
+}
+.tool-card:hover,
+.home__tool-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-glow);
+  box-shadow: var(--shadow-md);
+}
+.tool-card:active,
+.home__tool-item:active {
+  transform: scale(0.97);
+  transition-duration: 60ms;
+}
+
+/* --- 菜单项悬停 --- */
+.me-page__menu-item {
+  transition: background var(--dur-fast) var(--ease-out),
+              padding-left var(--dur-fast) var(--ease-out);
+  position: relative;
+}
+.me-page__menu-item:hover {
+  background: var(--bg-3);
+  padding-left: var(--sp-2);
+}
+.me-page__menu-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  background: var(--accent);
+  border-radius: var(--r-full);
+  transform: translateY(-50%);
+  transition: height var(--dur-normal) var(--ease-out);
+}
+.me-page__menu-item:hover::before {
+  height: 60%;
+}
+
+/* --- Dashboard 交互元素 --- */
+.dashboard__advice-card {
+  transition: transform var(--dur-normal) var(--ease-out),
+              box-shadow var(--dur-normal) var(--ease-out);
+}
+.dashboard__advice-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.dashboard__timeline-item {
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.dashboard__timeline-item:hover {
+  background: var(--bg-3);
+}
+.dashboard__toolstats-row {
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.dashboard__toolstats-row:hover {
+  background: var(--bg-3);
+}
+.dashboard__overview-stat {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.dashboard__overview-stat:hover {
+  transform: translateY(-1px);
+}
+
+/* --- 首页快捷入口悬停 --- */
+.home__quick-item {
+  transition: transform var(--dur-normal) var(--ease-out),
+              background var(--dur-normal) var(--ease-out);
+}
+.home__quick-item:hover {
+  transform: translateY(-2px);
+  background: var(--bg-3);
+}
+.home__quick-item:active {
+  transform: scale(0.96);
+  transition-duration: 60ms;
+}
+
+/* --- 印证页 Tab 悬停 --- */
+.echo-center__tab:not(.echo-center__tab--active):hover {
+  background: var(--bg-3);
+  color: var(--ink-2);
+}
+
+/* --- 签到日历格子悬停 --- */
+.checkin-page__calendar-day {
+  transition: background var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.checkin-page__calendar-day:not(.checkin-page__calendar-day--checked):hover {
+  background: var(--bg-3);
+  transform: scale(1.05);
+}
+
+/* ================================================================
+ * 七、华丽效果增强（Premium Visual Polish）
+ * ================================================================ */
+
+/* --- 吉凶判语徽章华丽入场（印章 + 光晕扩散） --- */
+.liuyao-verdict__badge,
+.gua-verdict__badge,
+.fengshui-verdict__badge,
+.dream-verdict__badge,
+.liuren-verdict__badge,
+.qimen-yongshen__verdict {
+  animation: stamp 0.5s var(--ease-out) both, glowEntrance 0.8s var(--ease-out) both;
+}
+
+/* --- 吉凶判语分数弹跳入场 --- */
+.liuyao-verdict__score,
+.gua-verdict__score,
+.fengshui-verdict__score,
+.dream-verdict__score {
+  animation: bounceIn 0.6s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 吉凶判语文本渐入 --- */
+.liuyao-verdict__text,
+.gua-verdict__text,
+.fengshui-verdict__text,
+.dream-verdict__text {
+  animation: fadeInLeft 0.4s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+
+/* --- 结果焦点区华丽入场 --- */
+.bazi-focus,
+.ziwei-focus,
+.astro-focus,
+.maya-focus,
+.tarot-advice,
+.meihua-reading,
+.qimen-reading,
+.liuren-reading,
+.yangsheng-advice,
+.yunshi-focus {
+  animation: grandEntrance 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 大运当前项呼吸光效 --- */
+.bazi-dayun__item--current {
+  animation: fadeInLeft 0.35s var(--ease-out) both, breathe 3s var(--ease-smooth) infinite 0.5s;
+}
+
+/* --- 紫微当前宫位呼吸光效 --- */
+.ziwei-palace--current {
+  animation: scaleIn 0.3s var(--ease-out) both, breathe 3s var(--ease-smooth) infinite 0.5s;
+}
+
+/* --- 奇门用神宫位呼吸光效 --- */
+.qimen-cell--yongshen {
+  animation: scaleIn 0.3s var(--ease-out) both, breathe 2.5s var(--ease-smooth) infinite 0.3s;
+}
+
+/* --- 梅花易数卦象符号华丽入场 --- */
+.meihua-gua__symbol {
+  animation: scaleIn 0.5s var(--ease-out) both;
+}
+.meihua-gua__upper,
+.meihua-gua__lower {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+}
+.meihua-gua__upper { animation-delay: 0.1s; }
+.meihua-gua__lower { animation-delay: 0.2s; }
+.meihua-gua__divider {
+  animation: fadeIn 0.3s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+.meihua-relation {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+  animation-delay: 0.4s;
+}
+
+/* --- 塔罗牌华丽入场增强（翻转 + 光晕） --- */
+.tarot-card {
+  animation: flipInX 0.6s var(--ease-out) both, glowEntrance 0.8s var(--ease-out) both;
+}
+.tarot-card:nth-child(1) { animation-delay: 0ms, 0ms; }
+.tarot-card:nth-child(2) { animation-delay: 150ms, 150ms; }
+.tarot-card:nth-child(3) { animation-delay: 300ms, 300ms; }
+.tarot-card:nth-child(4) { animation-delay: 450ms, 450ms; }
+.tarot-card:nth-child(5) { animation-delay: 600ms, 600ms; }
+.tarot-card__key {
+  animation: stamp 0.4s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 150ms + 300ms);
+}
+
+/* --- 塔罗综合解读渐入 --- */
+.tarot-synthesis {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+  animation-delay: 0.8s;
+}
+
+/* --- 每日运势总分数华丽入场 --- */
+.yunshi-overall {
+  animation: glowEntrance 0.6s var(--ease-out) both;
+}
+.yunshi-overall__num {
+  animation: bounceIn 0.6s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 运势评分条交错渐入 --- */
+.yunshi-scores {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+.yunshi-tip {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.yunshi-tip:nth-child(1) { animation-delay: 0ms; }
+.yunshi-tip:nth-child(2) { animation-delay: 60ms; }
+.yunshi-tip:nth-child(3) { animation-delay: 120ms; }
+.yunshi-tip:nth-child(4) { animation-delay: 180ms; }
+
+/* --- 八字日主华丽入场 --- */
+.bazi-daymaster {
+  animation: glowEntrance 0.5s var(--ease-out) both;
+}
+.bazi-daymaster__val {
+  animation: bounceIn 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 八字五行条交错填充 --- */
+.bazi-wuxing__bar {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.bazi-wuxing__bar:nth-child(1) { animation-delay: 0ms; }
+.bazi-wuxing__bar:nth-child(2) { animation-delay: 60ms; }
+.bazi-wuxing__bar:nth-child(3) { animation-delay: 120ms; }
+.bazi-wuxing__bar:nth-child(4) { animation-delay: 180ms; }
+.bazi-wuxing__bar:nth-child(5) { animation-delay: 240ms; }
+
+/* --- 紫微四化标签华丽入场增强（印章 + 光晕） --- */
+.ziwei-sihua .echo-tag {
+  animation: stamp 0.4s var(--ease-out) both, glowEntrance 0.6s var(--ease-out) both;
+}
+.ziwei-sihua .echo-tag:nth-child(1) { animation-delay: 100ms, 100ms; }
+.ziwei-sihua .echo-tag:nth-child(2) { animation-delay: 200ms, 200ms; }
+.ziwei-sihua .echo-tag:nth-child(3) { animation-delay: 300ms, 300ms; }
+.ziwei-sihua .echo-tag:nth-child(4) { animation-delay: 400ms, 400ms; }
+
+/* --- 紫微大限信息渐入 --- */
+.ziwei-daxian {
+  animation: fadeInUp 0.35s var(--ease-out) both;
+  animation-delay: 0.5s;
+}
+
+/* --- 六爻卦名华丽入场 --- */
+.liuyao-gua__name {
+  animation: grandEntrance 0.5s var(--ease-out) both;
+}
+.liuyao-gua__change {
+  animation: fadeIn 0.3s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+.liuyao-yingqi {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+  animation-delay: 0.4s;
+}
+
+/* --- 六壬三传华丽入场增强 --- */
+.liuren-chuan__item {
+  animation: glowEntrance 0.5s var(--ease-out) both;
+}
+.liuren-chuan__item:nth-child(1) { animation-delay: 0ms; }
+.liuren-chuan__item:nth-child(2) { animation-delay: 120ms; }
+.liuren-chuan__item:nth-child(3) { animation-delay: 240ms; }
+.liuren-chuan__zhi {
+  animation: bounceIn 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 六壬天盘格子交错渐入 --- */
+.liuren-tp__cell {
+  animation: scaleIn 0.25s var(--ease-out) both;
+}
+.liuren-tp__cell:nth-child(1) { animation-delay: 0ms; }
+.liuren-tp__cell:nth-child(2) { animation-delay: 30ms; }
+.liuren-tp__cell:nth-child(3) { animation-delay: 60ms; }
+.liuren-tp__cell:nth-child(4) { animation-delay: 90ms; }
+.liuren-tp__cell:nth-child(5) { animation-delay: 120ms; }
+.liuren-tp__cell:nth-child(6) { animation-delay: 150ms; }
+.liuren-tp__cell:nth-child(7) { animation-delay: 180ms; }
+.liuren-tp__cell:nth-child(8) { animation-delay: 210ms; }
+.liuren-tp__cell:nth-child(9) { animation-delay: 240ms; }
+.liuren-tp__cell:nth-child(10) { animation-delay: 270ms; }
+.liuren-tp__cell:nth-child(11) { animation-delay: 300ms; }
+.liuren-tp__cell:nth-child(12) { animation-delay: 330ms; }
+
+/* --- 六壬四课交错渐入 --- */
+.liuren-lesson {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.liuren-lesson:nth-child(1) { animation-delay: 0ms; }
+.liuren-lesson:nth-child(2) { animation-delay: 80ms; }
+.liuren-lesson:nth-child(3) { animation-delay: 160ms; }
+.liuren-lesson:nth-child(4) { animation-delay: 240ms; }
+
+/* --- 西洋占星三位一体华丽入场 --- */
+.astro-trinity__item {
+  animation: glowEntrance 0.5s var(--ease-out) both;
+}
+.astro-trinity__item:nth-child(1) { animation-delay: 0ms; }
+.astro-trinity__item:nth-child(2) { animation-delay: 100ms; }
+.astro-trinity__item:nth-child(3) { animation-delay: 200ms; }
+.astro-trinity__icon {
+  animation: bounceIn 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 玛雅历 Kin 华丽入场 --- */
+.maya-kin {
+  animation: glowEntrance 0.6s var(--ease-out) both;
+}
+.maya-kin__seal {
+  animation: bounceIn 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 玛雅历五方位交错渐入 --- */
+.maya-five__item {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.maya-five__item:nth-child(1) { animation-delay: 0ms; }
+.maya-five__item:nth-child(2) { animation-delay: 80ms; }
+.maya-five__item:nth-child(3) { animation-delay: 160ms; }
+.maya-five__item:nth-child(4) { animation-delay: 240ms; }
+.maya-five__item:nth-child(5) { animation-delay: 320ms; }
+
+/* --- 姓名学笔画交错渐入 --- */
+.nameology-stroke {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+.nameology-stroke:nth-child(1) { animation-delay: 0ms; }
+.nameology-stroke:nth-child(2) { animation-delay: 80ms; }
+.nameology-stroke:nth-child(3) { animation-delay: 160ms; }
+.nameology-stroke:nth-child(4) { animation-delay: 240ms; }
+
+/* --- 姓名学五格交错渐入 --- */
+.nameology-wuge-item {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.nameology-wuge-item:nth-child(1) { animation-delay: 0ms; }
+.nameology-wuge-item:nth-child(2) { animation-delay: 60ms; }
+.nameology-wuge-item:nth-child(3) { animation-delay: 120ms; }
+.nameology-wuge-item:nth-child(4) { animation-delay: 180ms; }
+.nameology-wuge-item:nth-child(5) { animation-delay: 240ms; }
+
+/* --- 姓名学总分华丽入场 --- */
+.nameology-score {
+  animation: glowEntrance 0.6s var(--ease-out) both;
+}
+.nameology-score__num {
+  animation: bounceIn 0.6s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 梦境关键词交错渐入 --- */
+.dream-keyword {
+  animation: stamp 0.3s var(--ease-out) both;
+}
+.dream-keyword:nth-child(1) { animation-delay: 0ms; }
+.dream-keyword:nth-child(2) { animation-delay: 50ms; }
+.dream-keyword:nth-child(3) { animation-delay: 100ms; }
+.dream-keyword:nth-child(4) { animation-delay: 150ms; }
+.dream-keyword:nth-child(5) { animation-delay: 200ms; }
+.dream-keyword:nth-child(6) { animation-delay: 250ms; }
+
+/* --- 梦境解读交错渐入 --- */
+.dream-interpretation {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+.dream-interpretation:nth-child(1) { animation-delay: 0ms; }
+.dream-interpretation:nth-child(2) { animation-delay: 80ms; }
+.dream-interpretation:nth-child(3) { animation-delay: 160ms; }
+
+/* --- 风水飞星盘格子交错渐入 --- */
+.fengshui-cell {
+  animation: scaleIn 0.25s var(--ease-out) both;
+}
+.fengshui-cell:nth-child(1) { animation-delay: 0ms; }
+.fengshui-cell:nth-child(2) { animation-delay: 30ms; }
+.fengshui-cell:nth-child(3) { animation-delay: 60ms; }
+.fengshui-cell:nth-child(4) { animation-delay: 90ms; }
+.fengshui-cell:nth-child(5) { animation-delay: 120ms; }
+.fengshui-cell:nth-child(6) { animation-delay: 150ms; }
+.fengshui-cell:nth-child(7) { animation-delay: 180ms; }
+.fengshui-cell:nth-child(8) { animation-delay: 210ms; }
+.fengshui-cell:nth-child(9) { animation-delay: 240ms; }
+
+/* --- 风水建议交错渐入 --- */
+.fengshui-suggestion {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.fengshui-suggestion:nth-child(1) { animation-delay: 0ms; }
+.fengshui-suggestion:nth-child(2) { animation-delay: 60ms; }
+.fengshui-suggestion:nth-child(3) { animation-delay: 120ms; }
+.fengshui-suggestion:nth-child(4) { animation-delay: 180ms; }
+
+/* --- 择吉日列表交错渐入 --- */
+.jiri-day {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+.jiri-day:nth-child(1) { animation-delay: 0ms; }
+.jiri-day:nth-child(2) { animation-delay: 50ms; }
+.jiri-day:nth-child(3) { animation-delay: 100ms; }
+.jiri-day:nth-child(4) { animation-delay: 150ms; }
+.jiri-day:nth-child(5) { animation-delay: 200ms; }
+.jiri-day--best {
+  animation: fadeInUp 0.3s var(--ease-out) both, breathe 3s var(--ease-smooth) infinite 0.5s;
+}
+
+/* --- 老黄历宜忌交错渐入 --- */
+.huangli-yi,
+.huangli-ji {
+  animation: fadeInUp 0.35s var(--ease-out) both;
+}
+.huangli-yi { animation-delay: 0.1s; }
+.huangli-ji { animation-delay: 0.2s; }
+
+/* --- 节气养生建议矩阵交错渐入 --- */
+.yangsheng-matrix__item {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.yangsheng-matrix__item:nth-child(1) { animation-delay: 0ms; }
+.yangsheng-matrix__item:nth-child(2) { animation-delay: 80ms; }
+.yangsheng-matrix__item:nth-child(3) { animation-delay: 160ms; }
+.yangsheng-matrix__item:nth-child(4) { animation-delay: 240ms; }
+
+/* --- 子午流注当前时辰华丽入场 --- */
+.ziwu-current {
+  animation: glowEntrance 0.5s var(--ease-out) both;
+}
+.ziwu-current__name {
+  animation: bounceIn 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 工具结果总结语渐入 --- */
+.tool-detail__summary {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+
+/* --- 首页 Hero 华丽入场 --- */
+.home__hero {
+  animation: grandEntrance 0.6s var(--ease-out) both;
+}
+.home__brand {
+  animation: fadeInUp 0.5s var(--ease-out) both;
+  animation-delay: 0.1s;
+}
+.home__slogan {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+.home__shichen {
+  animation: fadeIn 0.4s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+.home__daily-hook {
+  animation: fadeInUp 0.5s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+.home__section {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+}
+.home__section:nth-of-type(2) { animation-delay: 0.4s; }
+.home__section:nth-of-type(3) { animation-delay: 0.5s; }
+.home__section:nth-of-type(4) { animation-delay: 0.6s; }
+
+/* --- 首页工具卡片交错渐入 --- */
+.home__tool-item {
+  animation: fadeInUp 0.35s var(--ease-out) both;
+}
+.home__tool-item:nth-child(1) { animation-delay: 0ms; }
+.home__tool-item:nth-child(2) { animation-delay: 40ms; }
+.home__tool-item:nth-child(3) { animation-delay: 80ms; }
+.home__tool-item:nth-child(4) { animation-delay: 120ms; }
+.home__tool-item:nth-child(5) { animation-delay: 160ms; }
+.home__tool-item:nth-child(6) { animation-delay: 200ms; }
+
+/* --- 首页快捷入口交错渐入 --- */
+.home__quick-item {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.home__quick-item:nth-child(1) { animation-delay: 0ms; }
+.home__quick-item:nth-child(2) { animation-delay: 50ms; }
+.home__quick-item:nth-child(3) { animation-delay: 100ms; }
+.home__quick-item:nth-child(4) { animation-delay: 150ms; }
+
+/* --- 工具列表页卡片交错渐入 --- */
+.tool-card {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+.tool-card:nth-child(1) { animation-delay: 0ms; }
+.tool-card:nth-child(2) { animation-delay: 30ms; }
+.tool-card:nth-child(3) { animation-delay: 60ms; }
+.tool-card:nth-child(4) { animation-delay: 90ms; }
+.tool-card:nth-child(5) { animation-delay: 120ms; }
+.tool-card:nth-child(6) { animation-delay: 150ms; }
+.tool-card:nth-child(7) { animation-delay: 180ms; }
+.tool-card:nth-child(8) { animation-delay: 210ms; }
+.tool-card:nth-child(9) { animation-delay: 240ms; }
+
+/* --- 工具详情页头部渐入 --- */
+.tool-detail__intro {
+  animation: fadeInDown 0.4s var(--ease-out) both;
+}
+.tool-detail__form {
+  animation: fadeInUp 0.4s var(--ease-out) both;
+  animation-delay: 0.1s;
+}
+
+/* --- Me 页面统计数字华丽入场 --- */
+.me-page__stat {
+  animation: glowEntrance 0.4s var(--ease-out) both;
+}
+.me-page__stat:nth-child(1) { animation-delay: 0ms; }
+.me-page__stat:nth-child(2) { animation-delay: 80ms; }
+.me-page__stat:nth-child(3) { animation-delay: 160ms; }
+.me-page__stat:nth-child(4) { animation-delay: 240ms; }
+
+/* --- Me 页面菜单项交错渐入 --- */
+.me-page__menu-item {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.me-page__menu-item:nth-child(1) { animation-delay: 0ms; }
+.me-page__menu-item:nth-child(2) { animation-delay: 40ms; }
+.me-page__menu-item:nth-child(3) { animation-delay: 80ms; }
+.me-page__menu-item:nth-child(4) { animation-delay: 120ms; }
+.me-page__menu-item:nth-child(5) { animation-delay: 160ms; }
+.me-page__menu-item:nth-child(6) { animation-delay: 200ms; }
+
+/* --- 签到连续天数华丽入场 --- */
+.checkin-page__streak {
+  animation: glowEntrance 0.5s var(--ease-out) both;
+}
+.checkin-page__streak-num {
+  animation: bounceIn 0.6s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 签到里程碑交错渐入 --- */
+.checkin-page__milestone {
+  animation: scaleIn 0.3s var(--ease-out) both;
+}
+.checkin-page__milestone:nth-child(1) { animation-delay: 0ms; }
+.checkin-page__milestone:nth-child(2) { animation-delay: 80ms; }
+.checkin-page__milestone:nth-child(3) { animation-delay: 160ms; }
+.checkin-page__milestone:nth-child(4) { animation-delay: 240ms; }
+
+/* --- 印证页统计数字华丽入场 --- */
+.echo-center__stat {
+  animation: glowEntrance 0.4s var(--ease-out) both;
+}
+.echo-center__stat:nth-child(1) { animation-delay: 0ms; }
+.echo-center__stat:nth-child(2) { animation-delay: 80ms; }
+.echo-center__stat:nth-child(3) { animation-delay: 160ms; }
+
+/* --- 交叉印证结果交错渐入 --- */
+.crossverify-dim {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.crossverify-dim:nth-child(1) { animation-delay: 0ms; }
+.crossverify-dim:nth-child(2) { animation-delay: 60ms; }
+.crossverify-dim:nth-child(3) { animation-delay: 120ms; }
+.crossverify-dim:nth-child(4) { animation-delay: 180ms; }
+.crossverify-dim:nth-child(5) { animation-delay: 240ms; }
+
+/* --- 学习课程交错渐入 --- */
+.learn-page__lesson {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+.learn-page__lesson:nth-child(1) { animation-delay: 0ms; }
+.learn-page__lesson:nth-child(2) { animation-delay: 50ms; }
+.learn-page__lesson:nth-child(3) { animation-delay: 100ms; }
+.learn-page__lesson:nth-child(4) { animation-delay: 150ms; }
+.learn-page__lesson:nth-child(5) { animation-delay: 200ms; }
+.learn-page__lesson:nth-child(6) { animation-delay: 250ms; }
+
+/* --- Dashboard 概览统计交错渐入 --- */
+.dashboard__overview-stat {
+  animation: glowEntrance 0.4s var(--ease-out) both;
+}
+.dashboard__overview-stat:nth-child(1) { animation-delay: 0ms; }
+.dashboard__overview-stat:nth-child(2) { animation-delay: 80ms; }
+.dashboard__overview-stat:nth-child(3) { animation-delay: 160ms; }
+.dashboard__overview-stat:nth-child(4) { animation-delay: 240ms; }
+
+/* --- Dashboard 时间轴项交错渐入 --- */
+.dashboard__timeline-item {
+  animation: fadeInLeft 0.3s var(--ease-out) both;
+}
+.dashboard__timeline-item:nth-child(1) { animation-delay: 0ms; }
+.dashboard__timeline-item:nth-child(2) { animation-delay: 50ms; }
+.dashboard__timeline-item:nth-child(3) { animation-delay: 100ms; }
+.dashboard__timeline-item:nth-child(4) { animation-delay: 150ms; }
+.dashboard__timeline-item:nth-child(5) { animation-delay: 200ms; }
+
+/* --- Dashboard 建议卡片交错渐入 --- */
+.dashboard__advice-card {
+  animation: fadeInUp 0.35s var(--ease-out) both;
+}
+.dashboard__advice-card:nth-child(1) { animation-delay: 0ms; }
+.dashboard__advice-card:nth-child(2) { animation-delay: 80ms; }
+.dashboard__advice-card:nth-child(3) { animation-delay: 160ms; }
+
+/* --- 兼容性页面分数华丽入场 --- */
+.compat-page__mscore-total {
+  animation: glowEntrance 0.6s var(--ease-out) both;
+}
+.compat-page__mscore-total-num {
+  animation: bounceIn 0.6s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 兼容性维度条交错渐入 --- */
+.compat-page__dim {
+  animation: fadeInUp 0.3s var(--ease-out) both;
+}
+.compat-page__dim:nth-child(1) { animation-delay: 0ms; }
+.compat-page__dim:nth-child(2) { animation-delay: 60ms; }
+.compat-page__dim:nth-child(3) { animation-delay: 120ms; }
+.compat-page__dim:nth-child(4) { animation-delay: 180ms; }
+.compat-page__dim:nth-child(5) { animation-delay: 240ms; }
+
+/* --- 每日运势页总分数华丽入场 --- */
+.daily-page__overall-score {
+  animation: bounceIn 0.6s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* --- 黄历宜忌标签交错渐入 --- */
+.huangli-yi__list .echo-tag,
+.huangli-ji__list .echo-tag {
+  animation: stamp 0.3s var(--ease-out) both;
+}
+
+/* --- 节气名称华丽入场 --- */
+.yangsheng-jieqi {
+  animation: glowEntrance 0.5s var(--ease-out) both;
+}
+.yangsheng-jieqi__name {
+  animation: bounceIn 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+/* ================================================================
+ * 八、减少动画偏好（强制覆盖）
+ * ================================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

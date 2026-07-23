@@ -105,12 +105,12 @@
 }
 .dashboard__radar-label {
   font-family: 'Lora', serif;
-  font-size: 16px;
+  font-size: var(--fs-base);
   font-weight: var(--fw-bold);
 }
 .dashboard__radar-value {
   font-family: 'GeistMono', 'SF Mono', Menlo, monospace;
-  font-size: 11px;
+  font-size: var(--fs-xs);
   fill: var(--muted);
 }
 .dashboard__radar-reading {
@@ -366,6 +366,32 @@
   color: var(--muted);
   line-height: var(--lh-normal);
   overflow-wrap: break-word;
+}
+.dashboard__timeline-head-right {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+.dashboard__timeline-del {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--muted-2);
+  font-size: var(--fs-xs);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.dashboard__timeline-del:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.dashboard__timeline-clear {
+  margin-top: var(--sp-3);
 }
 .dashboard__timeline-empty {
   display: flex;

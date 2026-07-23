@@ -1,6 +1,7 @@
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEchoStore } from '@/stores/echo.js'
+import { useChatStore } from '@/stores/chat.js'
 import { TopBar } from '@/components/TabBar.jsx'
 import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoModal, MingeGauge, showToast } from '@/components/EchoUI.jsx'
 import { UIIcon } from '@/components/ToolIcons.jsx'
@@ -10,6 +11,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const store = useEchoStore()
+    const chatStore = useChatStore()
 
     // 档案编辑弹窗
     const profileModal = ref(false)
@@ -189,9 +191,10 @@ export default defineComponent({
           <EchoCard level="tertiary" class="stagger" style={{ '--i': 4 }}>
             <div class="me-page__danger">
               <div class="me-page__danger-title">重置数据</div>
-              <p class="me-page__danger-desc">清空所有预测与印证记录，命格等级归零。此操作不可恢复。</p>
+              <p class="me-page__danger-desc">清空所有预测、印证记录与 AI 对话历史，命格等级归零。此操作不可恢复。</p>
               <EchoButton variant="danger" size="sm" onClick={() => {
                 if (confirm('确定重置所有数据？此操作不可恢复。')) {
+                  chatStore.resetAll()
                   store.resetAll()
                   location.reload()
                 }
@@ -201,7 +204,7 @@ export default defineComponent({
 
           <div class="me-page__footer stagger" style={{ '--i': 5 }}>
             <div class="me-page__brand">Echo · 回响</div>
-            <div class="me-page__version">v0.2.0 · 发起预测，等待回响</div>
+            <div class="me-page__version">v0.3.0 · 发起预测，等待回响</div>
           </div>
         </div>
 

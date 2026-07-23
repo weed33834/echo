@@ -13,7 +13,8 @@
   overflow: hidden;
   transition: border-color var(--dur-normal) var(--ease-out),
               background var(--dur-normal) var(--ease-out),
-              transform var(--dur-normal) var(--ease-out);
+              transform var(--dur-normal) var(--ease-out),
+              box-shadow var(--dur-normal) var(--ease-out);
 }
 .echo-card--primary {
   border-color: var(--rule-2);
@@ -31,13 +32,14 @@
   cursor: pointer;
 }
 .echo-card--interactive:hover {
-  border-color: var(--rule-strong);
+  border-color: var(--accent-glow);
   background: var(--bg-3);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--accent-glow);
 }
 .echo-card--interactive:active {
-  transform: translateY(0);
-  background: var(--bg-2);
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--dur-fast);
 }
 .echo-card__head {
   display: flex;
@@ -69,7 +71,11 @@
   gap: var(--sp-2);
   font-weight: var(--fw-medium);
   border-radius: var(--r-md);
-  transition: all var(--dur-fast) var(--ease-out);
+  transition: transform var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              filter var(--dur-fast) var(--ease-out);
   min-height: 40px;
   padding: 0 var(--sp-4);
   white-space: nowrap;
@@ -77,6 +83,33 @@
   text-overflow: ellipsis;
   max-width: 100%;
   letter-spacing: var(--ls-snug);
+  position: relative;
+}
+.echo-btn:not(.echo-btn--disabled):hover {
+  transform: translateY(-1px);
+}
+.echo-btn:not(.echo-btn--disabled):active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 60ms;
+}
+/* 按钮波纹效果 */
+.echo-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s var(--ease-smooth), height 0.4s var(--ease-smooth);
+  pointer-events: none;
+}
+.echo-btn:not(.echo-btn--disabled):active::after {
+  width: 200%;
+  height: 200%;
+  transition: 0s;
 }
 .echo-btn--sm { min-height: 32px; padding: 0 var(--sp-3); font-size: var(--fs-xs); }
 .echo-btn--lg { min-height: 48px; padding: 0 var(--sp-5); font-size: var(--fs-base); }
@@ -91,9 +124,6 @@
   background: var(--accent-2);
   border-color: var(--accent-2);
   box-shadow: var(--shadow-accent);
-}
-.echo-btn--primary:active {
-  transform: scale(0.98);
 }
 
 .echo-btn--secondary {
@@ -117,13 +147,15 @@
 }
 
 .echo-btn--gold {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   color: var(--bg);
-  border: 1px solid var(--accent);
+  border: 1px solid var(--accent-2);
+  box-shadow: 0 1px 3px rgba(166, 139, 91, 0.25);
 }
 .echo-btn--gold:hover {
-  background: var(--accent-2);
+  background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
   border-color: var(--accent-2);
+  box-shadow: 0 2px 8px rgba(166, 139, 91, 0.35);
 }
 
 .echo-btn--danger {
@@ -161,9 +193,10 @@
   border-radius: var(--r-sm);
   line-height: 1.6;
   letter-spacing: var(--ls-snug);
+  animation: stamp 0.3s var(--ease-out) both;
 }
 .echo-badge--accent { background: var(--accent-soft); color: var(--accent-2); }
-.echo-badge--gold { background: var(--accent-soft); color: var(--accent-2); }
+.echo-badge--gold { background: rgba(196, 162, 99, 0.12); color: var(--accent-2); border: 1px solid rgba(196, 162, 99, 0.2); animation: stamp 0.3s var(--ease-out) both, goldPulse 3s var(--ease-smooth) infinite 0.4s; }
 .echo-badge--ok { background: var(--ok-soft); color: var(--ok); }
 .echo-badge--danger { background: var(--danger-soft); color: var(--danger); }
 .echo-badge--warn { background: var(--warn-soft); color: var(--warn); }
@@ -193,9 +226,11 @@
   color: var(--muted);
   line-height: 1.6;
   letter-spacing: var(--ls-snug);
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
 }
 .echo-tag--accent { background: var(--accent-soft); color: var(--accent-2); }
-.echo-tag--gold { background: var(--accent-soft); color: var(--accent-2); }
+.echo-tag--gold { background: rgba(196, 162, 99, 0.12); color: var(--accent-2); }
 .echo-tag--ok { background: var(--ok-soft); color: var(--ok); }
 .echo-tag--danger { background: var(--danger-soft); color: var(--danger); }
 
@@ -210,7 +245,17 @@
 .echo-progress__fill {
   height: 100%;
   border-radius: var(--r-full);
-  transition: width 0.6s var(--ease-out);
+  transition: width 0.8s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+.echo-progress__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background-size: 200% 100%;
+  animation: sweep 2.5s var(--ease-smooth) infinite;
 }
 .echo-progress__fill--accent { background: var(--accent); }
 .echo-progress__fill--gold { background: var(--accent-2); }
@@ -289,7 +334,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  animation: fadeIn var(--dur-normal) var(--ease-out);
+  animation: fadeIn var(--dur-normal, 0.2s) var(--ease-out) both;
   padding: var(--sp-4);
 }
 .echo-modal {
@@ -302,11 +347,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeInUp var(--dur-slow) var(--ease-out);
+  animation: slideInUp var(--dur-slow, 0.35s) var(--ease-smooth) both;
 }
 @media (min-width: 768px) {
   .echo-modal__overlay { align-items: center; }
-  .echo-modal { border-radius: var(--r-xl); }
+  .echo-modal {
+    border-radius: var(--r-xl);
+    animation: scaleInDown var(--dur-slow, 0.3s) var(--ease-out) both;
+  }
 }
 @media (min-width: 1024px) {
   .echo-modal__overlay {
@@ -340,7 +388,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--dur-fast) var(--ease-out);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
   flex-shrink: 0;
 }
 .echo-modal__close:hover {
@@ -381,7 +429,7 @@
   border-radius: var(--r-md);
   font-size: var(--fs-sm);
   box-shadow: var(--shadow-lg);
-  animation: fadeInDown var(--dur-slow) var(--ease-out);
+  animation: fadeInDown 0.3s var(--ease-out) both;
   max-width: 100%;
   overflow-wrap: break-word;
   backdrop-filter: blur(8px);

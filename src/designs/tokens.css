@@ -114,7 +114,7 @@
   --shadow-accent: 0 4px 12px rgba(166, 139, 91, 0.15);
 
   /* === 过渡 — Vercel 风格 === */
-  --ease-out: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --ease-out: cubic-bezier(0.175, 0.885, 0.32, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --dur-fast: 120ms;
   --dur-normal: 200ms;

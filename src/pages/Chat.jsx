@@ -5,7 +5,7 @@
  * 依赖（接口契约）：
  *   - useChatStore  from '@/stores/chat.js'
  *   - useEchoStore  from '@/stores/echo.js'
- *   - chatCompletion, DEFAULT_MODELS from '@/services/ai.js'
+ *   - chatCompletion from '@/services/ai.js'
  *   - getToolSchemas, executeTool, getRecentHistory, formatToolResult from '@/services/tools.js'
  *   - buildSystemPrompt from '@/prompts/system.js'
  *   - getCurrentJieqi from '@/utils/engines.js'
@@ -22,7 +22,7 @@ import {
 } from '@/components/EchoUI.jsx'
 import { useChatStore } from '@/stores/chat.js'
 import { useEchoStore } from '@/stores/echo.js'
-import { chatCompletion, DEFAULT_MODELS } from '@/services/ai.js'
+import { chatCompletion } from '@/services/ai.js'
 import { getToolSchemas, executeTool, getRecentHistory, formatToolResult, loopGuard } from '@/services/tools.js'
 import {
   buildSystemPrompt,
@@ -222,6 +222,11 @@ export default defineComponent({
     const textareaEl = ref(null)
     const expandedTools = ref({})
 
+    // --- 会话列表面板 ---
+    const convListOpen = ref(false)
+    const renamingId = ref(null)
+    const renameText = ref('')
+
     // --- 自动滚动到底部 ---
     const scrollToBottom = async () => {
       await nextTick()
@@ -264,7 +269,7 @@ export default defineComponent({
     }
 
     // --- 模型相关 ---
-    const allModels = computed(() => [...DEFAULT_MODELS, ...(chatStore.customModels || [])])
+    const allModels = computed(() => chatStore.allModels)
     const currentModelName = computed(() => {
       const m = allModels.value.find((x) => x.id === chatStore.modelConfig?.modelId)
       return m?.label || chatStore.modelConfig?.label || '未选择'
@@ -309,7 +314,42 @@ export default defineComponent({
     const newConversation = () => {
       if (chatStore.isStreaming) stopStreaming()
       chatStore.newConversation()
+      convListOpen.value = false
       showToast('已开启新会话', 'default', 1200)
+    }
+
+    // --- 会话列表：切换 / 删除 / 重命名 ---
+    const openConvList = () => {
+      renamingId.value = null
+      convListOpen.value = true
+    }
+    const switchConv = (id) => {
+      if (chatStore.isStreaming) stopStreaming()
+      chatStore.switchConversation(id)
+      renamingId.value = null
+      convListOpen.value = false
+    }
+    const deleteConv = (id) => {
+      if (confirm('确定删除此会话？此操作不可恢复。')) {
+        chatStore.deleteConversation(id)
+        renamingId.value = null
+        showToast('会话已删除', 'default', 1200)
+      }
+    }
+    const startRename = (conv) => {
+      renamingId.value = conv.id
+      renameText.value = conv.title || ''
+    }
+    const confirmRename = () => {
+      const title = renameText.value.trim()
+      if (title && renamingId.value) {
+        chatStore.renameConversation(renamingId.value, title)
+        showToast('已重命名', 'success', 1200)
+      }
+      renamingId.value = null
+    }
+    const cancelRename = () => {
+      renamingId.value = null
     }
 
     // --- 工具气泡折叠 ---
@@ -574,6 +614,15 @@ export default defineComponent({
                 <button
                   type="button"
                   class="chat-header__btn"
+                  onClick={openConvList}
+                  title="会话列表"
+                  aria-label="会话列表"
+                >
+                  ☰
+                </button>
+                <button
+                  type="button"
+                  class="chat-header__btn"
                   onClick={openModelPicker}
                   title="切换模型"
                   aria-label="切换模型"
@@ -696,6 +745,102 @@ export default defineComponent({
               </EchoButton>,
               <EchoButton variant="primary" key="confirm" onClick={confirmModel}>
                 确认
+              </EchoButton>
+            ]
+          }}
+        />
+
+        {/* 会话列表面板 */}
+        <EchoModal
+          modelValue={convListOpen.value}
+          onUpdate:modelValue={(v) => (convListOpen.value = v)}
+          title="会话列表"
+          vSlots={{
+            default: () => (
+              <div class="chat-conv-list">
+                {chatStore.conversations.length === 0 ? (
+                  <div class="chat-conv-list__empty">暂无会话</div>
+                ) : (
+                  chatStore.conversations.map((conv) => (
+                    <div
+                      key={conv.id}
+                      class={`chat-conv-item ${conv.id === chatStore.currentConversationId ? 'chat-conv-item--active' : ''}`}
+                    >
+                      {renamingId.value === conv.id ? (
+                        <div class="chat-conv-item__rename">
+                          <input
+                            class="chat-conv-item__input"
+                            type="text"
+                            value={renameText.value}
+                            onInput={(e) => (renameText.value = e.target.value)}
+                            onKeydown={(e) => {
+                              if (e.key === 'Enter') confirmRename()
+                              if (e.key === 'Escape') cancelRename()
+                            }}
+                            maxlength="40"
+                          />
+                          <button
+                            type="button"
+                            class="chat-conv-item__icon-btn chat-conv-item__icon-btn--ok"
+                            onClick={confirmRename}
+                            title="确认"
+                            aria-label="确认重命名"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            type="button"
+                            class="chat-conv-item__icon-btn"
+                            onClick={cancelRename}
+                            title="取消"
+                            aria-label="取消重命名"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            class="chat-conv-item__main"
+                            onClick={() => switchConv(conv.id)}
+                          >
+                            <span class="chat-conv-item__title">{conv.title || '新对话'}</span>
+                            <span class="chat-conv-item__meta">
+                              {conv.messages.length} 条 · {formatTime(conv.updatedAt)}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            class="chat-conv-item__icon-btn"
+                            onClick={() => startRename(conv)}
+                            title="重命名"
+                            aria-label="重命名会话"
+                          >
+                            ✎
+                          </button>
+                          <button
+                            type="button"
+                            class="chat-conv-item__icon-btn chat-conv-item__icon-btn--danger"
+                            onClick={() => deleteConv(conv.id)}
+                            title="删除"
+                            aria-label="删除会话"
+                          >
+                            🗑
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            ),
+            footer: () => [
+              <EchoButton variant="ghost" key="close" onClick={() => (convListOpen.value = false)}>
+                关闭
+              </EchoButton>,
+              <EchoButton variant="primary" key="new" onClick={newConversation}>
+                + 新建会话
               </EchoButton>
             ]
           }}

@@ -1,4 +1,4 @@
-import { createApp, defineComponent, h, watch } from 'vue'
+import { createApp, defineComponent, h, watch, Transition } from 'vue'
 import { createPinia } from 'pinia'
 import { RouterView } from 'vue-router'
 import router from './router'
@@ -47,7 +47,13 @@ const App = defineComponent({
     watch(() => store.settings, (s) => applySettings(s), { deep: true })
     return () => h('div', { class: 'app-root' }, [
       h(ParticleBackground),
-      h('main', { class: 'app-main' }, [h(RouterView)]),
+      h('main', { class: 'app-main' }, [
+        h(RouterView, null, {
+          default: ({ Component, route }) => h(Transition, { name: 'route', mode: 'out-in' }, {
+            default: () => h(Component, { key: route.path })
+          })
+        })
+      ]),
       h(TabBar),
       h(ChatFab),
       h(ToastHost),

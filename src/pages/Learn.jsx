@@ -21,16 +21,16 @@ export default defineComponent({
     // 测验作答：{ [questionIndex]: selectedOptionIndex }
     const quizAnswers = ref({})
 
-    // 已完成课程集合（响应式）
-    const completedSet = computed(() => new Set(store.learnProgress.completedLessons))
-
     const filteredLessons = computed(() =>
       activeCat.value === 'all'
         ? LESSONS
         : LESSONS.filter(l => l.cat === activeCat.value)
     )
 
-    const completedCount = computed(() => completedSet.value.size)
+    // 通过 store.isLessonCompleted 统计已完成数（响应式）
+    const completedCount = computed(() =>
+      LESSONS.filter(l => store.isLessonCompleted(l.id)).length
+    )
     const progressPct = computed(() =>
       LESSONS.length ? Math.round((completedCount.value / LESSONS.length) * 100) : 0
     )
@@ -109,7 +109,7 @@ export default defineComponent({
       // ===== 详情视图 =====
       if (selectedLesson.value) {
         const lesson = selectedLesson.value
-        const isDone = completedSet.value.has(lesson.id)
+        const isDone = store.isLessonCompleted(lesson.id)
         return (
           <div class="learn-page">
             <TopBar title="命理学堂" />
@@ -218,7 +218,7 @@ export default defineComponent({
             {/* 课程列表 */}
             <div class="learn-page__lessons">
               {filteredLessons.value.map(lesson => {
-                const done = completedSet.value.has(lesson.id)
+                const done = store.isLessonCompleted(lesson.id)
                 return (
                   <div
                     key={lesson.id}

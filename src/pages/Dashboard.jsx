@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 import { useEchoStore, TOOLS } from '@/stores/echo.js'
 import { getCurrentJieqi } from '@/utils/engines.js'
 import { TopBar } from '@/components/TabBar.jsx'
-import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, MingeGauge } from '@/components/EchoUI.jsx'
+import { EchoCard, EchoButton, EchoBadge, EchoTag, EchoProgress, MingeGauge, showToast } from '@/components/EchoUI.jsx'
 import { Timeline } from '@/components/Timeline.jsx'
 
 /* === 五行建议数据（日主五行 → 四维建议） === */
@@ -220,6 +220,20 @@ export default defineComponent({
     const goToTools = () => router.push('/tools')
     const goToMe = () => router.push('/me')
     const goToHuangli = () => router.push('/tools/huangli')
+
+    /* 删除单条推演历史 */
+    const removeHistoryItem = (id) => {
+      store.removeHistory(id)
+      showToast('已删除该记录', 'default', 1200)
+    }
+    /* 清空全部推演历史 */
+    const clearAllHistory = () => {
+      if (store.history.length === 0) return
+      if (confirm('确定清空全部推演历史？此操作不可恢复。')) {
+        store.clearHistory()
+        showToast('已清空推演历史', 'default', 1200)
+      }
+    }
 
     return () => (
       <div class="dashboard">
@@ -496,27 +510,45 @@ export default defineComponent({
           {/* === 5. 推演历史时间线 === */}
           <EchoCard level="secondary" title="推演轨迹">
             {recentHistory.value.length > 0 ? (
-              <div class="dashboard__timeline">
-                {recentHistory.value.map((h, i) => (
-                  <div key={h.id} class="dashboard__timeline-item">
-                    <div class="dashboard__timeline-marker">
-                      <div class="dashboard__timeline-dot" />
-                      {i < recentHistory.value.length - 1 && (
-                        <div class="dashboard__timeline-line" />
-                      )}
-                    </div>
-                    <div class="dashboard__timeline-content">
-                      <div class="dashboard__timeline-head">
-                        <span class="dashboard__timeline-tool">{h.toolName || h.toolKey}</span>
-                        <span class="dashboard__timeline-time">{relativeTime(h.createdAt)}</span>
+              <>
+                <div class="dashboard__timeline">
+                  {recentHistory.value.map((h, i) => (
+                    <div key={h.id} class="dashboard__timeline-item">
+                      <div class="dashboard__timeline-marker">
+                        <div class="dashboard__timeline-dot" />
+                        {i < recentHistory.value.length - 1 && (
+                          <div class="dashboard__timeline-line" />
+                        )}
                       </div>
-                      {h.summary && (
-                        <div class="dashboard__timeline-summary">{h.summary}</div>
-                      )}
+                      <div class="dashboard__timeline-content">
+                        <div class="dashboard__timeline-head">
+                          <span class="dashboard__timeline-tool">{h.toolName || h.toolKey}</span>
+                          <div class="dashboard__timeline-head-right">
+                            <span class="dashboard__timeline-time">{relativeTime(h.createdAt)}</span>
+                            <button
+                              type="button"
+                              class="dashboard__timeline-del"
+                              onClick={() => removeHistoryItem(h.id)}
+                              title="删除"
+                              aria-label="删除该记录"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                        {h.summary && (
+                          <div class="dashboard__timeline-summary">{h.summary}</div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                <div class="dashboard__timeline-clear">
+                  <EchoButton variant="danger" size="sm" block onClick={clearAllHistory}>
+                    清空全部历史
+                  </EchoButton>
+                </div>
+              </>
             ) : (
               <div class="dashboard__timeline-empty">
                 <span class="dashboard__timeline-empty-text">还没有推演记录</span>

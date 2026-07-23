@@ -16,7 +16,7 @@
   font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 .share-btn:hover:not(:disabled) {

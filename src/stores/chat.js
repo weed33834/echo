@@ -191,13 +191,6 @@ export const useChatStore = defineStore('chat', () => {
   const messages = computed(() => currentMessages.value)
 
   /**
-   * 当前会话对象
-   */
-  const currentConversation = computed(() => {
-    return conversations.value.find(c => c.id === currentConversationId.value) || null
-  })
-
-  /**
    * 合并的模型列表：预设 + 自定义
    */
   const allModels = computed(() => {
@@ -215,11 +208,6 @@ export const useChatStore = defineStore('chat', () => {
     }
     return base
   })
-
-  /**
-   * 当前会话的消息数量
-   */
-  const messageCount = computed(() => currentMessages.value.length)
 
   // === 持久化 ===
 
@@ -299,13 +287,6 @@ export const useChatStore = defineStore('chat', () => {
       delete patch.appendContent
     }
     Object.assign(msg, patch)
-  }
-
-  /**
-   * 流式结束后持久化
-   */
-  function persistMessages() {
-    persist()
   }
 
   // === 流式状态 ===
@@ -414,24 +395,6 @@ export const useChatStore = defineStore('chat', () => {
    */
   function setModelConfig(config) {
     modelConfig.value = { ...modelConfig.value, ...config }
-    persistConfig()
-  }
-
-  /**
-   * 按预设模型 id 切换配置
-   * @param {string} modelId - DEFAULT_MODELS 或 customModels 中的 id
-   */
-  function switchModel(modelId) {
-    const m = allModels.value.find(x => x.id === modelId)
-    if (!m) return
-    modelConfig.value = {
-      ...modelConfig.value,
-      provider: m.provider,
-      baseUrl: m.baseUrl,
-      model: m.model,
-      modelId: m.id,
-      label: m.label
-    }
     persistConfig()
   }
 
@@ -598,26 +561,6 @@ export const useChatStore = defineStore('chat', () => {
   // === 便捷 ===
 
   /**
-   * 获取用于 AI 调用的最终配置（合并管理员配置）
-   * @returns {Object}
-   */
-  function getActiveConfig() {
-    return effectiveConfig.value
-  }
-
-  /**
-   * 获取当前生效的提示词（管理员覆盖优先）
-   * @param {string} [key='mingli'] - 提示词 key
-   * @returns {string}
-   */
-  function getActivePrompt(key = 'mingli') {
-    if (adminConfig.value.systemPromptOverride && key === 'mingli') {
-      return adminConfig.value.systemPromptOverride
-    }
-    return adminConfig.value.prompts?.[key] || DEFAULT_PROMPTS[key] || SYSTEM_PROMPT
-  }
-
-  /**
    * 重置所有数据
    */
   function resetAll() {
@@ -645,14 +588,11 @@ export const useChatStore = defineStore('chat', () => {
     usageStats,
     // 计算属性
     currentMessages,
-    currentConversation,
     allModels,
     effectiveConfig,
-    messageCount,
     // 消息操作
     addMessage,
     updateMessage,
-    persistMessages,
     incrementUnread,
     // 流式
     startStreaming,
@@ -667,7 +607,6 @@ export const useChatStore = defineStore('chat', () => {
     markRead,
     // 模型
     setModelConfig,
-    switchModel,
     addCustomModel,
     updateCustomModel,
     removeCustomModel,
@@ -684,8 +623,6 @@ export const useChatStore = defineStore('chat', () => {
     clearUsageStats,
     // 数据
     exportData,
-    getActiveConfig,
-    getActivePrompt,
     // 持久化
     persist,
     // 重置
