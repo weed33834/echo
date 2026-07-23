@@ -94,7 +94,7 @@ src/
 - **组件模式**：`defineComponent` + `setup()` + JSX
 - **CSS 命名**：BEM 风格（`block__element--modifier`）
 - **颜色/字号**：必须使用设计令牌（`var(--token)`），禁止硬编码
-- **间距**：8pt 节奏（4/8/12/16/24/32/48/64）
+- **间距**：4pt 基准（4/8/12/16/24/32/48/64）
 - **列表渲染**：必须设置 `key` prop
 - **不使用 TypeScript**：保持纯 JavaScript + JSX
 

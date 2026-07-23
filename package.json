@@ -1,7 +1,7 @@
 {
   "name": "echo-fortune",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "description": "Echo · 回响 — 命运印证引擎。发起预测，等待回响。18 种命理工具 + AI 对话 + 命格面板",
   "keywords": [

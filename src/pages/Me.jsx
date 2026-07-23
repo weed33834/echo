@@ -204,7 +204,7 @@ export default defineComponent({
 
           <div class="me-page__footer stagger" style={{ '--i': 5 }}>
             <div class="me-page__brand">Echo · 回响</div>
-            <div class="me-page__version">v0.3.0 · 发起预测，等待回响</div>
+            <div class="me-page__version">v0.3.1 · 发起预测，等待回响</div>
           </div>
         </div>
 

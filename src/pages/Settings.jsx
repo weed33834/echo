@@ -434,7 +434,7 @@ export default defineComponent({
                 </div>
                 <div class="settings-page__about-row">
                   <span class="settings-page__about-label">版本</span>
-                  <span class="settings-page__about-val">v0.3.0</span>
+                  <span class="settings-page__about-val">v0.3.1</span>
                 </div>
                 <div class="settings-page__about-row">
                   <span class="settings-page__about-label">定位</span>

@@ -5,6 +5,36 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.3.1] - 2026-07-23
+
+### 新增
+- 动画系统全面增强：grandEntrance / glowEntrance / goldPulse / goldShimmer / float 关键帧
+- 18 种命理工具结果交错入场动画（八字四柱 / 紫微 12 宫 / 六爻爻线 / 塔罗牌翻转 / 六壬三传四课 / 奇门九宫 / 风水飞星盘等）
+- 吉凶判语徽章印章 + 光晕双重入场效果
+- 关键分数数字弹跳入场动画
+- 当前大运 / 宫位 / 用神持续呼吸光效
+- 首页 Hero / 工具卡片 / 快捷入口交错渐入
+- Me 页统计数字 / 菜单项 / 签到里程碑光晕 + 交错入场
+- Dashboard / 兼容性 / 学习页交错入场动画
+- 路由转场增强：blur + scale 电影感过渡
+- `.anim-grand` / `.anim-glow` / `.anim-float` / `.anim-gold-shimmer` 工具类
+
+### 变更
+- 金色按钮渐变差异化：linear-gradient + shadow
+- `--ease-out` 缓动函数过冲修正（1.1 → 1.0）
+- 卡片 hover 背景 / 边框修复
+
+### 修复
+- 36 处 `transition: all` → 具体属性
+- 6 处 font-size 低于 13px 最小值 → `var(--fs-xs)`
+- 五行颜色硬编码 hex → CSS tokens
+- toast 重复动画移除
+- SPEC.md 技术栈版本更新（Pinia ≥4.0 / Vue Router ≥5.2 / Vite ≥8.1）
+- SPEC.md 设计令牌更新（紫色 → 墨砚金）、等级系统（8 级 → 11 级）、XP 公式修正
+- SPEC.md 补充 Compass.jsx 页面
+- README.md / README.en.md / README.ja.md 设计令牌部分全部同步更新
+- CONTRIBUTING.md 间距描述修正（8pt 节奏 → 4pt 基准）
+
 ## [0.3.0] - 2026-07-22
 
 ### 新增

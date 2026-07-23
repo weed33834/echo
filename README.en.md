@@ -212,20 +212,21 @@ The project uses CSS custom properties as design tokens:
 
 ```css
 :root {
-  --accent: #5b3fd6;     /* Primary: Purple */
-  --gold: #b8893a;       /* Gold */
-  --ink: #15131f;        /* Text */
-  --bg: #f7f5f0;         /* Background */
+  /* Inkstone palette — Warm black canvas + Ancient copper gold */
+  --accent: #a68b5b;     /* Ancient copper gold */
+  --accent-2: #c4a263;   /* Bright gold */
+  --ink: #e8e0d4;        /* Warm white ink */
+  --bg: #0a0908;         /* Warm black canvas */
 
-  --wuxing-metal: #d4a843;
-  --wuxing-wood: #5a9e5a;
-  --wuxing-water: #5a8db5;
-  --wuxing-fire: #d45a5a;
+  --wuxing-metal: #c9b06b;
+  --wuxing-wood: #6b9b6b;
+  --wuxing-water: #6b8eb5;
+  --wuxing-fire: #c96b5a;
   --wuxing-earth: #a8825a;
 }
 ```
 
-Supports dark mode (`[data-theme="dark"]`) and font scaling (`[data-font-scale]`).
+Dark theme is the default. Light mode via `[data-theme="light"]`. Font scaling via `[data-font-scale]`.
 
 ## Security Sandbox
 
@@ -242,16 +243,16 @@ AI output → validateOutput → append safety notice
 | Level | Title | XP Threshold |
 |-------|-------|--------------|
 | 1 | Initiate | 0 |
-| 2 | Gradual Awakening | 100 |
-| 3 | Enlightenment | 300 |
-| 4 | Profound | 600 |
+| 2 | Gradual Awakening | 50 |
+| 3 | Enlightenment | 200 |
+| 4 | Profound | 500 |
 | 5 | Clear Insight | 1,000 |
-| 6 | Knowing Destiny | 1,500 |
-| 7 | Deep Sight | 2,200 |
-| 8 | True Nature | 3,000 |
-| 9 | Reaching Truth | 4,000 |
-| 10 | Harmony | 5,500 |
-| 11 | Heavenly Revelation | 7,500 |
+| 6 | Knowing Destiny | 2,000 |
+| 7 | Deep Sight | 3,500 |
+| 8 | True Nature | 5,000 |
+| 9 | Reaching Truth | 6,500 |
+| 10 | Harmony | 8,000 |
+| 11 | Heavenly Revelation | 10,000 |
 
 XP = match score × 30 + 10 (weighted by review match), check-in +5, guide completion +20
 
