@@ -2,13 +2,13 @@
 
 # Echo · 回响
 
-**命运印证引擎**
+**Destiny Verification Engine**
 
-*发起预测，等待回响*
+*Initiate a prediction, await the echo*
 
-[简体中文](./README.md) | [English](./README.en.md) | [日本語](./README.ja.md)
+[English](README.md) | [中文](README.zh.md) | [日本語](README.ja.md)
 
-**[在线体验 →](https://weed33834.github.io/echo/)**
+**[Live Demo →](https://weed33834.github.io/echo/)**
 
 ![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vuedotjs&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8.1-646cff?logo=vite&logoColor=white)
@@ -25,277 +25,278 @@
 
 ---
 
-## 这是什么
+## What This Is
 
-Echo 不是算命软件。它是一个**假设验证工具**。
+Echo is not fortune-telling software. It is a **hypothesis-verification tool**.
 
-你用八字、紫微、六爻排出来的结果，本质上是一个**预测**。Echo 做的事情很简单：帮你记录这些预测，设定印证时间节点，到期后回来复盘——应验了还是没应验。随着时间推移，你的「命格可信度」会逐渐积累，你也能看清哪套体系对你更准。
+The results produced by systems such as BaZi, ZiWei, or LiuYao are, in essence, **predictions**. What Echo does is record those predictions, set verification checkpoints, and bring you back when the time arrives to review whether they came true or fell short. As reviews accumulate, a personal "destiny credibility" takes shape, and it becomes clearer which system works better for you.
 
-核心循环：**设节点 → 等回响 → 复盘**
+Core loop: **Set checkpoint → Await echo → Review**
 
-> 所有推演结果均为文化算法的可视化呈现，不构成任何决策依据。
+> All divination results are visual representations of cultural algorithms and do not constitute any basis for decision-making.
 
-## 功能总览
+## Feature Overview
 
-### 18 种命理工具
+### 18 Divination Tools
 
-| 类别 | 工具 | 说明 |
-|------|------|------|
-| 命理 | 八字排盘 | 四柱干支、日主五行、十神、大运流年 |
-| 命理 | 紫微斗数 | 十二宫位、主星四化 |
-| 命理 | 奇门遁甲 | 九宫时盘、八门九星 |
-| 命理 | 大六壬 | 四课三传、天将盘 |
-| 占卜 | 六爻占卜 | 金钱课起卦、六亲装卦 |
-| 占卜 | 梅花易数 | 时间起卦、体用生克 |
-| 占卜 | 摇钱起卦 | 六十四卦铜钱法 |
-| 健康 | 子午流注 | 十二时辰经络流注 |
-| 健康 | 节气养生 | 顺时调养、节气宜忌 |
-| 生活 | 老黄历 | 每日宜忌、冲煞、值神 |
-| 生活 | 择吉日 | 事件择日、黄道吉日 |
-| 生活 | 每日运势 | 个性化日运、四维运势 |
-| 异域 | 西洋占星 | 星盘三巨头、七行星相位 |
-| 异域 | 玛雅历 | 260 kin、银河音调 |
-| 异域 | 塔罗牌 | 大阿卡那三牌阵 |
-| 异域 | 周公解梦 | 梦境关键词解析 |
-| 风水 | 风水布局 | 九宫飞星、元运盘 |
-| 风水 | 姓名学 | 三才五格、81 数理 |
+| Category | Tool | Description |
+|----------|------|-------------|
+| Destiny | BaZi (八字) | Four pillars, day master, ten gods, luck cycles |
+| Destiny | ZiWei (紫微) | 12 palaces, star transformations |
+| Destiny | QiMen (奇门) | Nine-palace time board, eight gates |
+| Destiny | LiuRen (六壬) | Four lessons, three transmissions |
+| Divination | LiuYao (六爻) | Coin-toss hexagram, six relations |
+| Divination | MeiHua (梅花) | Time-based hexagram, ti-yong analysis |
+| Divination | YaoQian (摇钱) | 64 hexagrams, coin method |
+| Health | ZiWu (子午) | 12-hour meridian flow |
+| Health | JieQi (节气) | Seasonal wellness, solar-term guidance |
+| Daily | HuangLi (黄历) | Daily auspicious/inauspicious, conflicts |
+| Daily | JiRi (择吉日) | Event date selection |
+| Daily | YunShi (运势) | Personalized daily fortune, four-dimensional |
+| Western | Astrology | Chart big three, planetary aspects |
+| Western | Mayan Calendar | 260 kin, galactic tones |
+| Western | Tarot | Major Arcana three-card spread |
+| Western | Dream Interpretation | Dream keyword analysis |
+| FengShui | FengShui Layout | Nine-palace flying stars |
+| FengShui | Nameology | Three talents, five grids, 81 numbers |
 
-### AI 对话
+### AI Chat
 
-- 支持 DeepSeek / OpenAI / Claude / 通义千问 / Ollama 本地模型
-- 工具调用：AI 可调用 18 种命理工具进行推演
-- 联网搜索：集成 Tavily API，AI 可搜索实时信息
-- 安全沙箱：参数校验、超时控制、注入检测、输出验证
-- 知识检索：命理知识库 + 节气感知 + Few-shot 示例
+- Multi-model support: DeepSeek / OpenAI / Claude / Qwen / local Ollama, unified through the OpenAI-compatible protocol with SSE streaming
+- Multi-turn reasoning: the AI autonomously invokes the 18 divination tools, then continues reasoning against the structured results; a loop guard prevents unbounded calls
+- Context memory: multiple conversations persist in localStorage; user profile, BaZi data, recent divination history, the fortune-telling knowledge base, and the current solar term are injected automatically
+- Web search: Tavily API integration lets the AI retrieve real-time information
+- Security sandbox: input sanitization, injection detection, argument validation, timeout control, and output validation; five categories of dynamic safety guardrails (medical / legal / financial / emotional / crisis)
+- Evidence-oriented: the AI is required to cite tool data, cross-verify results across systems, and avoid absolute assertions
 
-### 命格面板
+### Destiny Dashboard
 
-- 五行雷达图：金木水火土分布可视化
-- 五行生克图：相生相克关系网络
-- 今日建议矩阵：饮食 / 起居 / 运动 / 情志
-- 推演时间线：历史记录可视化
-- 工具使用统计：使用频率排行
-- 大运流年：十年大运与流年走势
+- Five-elements radar chart: metal / wood / water / fire / earth distribution
+- Five-elements interaction graph: generation and destruction network
+- Daily advice matrix: diet / lifestyle / exercise / emotion
+- Divination timeline: history visualization
+- Tool usage statistics: frequency ranking
+- Luck cycles: ten-year major luck and annual flow
 
-### 命运图谱
+### Destiny Graph
 
-- SVG 关系网络图：中心节点 + 五行节点 + 工具节点
-- 交互式节点：点击五行查看调摄建议
-- 印证统计与命格等级可视化
+- SVG relationship network: center node + element nodes + tool nodes
+- Interactive nodes: click an element for wellness advice
+- Verification statistics and destiny-level visualization
 
-### 其他功能
+### Other Features
 
-- 每日签到 + 连续签到里程碑
-- 合婚匹配：双方八字对照分析
-- 学习中心：命理入门课程
-- 三主题切换（玄夜暗色 / 宣纸亮色 / 随天自动）
-- 字号缩放（紧凑 / 标准 / 宽松）
-- 全响应式：320px 手机 → 4K 显示器
+- Daily check-in + streak milestones
+- Compatibility matching: dual BaZi comparison
+- Learning center: introductory fortune-telling courses
+- Three-theme switching (XuanYe dark / Xuan paper light / auto by time of day)
+- Font-size scaling (compact / standard / relaxed)
+- Fully responsive: 320px mobile → 4K display
 
-## 技术架构
+## Tech Architecture
 
 ```
 src/
-├── main.js                    # 应用入口
-├── router/index.js            # 16 条路由
+├── main.js                    # App entry
+├── router/index.js            # 16 routes
 ├── stores/
-│   ├── echo.js                # 命格/历史/档案/工具注册 store
-│   └── chat.js                # AI 对话/模型配置 store
+│   ├── echo.js                # Destiny/history/profile/tools store
+│   └── chat.js                # AI chat/model config store
 ├── services/
-│   ├── ai.js                  # 多模型 AI 对话服务
-│   ├── tools.js               # 工具调度与执行
-│   ├── sandbox.js             # 安全沙箱（校验/超时/注入检测）
-│   └── webSearch.js           # Tavily 联网搜索
+│   ├── ai.js                  # Multi-model AI service
+│   ├── tools.js               # Tool scheduling and execution
+│   ├── sandbox.js             # Security sandbox
+│   └── webSearch.js           # Tavily web search
 ├── prompts/
-│   └── system.js              # 系统提示词/Few-shot/知识库/安全护栏
+│   └── system.js              # System prompts/Few-shot/knowledge base/guardrails
 ├── utils/
-│   └── engines.js             # 18 个命理引擎
+│   └── engines.js             # 18 divination engines
 ├── components/
-│   ├── EchoUI.jsx             # 基础组件库（Card/Button/Badge/...）
-│   ├── TabBar.jsx             # 导航栏（响应式底部/侧边）
-│   ├── ChatFab.jsx            # 悬浮 AI 入口
-│   ├── BaziChart.jsx          # 八字排盘可视化
-│   └── Timeline.jsx           # 时间线组件
-├── pages/                     # 16 个页面
-│   ├── Home.jsx               # 首页
-│   ├── Tools.jsx              # 工具列表
-│   ├── ToolDetail.jsx         # 工具推演
-│   ├── Profile.jsx            # 个人档案
-│   ├── Daily.jsx              # 今日运势
-│   ├── Dashboard.jsx          # 命格面板
-│   ├── Compatibility.jsx      # 合婚匹配
-│   ├── Learn.jsx              # 学习中心
-│   ├── EchoCenter.jsx         # 印证中心
-│   ├── Graph.jsx              # 命运图谱
-│   ├── Chat.jsx               # AI 对话
-│   ├── Me.jsx                 # 个人中心
-│   ├── Settings.jsx           # 设置
-│   ├── Admin.jsx              # 管理后台
-│   ├── Checkin.jsx            # 每日签到
-│   └── Compass.jsx            # 风水罗盘
-└── designs/                   # 设计系统
-    ├── tokens.css             # 设计令牌（颜色/间距/字号）
-    ├── base.css               # 全局重置
-    ├── animations.css         # 动画关键帧
-    └── ...                    # 各页面样式
+│   ├── EchoUI.jsx             # Base component library
+│   ├── TabBar.jsx             # Navigation bar (responsive)
+│   ├── ChatFab.jsx            # Floating AI entry
+│   ├── BaziChart.jsx          # BaZi visualization
+│   └── Timeline.jsx           # Timeline component
+├── pages/                     # 16 pages
+│   ├── Home.jsx               # Home
+│   ├── Tools.jsx              # Tool list
+│   ├── ToolDetail.jsx         # Tool divination
+│   ├── Profile.jsx            # Profile
+│   ├── Daily.jsx              # Daily fortune
+│   ├── Dashboard.jsx          # Destiny dashboard
+│   ├── Compatibility.jsx      # Compatibility matching
+│   ├── Learn.jsx              # Learning center
+│   ├── EchoCenter.jsx         # Verification center
+│   ├── Graph.jsx              # Destiny graph
+│   ├── Chat.jsx               # AI chat
+│   ├── Me.jsx                 # Personal center
+│   ├── Settings.jsx           # Settings
+│   ├── Admin.jsx              # Admin panel
+│   ├── Checkin.jsx            # Daily check-in
+│   └── Compass.jsx            # Feng Shui Compass
+└── designs/                   # Design system
+    ├── tokens.css             # Design tokens
+    ├── base.css               # Global reset
+    ├── animations.css         # Animation keyframes
+    └── ...                    # Page styles
 ```
 
-### 技术栈
+### Tech Stack
 
-| 技术 | 版本 | 用途 |
-|------|------|------|
-| Vue 3 | 3.5 | 框架（JSX + Composition API） |
-| Pinia | 4.0 | 状态管理 |
-| Vue Router | 5.2 | 路由 |
-| Vite | 8.1 | 构建工具 |
+| Tech | Version | Purpose |
+|------|---------|---------|
+| Vue 3 | 3.5 | Framework (JSX + Composition API) |
+| Pinia | 4.0 | State management |
+| Vue Router | 5.2 | Routing |
+| Vite | 8.1 | Build tool |
 
-**零运行时依赖**——除了 Vue/Pinia/Router 三个核心库，所有功能均自实现：
-- Markdown 渲染器（无 marked/markdown-it）
-- SVG 雷达图 / 生克图 / 关系图谱（无 echarts/d3）
-- Toast / Modal / Progress（无 UI 库）
+**Zero runtime dependencies** — apart from the three core libraries (Vue / Pinia / Router), everything is self-implemented:
+- Markdown renderer (no marked / markdown-it)
+- SVG radar / interaction / network graphs (no echarts / d3)
+- Toast / Modal / Progress (no UI library)
 
-## 快速开始
+## Quick Start
 
-> 前置要求：Node.js ≥ 22（参见 `.nvmrc`）、npm ≥ 9
+> Prerequisites: Node.js ≥ 22 (see `.nvmrc`), npm ≥ 9
 
 ```bash
-# 克隆仓库
+# Clone the repository
 git clone https://github.com/weed33834/echo.git
 cd echo
 
-# 安装依赖
+# Install dependencies
 npm install
 
-#（可选）配置环境变量
-cp .env.example .env  # 填入你的 API Key，也可在应用内设置页面配置
+# (Optional) Configure environment variables
+cp .env.example .env  # Fill in your API keys, or configure them in the in-app Settings page
 
-# 启动开发服务器
+# Start the dev server
 npm run dev
 
-# 构建生产版本
+# Build for production
 npm run build
 
-# 预览构建结果
+# Preview the build
 npm run preview
 ```
 
-浏览器打开 `http://localhost:5173` 即可使用。
+Open `http://localhost:5173` in your browser.
 
-### 配置 AI 对话
+### Configure AI Chat
 
-1. 进入「设置」页面
-2. 在「AI 对话」区域输入你的 API Key
-3. 或开启「使用默认模型」体验占位回复
-4. 支持的模型提供商：DeepSeek / OpenAI / Claude / 通义千问 / Ollama
+1. Go to the "Settings" page
+2. Enter your API key in the "AI Chat" section
+3. Or enable "Use default model" for placeholder responses
+4. Supported providers: DeepSeek / OpenAI / Claude / Qwen / Ollama
 
-### 管理后台
+### Admin Panel
 
-访问 `#/admin` 进入管理后台（首次使用需在系统配置中设置密码）。
+Access `#/admin` for the admin panel (set a password in system config on first use).
 
-功能包括：模型管理（预设/自定义 CRUD）、提示词管理、用量统计、系统配置。
+Features: model management (preset / custom CRUD), prompt management, usage statistics, system config.
 
-## 响应式设计
+## Responsive Design
 
-| 断点 | 场景 | 适配策略 |
-|------|------|----------|
-| ≤340px | 超窄屏（iPhone SE 1） | 压缩间距、网格降列、隐藏文字 |
-| 341-767px | 标准手机 | 底部 TabBar、单列布局 |
-| 768-1023px | 平板 | 双列网格、雷达图横向 |
-| 1024-1439px | 桌面 | 侧边导航、双列面板 |
-| ≥1440px | 宽屏 | 五列工具网格、更大间距 |
-| ≥1920px | 超宽屏 | 限制最大宽度 1280px |
-| 横屏 ≤500h | 手机横屏 | 压缩垂直间距、输入区优化 |
+| Breakpoint | Scenario | Strategy |
+|------------|----------|----------|
+| ≤340px | Ultra-narrow (iPhone SE 1) | Compress spacing, reduce grid columns, hide text |
+| 341-767px | Standard mobile | Bottom TabBar, single column |
+| 768-1023px | Tablet | Dual-column grid, horizontal radar |
+| 1024-1439px | Desktop | Side navigation, dual-column panel |
+| ≥1440px | Wide screen | Five-column tool grid, larger spacing |
+| ≥1920px | Ultra-wide | Max width 1280px |
+| Landscape ≤500h | Mobile landscape | Compress vertical spacing, optimize input area |
 
-## 设计令牌
+## Design Tokens
 
-项目使用 CSS 自定义属性作为设计令牌的单源真相：
+The project uses CSS custom properties as the single source of truth for design tokens:
 
 ```css
 :root {
-  /* 主题色 — 墨砚系（暖黑画布 + 古铜金） */
-  --accent: #a68b5b;     /* 古铜金 */
-  --accent-2: #c4a263;   /* 亮金 */
-  --ink: #e8e0d4;        /* 暖白墨迹 */
-  --bg: #0a0908;         /* 暖黑画布 */
+  /* Theme — Inkstone palette (warm-black canvas + antique copper gold) */
+  --accent: #a68b5b;     /* Antique copper gold */
+  --accent-2: #c4a263;   /* Bright gold */
+  --ink: #e8e0d4;        /* Warm white ink */
+  --bg: #0a0908;         /* Warm black canvas */
 
-  /* 五行色 */
+  /* Five-elements colors */
   --wuxing-metal: #c9b06b;
   --wuxing-wood: #6b9b6b;
   --wuxing-water: #6b8eb5;
   --wuxing-fire: #c96b5a;
   --wuxing-earth: #a8825a;
 
-  /* 间距 / 字号 / 圆角 / 阴影 */
+  /* Spacing / font-size / radius / shadow */
   --sp-1: 4px;  --sp-4: 16px;  --sp-7: 48px;
   --fs-xs: 13px;  --fs-base: 15px;  --fs-2xl: 34px;
 }
 ```
 
-暗色为默认主题，浅色模式通过 `[data-theme="light"]` 切换。字号缩放通过 `[data-font-scale]` 控制。
+Dark is the default theme. Light mode is toggled via `[data-theme="light"]`. Font scaling is controlled via `[data-font-scale]`.
 
-## 项目结构亮点
+## Structure Highlights
 
-### 安全沙箱
+### Security Sandbox
 
 ```
-用户输入 → sanitizeInput → detectInjection → AI
+User input → sanitizeInput → detectInjection → AI
                                     ↓
-工具调用 → validateArgs → executeWithTimeout → sanitizeToolResult → AI
+Tool call → validateArgs → executeWithTimeout → sanitizeToolResult → AI
                                     ↓
-AI 输出 → validateOutput → 追加安全提示
+AI output → validateOutput → append safety notice
 ```
 
-### 命格等级系统
+### Destiny Level System
 
-| 等级 | 称号 | 经验阈值 |
-|------|------|----------|
-| 1 | 初悟 | 0 |
-| 2 | 渐悟 | 50 |
-| 3 | 开悟 | 200 |
-| 4 | 通玄 | 500 |
-| 5 | 明机 | 1,000 |
-| 6 | 知命 | 2,000 |
-| 7 | 洞微 | 3,500 |
-| 8 | 见性 | 5,000 |
-| 9 | 达理 | 6,500 |
-| 10 | 圆融 | 8,000 |
-| 11 | 天启 | 10,000 |
+| Level | Title | XP Threshold |
+|-------|-------|--------------|
+| 1 | Initiate | 0 |
+| 2 | Gradual Awakening | 50 |
+| 3 | Enlightenment | 200 |
+| 4 | Profound | 500 |
+| 5 | Clear Insight | 1,000 |
+| 6 | Knowing Destiny | 2,000 |
+| 7 | Deep Sight | 3,500 |
+| 8 | True Nature | 5,000 |
+| 9 | Reaching Truth | 6,500 |
+| 10 | Harmony | 8,000 |
+| 11 | Heavenly Revelation | 10,000 |
 
-经验值 = 匹配度 × 30 + 10（按复盘匹配度加权），签到 +5，完成引导 +20
+XP = match score × 30 + 10 (weighted by review match), check-in +5, guide completion +20.
 
-## 项目文档
+## Documentation
 
-| 文档 | 说明 |
-|------|------|
-| [SPEC.md](./SPEC.md) | 技术规范（架构 / 引擎 / 设计系统 / 安全） |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | 贡献指南（开发环境 / 代码风格 / 提交规范） |
-| [SECURITY.md](./SECURITY.md) | 安全策略（漏洞报告 / 沙箱机制 / 安全护栏） |
-| [CHANGELOG.md](./CHANGELOG.md) | 更新日志 |
-| [.env.example](./.env.example) | 环境变量模板 |
+| Document | Description |
+|----------|-------------|
+| [SPEC.md](./SPEC.md) | Technical spec (architecture / engines / design system / security) |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contributing guide (dev setup / code style / commit conventions) |
+| [SECURITY.md](./SECURITY.md) | Security policy (vulnerability reporting / sandbox / guardrails) |
+| [CHANGELOG.md](./CHANGELOG.md) | Changelog |
+| [.env.example](./.env.example) | Environment variable template |
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 和 Pull Request。请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发规范。
+Issues and Pull Requests are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
 
-新增命理引擎只需 3 步：
-1. 在 `engines.js` 实现 `{ inputConfig, calc }` 结构
-2. 在 `echo.js` 的 `TOOLS` 数组注册元信息
-3. 在 `tools.js` 的 `ENGINES` 映射关联引擎
+Adding a new divination engine takes three steps:
+1. Implement the `{ inputConfig, calc }` structure in `engines.js`
+2. Register tool metadata in the `TOOLS` array in `echo.js`
+3. Associate the engine in the `ENGINES` map in `tools.js`
 
-## 许可证
+## License
 
 [MIT License](./LICENSE)
 
-## 免责声明
+## Disclaimer
 
-本项目所有推演结果均为文化算法的可视化呈现，不构成任何决策依据。命理文化的价值在于启发思考与自我认知，而非预测未来的准确性。Echo 的核心在于「设节点 → 等回响 → 复盘」的验证过程，而非单次预测的准与不准。
+All divination results in this project are visual representations of cultural algorithms and do not constitute any basis for decision-making. The value of fortune-telling culture lies in inspiring thought and self-awareness, not in accurately predicting the future. Echo's core is the verification process of "set checkpoint → await echo → review," not whether any single prediction is correct.
 
-涉及健康、法律、财务等敏感话题时，请咨询专业人士。
+For health, legal, financial, and other sensitive topics, please consult professionals.
 
 ---
 
 <div align="center">
 
-**如果这个项目对你有启发，欢迎 Star 支持**
+**If this project inspires you, a Star is appreciated**
 
 </div>
